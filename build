@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# directories
+JS_IN_DIR='./src/'
+JS_OUT_DIR='.'
+
+JS_TEMP=""
+JS_WRAPPER=$(<"$JS_IN_DIR/wrapper.js")
+JS_COMBINED_FILE="$JS_OUT_DIR/ol3-contextmenu-debug.js"
+JS_COMBINED_FILE_MIN="$JS_OUT_DIR/ol3-contextmenu.js"
+
+# JS files you want to combine together
+
+JS_FILES=(
+    base.js
+    html.js
+    utils.js
+)
+
+#clear the files
+> $JS_COMBINED_FILE
+> $JS_COMBINED_FILE_MIN
+
+#run thru the JS files
+for F in ${JS_FILES[@]}; do
+  CONTENTS=$(<"$JS_IN_DIR/$F")
+  JS_TEMP+="$CONTENTS"
+done
+
+echo "${JS_WRAPPER//CODE_HERE/$JS_TEMP}" > $JS_COMBINED_FILE
+
+
+#compress it
+uglifyjs --screw-ie8 -c -o $JS_COMBINED_FILE_MIN $JS_COMBINED_FILE
+
+#add the file to the git base
+#git add $JS_COMBINED_FILE
+#git add $JS_COMBINED_FILE_MIN

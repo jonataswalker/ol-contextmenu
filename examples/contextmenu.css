@@ -1,0 +1,22 @@
+html, body, #map{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+body {
+    font: 1em/1.5 "Open Sans",Helvetica,Arial,sans-serif;
+    color: #222;
+    font-weight: 400;
+}
+
+#map{
+    position:absolute;
+    z-index:1;
+    top:0; bottom:0;
+}
+.ol-control button{ 
+    background-color: rgba(40, 40, 40, 0.8) !important;
+}
+.ol-control button:hover{ 
+    background-color: rgba(40, 40, 40, 1) !important;
+}
