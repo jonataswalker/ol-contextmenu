@@ -2,7 +2,7 @@
 A `contextmenu` extension for OpenLayers 3.
 
 ## Demo
-You can see [here a demo](http://rawgit.com/jonataswalker/ol3-contextmenu/master/examples/contextmenu.html).
+You can see [here a demo](http://rawgit.com/jonataswalker/ol3-contextmenu/master/examples/contextmenu.html) or [JSFiddle](http://jsfiddle.net/jonataswalker/ooxs1w5d/).
 
 ## How to use it?
 Load the CSS and Javascript:
