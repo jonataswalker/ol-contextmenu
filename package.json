@@ -1,0 +1,41 @@
+{
+  "name": "ol3-contextmenu",
+  "description": "Custom Context Menu for Openlayers 3",
+  "main": "ol3-contextmenu.js",
+  "author": "Jonatas Walker",
+  "license": "MIT",
+  "config": {
+    "js_debug": "ol3-contextmenu-debug.js",
+    "js_minified": "ol3-contextmenu.js",
+    "css_combined": "ol3-contextmenu.css",
+    "css_minified": "ol3-contextmenu.min.css"
+  },
+  "devDependencies": {
+    "jshint": "latest",
+    "uglify-js": "latest",
+    "clean-css": "latest",
+    "postcss": "latest",
+    "nodemon": "latest",
+    "parallelshell": "latest"
+  },
+  "scripts": {
+    "prelint": "node combine.js",
+    "lint": "jshint build/$npm_package_config_js_debug",
+    
+    "preuglify": "npm run lint",
+    "uglify": "uglifyjs build/$npm_package_config_js_debug --mangle --mangle-regex --screw-ie8 -c warnings=false -o build/$npm_package_config_js_minified",
+    
+    "prebuild:css": "postcss --use autoprefixer -b 'last 2 versions' src/$npm_package_config_css_combined -o build/$npm_package_config_css_combined",
+    
+    "build:css": "cleancss --skip-restructuring -o build/$npm_package_config_css_minified build/$npm_package_config_css_combined",
+
+    "watch:css": "nodemon --on-change-only --watch 'src' --ext 'css' --exec 'npm run build:css'",
+    
+    "build:js": "npm run uglify",
+    "watch:js": "nodemon --on-change-only --watch 'src' --ext 'js' --exec 'npm run build:js'",
+    
+    "build": "npm run build:js && npm run build:css",
+
+    "build:watch": "npm run build && parallelshell 'npm run watch:js' 'npm run watch:css'"
+  }
+}

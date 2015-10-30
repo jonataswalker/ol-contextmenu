@@ -1,0 +1,4 @@
+{
+  "verbose": true,
+  "ignore": ["*.kate-swp", ".*.js.kate-swp"]
+}

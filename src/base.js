@@ -1,109 +1,71 @@
+
+/**
+ * @constructor
+ * @extends {ol.control.Control}
+ * @param {Object|undefined} opt_options Options.
+ */
 var ContextMenu = function(opt_options){
-    'use strict';
-    
-    var defaults = {
-        width: 150,
-        default_items: true
-    };
-    this.options = utils.mergeOptions(defaults, opt_options);
-    
-    var html = new ContextMenu.Html(this);
-    if(!html) return;
-    this.container = html.container;
-    
-    ol.control.Control.call(this, {
-        element: html.container
-    });
+  
+  var defaults = {
+    width: 150,
+    default_items: true
+  };
+  this.options = utils.mergeOptions(defaults, opt_options);
+  
+  this.$html = new ContextMenu.Html(this);
+  this.container = this.$html.container;
+  this.$internal = new ContextMenu.Internal(this);
+  
+  ol.control.Control.call(this, {
+    element: this.container
+  });
 };
 ol.inherits(ContextMenu, ol.control.Control);
 
-ContextMenu.items = [];
+/**
+ * Remove all elements from the menu.
+ */
+ContextMenu.prototype.clear = function() {
+  utils.removeAllChildren(this.container);
+};
 
+/**
+ * Add items to the menu. This pushes each item in the provided array
+ * to the end of the menu.
+ * @param {Array} arr Array.
+ */
+ContextMenu.prototype.extend = function(arr) {
+  utils.assert(Array.isArray(arr), '@param `arr` should be an Array.');
+  arr.forEach(this.push, this);
+};
+
+/**
+ * Insert the provided item at the end of the menu.
+ * @param {Object|String} item Item.
+ */
+ContextMenu.prototype.push = function(item) {
+  utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
+  var item_html = this.$html.getHtmlEntry(item, ContextMenu.items.length);
+  var frag = utils.createFragment(item_html);
+  this.container.appendChild(frag);
+};
+
+/**
+ * Remove the last item of the menu.
+ */
+ContextMenu.prototype.pop = function() {
+  var last = this.container.lastChild;
+  if (last) {
+    this.container.removeChild(last);
+  }
+};
+
+/**
+ * Not supposed to be used on app.
+ */
 ContextMenu.prototype.setMap = function(map) {
-    ol.control.Control.prototype.setMap.call(this, map);
-    //http://gis.stackexchange.com/a/136850/50718
-    //can't call setListeners on constructor
-    this.setListeners();
-};
-ContextMenu.prototype.setListeners = function(){
-    var
-        this_ = this,
-        map = this.getMap(),
-        canvas = map.getTargetElement(),
-        coord_clicked,
-        items_len = ContextMenu.items.length,
-        i = -1, li,
-        menu = function(evt){
-            evt.stopPropagation();
-            evt.preventDefault();
-            this_.openMenu(map.getEventPixel(evt));
-            coord_clicked = map.getEventCoordinate(evt);
-           
-            //one-time fire
-            canvas.addEventListener('mousedown', {
-                handleEvent: function (evt) {
-                    this_.closeMenu();
-                    canvas.removeEventListener(evt.type, this, false);
-                }
-            }, false);
-        },
-        getCoordinateClicked = function(){
-            return coord_clicked;
-        }
-    ;
-    canvas.addEventListener('contextmenu', menu, false);
-    
-    while(++i < items_len){
-        li = this.container.querySelector('#index' + ContextMenu.items[i].id);
-        
-        if(li && typeof ContextMenu.items[i].callback === 'function'){
-            (function(callback){
-                li.addEventListener('click', function(evt){
-                    evt.preventDefault();
-                    var
-                        coord = getCoordinateClicked(),
-                        obj = {
-                            coordinate: coord
-                        }
-                    ;
-                    this_.closeMenu();
-                    callback(obj);
-                }, false);
-            })(ContextMenu.items[i].callback);
-        }
-    }
-};
-ContextMenu.prototype.openMenu = function(pixel){
-    var
-        this_ = this,
-        map = this.getMap(),
-        map_size = map.getSize(),
-        menu_size = [
-            this.container.offsetWidth,
-            this.container.offsetHeight
-        ],
-        map_width       = map_size[0],
-        map_height      = map_size[1],
-        menu_width      = menu_size[0],
-        menu_height     = menu_size[1],
-        height_left     = map_height - pixel[1],
-        width_left      = map_width - pixel[0],
-        top             = 0,
-        left            = 0
-    ;
-    top = (height_left >= menu_height)
-        ? pixel[1] - 10
-        : pixel[1] - menu_height - 10;
-        
-    left = (width_left >= menu_width)
-        ? pixel[0] + 5
-        : pixel[0] - menu_width - 5;
-    
-    utils.removeClass(this.container, 'hidden');
-    this.container.style.left = left + 'px';
-    this.container.style.top = top + 'px';
-    
-};
-ContextMenu.prototype.closeMenu = function(){
-    utils.addClass(this.container, 'hidden');
+  ol.control.Control.prototype.setMap.call(this, map);
+  //http://gis.stackexchange.com/a/136850/50718
+  // let's start since now we have the map
+  this.$internal.init(map);
 };
