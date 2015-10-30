@@ -2,29 +2,14 @@
   'use strict';
   
   var 
-    iconStyle = new ol.style.Style({
-      image: new ol.style.Icon({
-        scale: .8,
-        src: 'img/marker.png'
-      }),
-      text: new ol.style.Text({
-        font: '13px Calibri,sans-serif',
-        fill: new ol.style.Fill({ color: '#111' }),
-        stroke: new ol.style.Stroke({
-          color: '#eee', width: 2
-        }),
-        offsetY: 35
-      })
-    }),
     view = new ol.View({
       center: [0, 0],
       zoom: 3,
       minZoom: 2,
       maxZoom: 20
     }),
-    vectorSource = new ol.source.Vector(),
     vectorLayer = new ol.layer.Vector({
-      source: vectorSource
+      source: new ol.source.Vector()
     }),
     baseLayer = new ol.layer.Tile({
       preload: Infinity,
@@ -52,16 +37,28 @@
     },
     marker = function(obj){
       var
-        feature = new ol.Feature(
-          new ol.geom.Point(obj.coordinate)
-        ),
+        coord4326 = ol.proj.transform(obj.coordinate, 'EPSG:3857', 'EPSG:4326'),
         template = 'Coordinate is ({x} | {y})',
-        out = ol.coordinate.format(obj.coordinate, template, 2)
+        iconStyle = new ol.style.Style({
+          image: new ol.style.Icon({
+            scale: .6,
+            src: 'img/marker.png'
+          }),
+          text: new ol.style.Text({
+            offsetY: 25,
+            text: ol.coordinate.format(coord4326, template, 2),
+            font: '14px Open Sans,sans-serif',
+            fill: new ol.style.Fill({ color: '#111' }),
+            stroke: new ol.style.Stroke({
+              color: '#eee', width: 2
+            })
+          })
+        }),
+        feature = new ol.Feature(new ol.geom.Point(obj.coordinate))
       ;
       
-      iconStyle.getText().setText(out);
       feature.setStyle(iconStyle);
-      vectorSource.addFeature(feature);
+      vectorLayer.getSource().addFeature(feature);
     }
   ;
   var contextmenu = new ContextMenu({
