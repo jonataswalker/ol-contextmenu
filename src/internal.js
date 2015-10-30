@@ -1,13 +1,17 @@
-(function(ContextMenu, win, doc){
+(function(win, doc){
   ContextMenu.Internal = function(menu){
     this.map = undefined;
     this.container = menu.container;
+    this.$html = menu.$html;
     this.coordinate_clicked = undefined;
   };
   ContextMenu.Internal.prototype = {
     init: function(map) {
       this.map = map;
+      // subscribe
       this.setListeners();
+      // publish
+      this.$html.createMenu();
     },
     getCoordinateClicked: function() {
       return this.coordinate_clicked;
@@ -39,13 +43,14 @@
     closeMenu: function(){
       utils.addClass(this.container, 'hidden');
     },
+    getNextItemIndex: function(){
+      return Object.keys(ContextMenu.items).length;
+    },
     setListeners: function() {
       var
         this_ = this,
         map = this.map,
         canvas = map.getTargetElement(),
-        items_len = ContextMenu.items.length,
-        i = -1, li,
         menu = function(evt){
           evt.stopPropagation();
           evt.preventDefault();
@@ -63,14 +68,15 @@
       ;
       canvas.addEventListener('contextmenu', menu, false);
       
-      while(++i < items_len){
-        li = this.container.querySelector('#index' + ContextMenu.items[i].id);
-        this.setItemListener(li, i);
-      }
+      // subscribe to later menu entries
+      events.subscribe(ContextMenu.Constants.eventType.ADD_MENU_ENTRY,
+        function(obj) {
+          this_.setItemListener(obj.element, obj.index);
+        }
+      );
     },
     setItemListener: function(li, index) {
       var this_ = this;
-      
       if(li && typeof ContextMenu.items[index].callback === 'function'){
         (function(callback){
           li.addEventListener('click', function(evt){
@@ -86,7 +92,7 @@
     }
   };
   
-  ContextMenu.items = [];
+  ContextMenu.items = {};
 
   ContextMenu.defaultItems = [
     {
@@ -132,4 +138,4 @@
     }
   ];
   
-})(ContextMenu, win, doc);
+})(win, doc);

@@ -16,7 +16,6 @@ var ContextMenu = function(opt_options){
     default_items: true
   };
   this.options = utils.mergeOptions(defaults, opt_options);
-  
   this.$html = new ContextMenu.Html(this);
   this.container = this.$html.container;
   this.$internal = new ContextMenu.Internal(this);
@@ -50,9 +49,7 @@ ContextMenu.prototype.extend = function(arr) {
  */
 ContextMenu.prototype.push = function(item) {
   utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
-  var item_html = this.$html.getHtmlEntry(item, ContextMenu.items.length);
-  var frag = utils.createFragment(item_html);
-  this.container.appendChild(frag);
+  this.$html.addMenuEntry(item, this.$internal.getNextItemIndex());
 };
 
 /**
@@ -74,16 +71,20 @@ ContextMenu.prototype.setMap = function(map) {
   // let's start since now we have the map
   this.$internal.init(map);
 };
-(function(ContextMenu, win, doc){
+(function(win, doc){
   ContextMenu.Internal = function(menu){
     this.map = undefined;
     this.container = menu.container;
+    this.$html = menu.$html;
     this.coordinate_clicked = undefined;
   };
   ContextMenu.Internal.prototype = {
     init: function(map) {
       this.map = map;
+      // subscribe
       this.setListeners();
+      // publish
+      this.$html.createMenu();
     },
     getCoordinateClicked: function() {
       return this.coordinate_clicked;
@@ -115,13 +116,14 @@ ContextMenu.prototype.setMap = function(map) {
     closeMenu: function(){
       utils.addClass(this.container, 'hidden');
     },
+    getNextItemIndex: function(){
+      return Object.keys(ContextMenu.items).length;
+    },
     setListeners: function() {
       var
         this_ = this,
         map = this.map,
         canvas = map.getTargetElement(),
-        items_len = ContextMenu.items.length,
-        i = -1, li,
         menu = function(evt){
           evt.stopPropagation();
           evt.preventDefault();
@@ -139,14 +141,15 @@ ContextMenu.prototype.setMap = function(map) {
       ;
       canvas.addEventListener('contextmenu', menu, false);
       
-      while(++i < items_len){
-        li = this.container.querySelector('#index' + ContextMenu.items[i].id);
-        this.setItemListener(li, i);
-      }
+      // subscribe to later menu entries
+      events.subscribe(ContextMenu.Constants.eventType.ADD_MENU_ENTRY,
+        function(obj) {
+          this_.setItemListener(obj.element, obj.index);
+        }
+      );
     },
     setItemListener: function(li, index) {
       var this_ = this;
-      
       if(li && typeof ContextMenu.items[index].callback === 'function'){
         (function(callback){
           li.addEventListener('click', function(evt){
@@ -162,7 +165,7 @@ ContextMenu.prototype.setMap = function(map) {
     }
   };
   
-  ContextMenu.items = [];
+  ContextMenu.items = {};
 
   ContextMenu.defaultItems = [
     {
@@ -208,19 +211,21 @@ ContextMenu.prototype.setMap = function(map) {
     }
   ];
   
-})(ContextMenu, win, doc);
-(function(ContextMenu, win, doc){
+})(win, doc);
+(function(win, doc){
   ContextMenu.Html = function(menu){
     this.options = menu.options;
-    this.container = this.createMenu();
+    this.container = this.createContainer();
   };
   ContextMenu.Html.prototype = {
-    createMenu: function(){
-      var
-        this_ = this,
-        options = this.options,
-        items = []
-      ;
+    createContainer: function() {
+      var container = doc.createElement('ul');
+      container.className = 'ol-contextmenu ol-unselectable hidden';
+      container.style.width = parseInt(this.options.width, 10) + 'px';
+      return container;
+    },
+    createMenu: function() {
+      var options = this.options, items = [];
 
       if('items' in options){
         items = (options.default_items) ?
@@ -231,54 +236,86 @@ ContextMenu.prototype.setMap = function(map) {
       
       //no item
       if(items.length === 0) return false;
- 
-      var
-        i = -1,
-        menu_html = '',
-        len = items.length
-      ;
-      while(++i < len) {
-        menu_html += this.getHtmlEntry(items[i], i);
-      }
-      var container = utils.createElement([
-        'ul', { classname: 'ol-contextmenu ol-unselectable hidden' }
-      ], menu_html);
-      
-      container.style.width = parseInt(options.width, 10) + 'px';
-      return container;
+
+      // create entries
+      items.forEach(this.addMenuEntry, this);
     },
-    getHtmlEntry: function(item, index) {
-      var
-        classname,
-        style = '',
-        menu_html = ''
-      ;
+    addMenuEntry: function(item, index) {
+      var classname, style = '', html = '';
       
       //separator
       if(typeof item === 'string'){
         if(item.trim() == '-'){
-          menu_html = '<li class="ol-menu-sep"><hr></li>';
+          html = '<li class="ol-menu-sep"><hr></li>';
         }
       } else {
         if(item.icon){
           item.classname += ' ol-contextmenu-icon';
-          style = ' style="background-image:url('+item.icon+')"';
+          style = ' style="background-image:url(' + item.icon + ')"';
         }
         
-        classname = item.classname ? ' class="'+item.classname+'"' : '';
-        menu_html = '<li id="index'+index+'"' + style + classname +'>' +
-          item.text +'</li>';
-        ContextMenu.items.push({
-          id: index,
-          callback: item.callback
-        });
+        classname = item.classname ? ' class="' + item.classname + '"' : '';
+        html = '<li id="index' + index + '"' + style + classname + '>' +
+          item.text + '</li>';
       }
-      return menu_html;
+
+      var frag = utils.createFragment(html);
+      // http://stackoverflow.com/a/13347298/4640499
+      var child = [].slice.call(frag.childNodes, 0)[0];
+      this.container.appendChild(frag);
+
+      ContextMenu.items[index] = {
+        id: index,
+        callback: item.callback
+      };
+      
+      // publish to add listener
+      events.publish(ContextMenu.Constants.eventType.ADD_MENU_ENTRY, {
+        index: index,
+        element: child
+      });
     }
   };
-})(ContextMenu, win, doc);
+})(win, doc);
 (function(win, doc){
+  ContextMenu.Constants = {
+    eventType: {
+      ADD_MENU_ENTRY: 'add-menu-entry'
+    }
+  };
+})(win, doc);(function(win, doc){
   ContextMenu.Utils = {
+    events: function() {
+      var topics = {};
+      var hOP = topics.hasOwnProperty;
+      
+      return {
+        subscribe: function(topic, listener) {
+          // Create the topic's object if not yet created
+          if(!hOP.call(topics, topic)) topics[topic] = [];
+  
+          // Add the listener to queue
+          var index = topics[topic].push(listener) -1;
+          
+          // Provide handle back for removal of topic
+          return {
+            remove: function() {
+              delete topics[topic][index];
+            }
+          };
+        },
+        publish: function(topic, info) {
+          // If the topic doesn't exist, or there's no listeners
+          // in queue, just leave
+          if(!hOP.call(topics, topic)) return;
+        
+          // Cycle through topics queue, fire!
+          topics[topic].forEach(function(item) {
+            item(info !== undefined ? info : {});
+          });
+        }
+      };
+    },
     whiteSpaceRegex: /\s+/,
     to3857: function(coord){
       return ol.proj.transform(
@@ -500,6 +537,7 @@ ContextMenu.prototype.setMap = function(map) {
   })();
   var
     log = function(m){console.info(m);},
-    utils = ContextMenu.Utils
+    utils = ContextMenu.Utils,
+    events = utils.events()
   ;
 }).call(this, window, document);

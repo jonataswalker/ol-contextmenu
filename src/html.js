@@ -1,15 +1,17 @@
-(function(ContextMenu, win, doc){
+(function(win, doc){
   ContextMenu.Html = function(menu){
     this.options = menu.options;
-    this.container = this.createMenu();
+    this.container = this.createContainer();
   };
   ContextMenu.Html.prototype = {
-    createMenu: function(){
-      var
-        this_ = this,
-        options = this.options,
-        items = []
-      ;
+    createContainer: function() {
+      var container = doc.createElement('ul');
+      container.className = 'ol-contextmenu ol-unselectable hidden';
+      container.style.width = parseInt(this.options.width, 10) + 'px';
+      return container;
+    },
+    createMenu: function() {
+      var options = this.options, items = [];
 
       if('items' in options){
         items = (options.default_items) ?
@@ -20,49 +22,44 @@
       
       //no item
       if(items.length === 0) return false;
- 
-      var
-        i = -1,
-        menu_html = '',
-        len = items.length
-      ;
-      while(++i < len) {
-        menu_html += this.getHtmlEntry(items[i], i);
-      }
-      var container = utils.createElement([
-        'ul', { classname: 'ol-contextmenu ol-unselectable hidden' }
-      ], menu_html);
-      
-      container.style.width = parseInt(options.width, 10) + 'px';
-      return container;
+
+      // create entries
+      items.forEach(this.addMenuEntry, this);
     },
-    getHtmlEntry: function(item, index) {
-      var
-        classname,
-        style = '',
-        menu_html = ''
-      ;
+    addMenuEntry: function(item, index) {
+      var classname, style = '', html = '';
       
       //separator
       if(typeof item === 'string'){
         if(item.trim() == '-'){
-          menu_html = '<li class="ol-menu-sep"><hr></li>';
+          html = '<li class="ol-menu-sep"><hr></li>';
         }
       } else {
         if(item.icon){
           item.classname += ' ol-contextmenu-icon';
-          style = ' style="background-image:url('+item.icon+')"';
+          style = ' style="background-image:url(' + item.icon + ')"';
         }
         
-        classname = item.classname ? ' class="'+item.classname+'"' : '';
-        menu_html = '<li id="index'+index+'"' + style + classname +'>' +
-          item.text +'</li>';
-        ContextMenu.items.push({
-          id: index,
-          callback: item.callback
-        });
+        classname = item.classname ? ' class="' + item.classname + '"' : '';
+        html = '<li id="index' + index + '"' + style + classname + '>' +
+          item.text + '</li>';
       }
-      return menu_html;
+
+      var frag = utils.createFragment(html);
+      // http://stackoverflow.com/a/13347298/4640499
+      var child = [].slice.call(frag.childNodes, 0)[0];
+      this.container.appendChild(frag);
+
+      ContextMenu.items[index] = {
+        id: index,
+        callback: item.callback
+      };
+      
+      // publish to add listener
+      events.publish(ContextMenu.Constants.eventType.ADD_MENU_ENTRY, {
+        index: index,
+        element: child
+      });
     }
   };
-})(ContextMenu, win, doc);
+})(win, doc);

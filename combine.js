@@ -12,6 +12,7 @@ var
     'base.js',
     'internal.js',
     'html.js',
+    'constants.js',
     'utils.js'
   ],
   

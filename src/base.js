@@ -11,7 +11,6 @@ var ContextMenu = function(opt_options){
     default_items: true
   };
   this.options = utils.mergeOptions(defaults, opt_options);
-  
   this.$html = new ContextMenu.Html(this);
   this.container = this.$html.container;
   this.$internal = new ContextMenu.Internal(this);
@@ -45,9 +44,7 @@ ContextMenu.prototype.extend = function(arr) {
  */
 ContextMenu.prototype.push = function(item) {
   utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
-  var item_html = this.$html.getHtmlEntry(item, ContextMenu.items.length);
-  var frag = utils.createFragment(item_html);
-  this.container.appendChild(frag);
+  this.$html.addMenuEntry(item, this.$internal.getNextItemIndex());
 };
 
 /**
