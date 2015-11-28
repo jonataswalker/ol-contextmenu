@@ -42,82 +42,116 @@
         [parseFloat(coord[0]), parseFloat(coord[1])], 'EPSG:3857', 'EPSG:4326'
       );
     },
+    isNumeric: function(str){
+      return /^\d+$/.test(str);
+    },
     classRegex: function(classname) {
       return new RegExp('(^|\\s+)' + classname + '(\\s+|$)');
     },
-    _addClass: function(el, c){
-      if (el.classList)
-        el.classList.add(c);
-      else
-        el.className = (el.className + ' ' + c).trim();
-    },
-    addClass: function(el, classname){
-      if(Array.isArray(el)){
-        el.forEach(function(each){
+    /**
+    * @param {Element|Array<Element>} element DOM node or array of nodes.
+    * @param {String|Array<String>} classname Class or array of classes.
+    * For example: 'class1 class2' or ['class1', 'class2']
+    * @param {Number|undefined} timeout Timeout to remove a class.
+    */
+    addClass: function(element, classname, timeout){
+      if(Array.isArray(element)){
+        element.forEach(function(each){
           utils.addClass(each, classname);
         });
         return;
       }
       
-      //classname can be ['class1', 'class2'] or 'class1 class2'
       var 
-        array = (Array.isArray(classname)) ?
-          classname : classname.split(utils.whiteSpaceRegex),
+        array = (Array.isArray(classname)) ? classname : classname.split(/\s+/),
         i = array.length
       ;
       while(i--){
-        if(!utils.hasClass(el, array[i])) {
-          utils._addClass(el, array[i]);
+        if(!utils.hasClass(element, array[i])) {
+          utils._addClass(element, array[i], timeout);
         }
       }
     },
-    _removeClass: function(el, c){
+    _addClass: function(el, c, timeout){
+      // use native if available
+      if (el.classList) {
+        el.classList.add(c);
+      } else {
+        el.className = (el.className + ' ' + c).trim();
+      }
+      
+      if(timeout && utils.isNumeric(timeout)){
+        win.setTimeout(function(){
+          utils._removeClass(el, c);
+        }, timeout);
+      }
+    },
+    /**
+    * @param {Element|Array<Element>} element DOM node or array of nodes.
+    * @param {String|Array<String>} classname Class or array of classes.
+    * For example: 'class1 class2' or ['class1', 'class2']
+    * @param {Number|undefined} timeout Timeout to add a class.
+    */
+    removeClass: function(element, classname, timeout){
+      if(Array.isArray(element)){
+        element.forEach(function(each){
+          utils.removeClass(each, classname, timeout);
+        });
+        return;
+      }
+      
+      var 
+        array = (Array.isArray(classname)) ? classname : classname.split(/\s+/),
+        i = array.length
+      ;
+      while(i--){
+        if(utils.hasClass(element, array[i])) {
+          utils._removeClass(element, array[i], timeout);
+        }
+      }
+    },
+    _removeClass: function(el, c, timeout){
       if (el.classList){
         el.classList.remove(c);
       } else {
-        el.className = 
-          (el.className.replace(utils.classReg(c), ' ')).trim();
+        el.className = (el.className.replace(utils.classRegex(c), ' ')).trim();
       }
-    },
-    removeClass: function(el, classname){
-      if(Array.isArray(el)){
-        el.forEach(function(each){
-          utils.removeClass(each, classname);
-        });
-        return;
-      }
-      
-      //classname can be ['class1', 'class2'] or 'class1 class2'
-      var 
-        array = (Array.isArray(classname)) ?
-        classname : classname.split(utils.whiteSpaceRegex),
-        i = array.length
-      ;
-      while(i--){
-        if(utils.hasClass(el, array[i])) {
-          utils._removeClass(el, array[i]);
-        }
-      }
-    },
-    hasClass: function(el, c){
-      return (el.classList) ? 
-        el.classList.contains(c) : utils.classReg(c).test(el.className);
-    },
-    toggleClass: function(el, c){
-      if(Array.isArray(el)){
-        el.forEach(function(each){
-          utils.toggleClass(each, c);
-        });
-        return;
-      }
-      
-      if(el.classList) {
-        el.classList.toggle(c);
-      } else {
-        if(utils.hasClass(el, c)){
-          utils._removeClass(el, c);
-        } else {
+      if(timeout && utils.isNumeric(timeout)){
+        win.setTimeout(function() {
           utils._addClass(el, c);
+        }, timeout);
+      }
+    },
+    /**
+    * @param {Element} element DOM node.
+    * @param {String} classname Classname.
+    * @return {Boolean}
+    */
+    hasClass: function(element, c) {
+      // use native if available
+      return (element.classList) ?
+        element.classList.contains(c) : utils.classRegex(c).test(element.className);
+    },
+    /**
+    * @param {Element|Array<Element>} element DOM node or array of nodes.
+    * @param {String} classname Classe.
+    */
+    toggleClass: function(element, classname){
+      if(Array.isArray(element)) {
+        element.forEach(function(each) {
+          utils.toggleClass(each, classname);
+        });
+        return;
+      }
+      
+      // use native if available
+      if(element.classList) {
+        element.classList.toggle(classname);
+      } else {
+        if(utils.hasClass(element, classname)){
+          utils._removeClass(element, classname);
+        } else {
+          utils._addClass(element, classname);
         }
       }
     },
