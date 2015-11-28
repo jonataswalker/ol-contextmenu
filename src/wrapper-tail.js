@@ -1,10 +1,3 @@
-(function(win, doc){
-  'use strict';
-  
-  this.ContextMenu = (function(){
-    
-    /*{CODE_HERE}*/
-    
     return ContextMenu;
   })();
   var
