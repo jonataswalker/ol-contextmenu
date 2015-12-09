@@ -1,7 +1,7 @@
 # OpenLayers 3 Custom Context Menu
 A `contextmenu` extension for OpenLayers 3.
 
-![contextmenu anim](https://raw.githubusercontent.com/jonataswalker/ol3-contextmenu/screenshots/images/anim.gif)
+![contextmenu anim](https://raw.githubusercontent.com/jonataswalker/ol3-contextmenu/screenshot/images/anim.gif)
 
 ## Demo
 You can see [here a demo](http://rawgit.com/jonataswalker/ol3-contextmenu/master/examples/contextmenu.html) or [JSFiddle](http://jsfiddle.net/jonataswalker/ooxs1w5d/).
