@@ -12,7 +12,6 @@ TMPFILE 	:= $(BUILD_DIR)/tmp
 JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
 		   $(SRC_DIR)/base.js \
 		   $(SRC_DIR)/internal.js \
-		   $(SRC_DIR)/internal.js \
 		   $(SRC_DIR)/html.js \
 		   $(SRC_DIR)/constants.js \
 		   $(SRC_DIR)/utils.js \
