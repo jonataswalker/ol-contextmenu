@@ -52,8 +52,12 @@
 
       ContextMenu.items[index] = {
         id: index,
-        callback: item.callback
+        callback: item.callback,
+        data:null
       };
+      if (item.data != null){
+        ContextMenu.items[index].data = item.data;
+      }
       
       // publish to add listener
       events.publish(ContextMenu.Constants.eventType.ADD_MENU_ENTRY, {
