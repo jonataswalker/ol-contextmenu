@@ -52,7 +52,8 @@
 
       ContextMenu.items[index] = {
         id: index,
-        callback: item.callback
+        callback: item.callback,
+        data: item.data || null
       };
       
       // publish to add listener

@@ -83,6 +83,7 @@
             evt.preventDefault();
             var obj = {
               coordinate: this_.getCoordinateClicked()
+              data: ContextMenu.items[index].data || null
             };
             this_.closeMenu();
             callback.call(undefined, obj, this_.map);
