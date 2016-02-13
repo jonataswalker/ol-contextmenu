@@ -83,11 +83,8 @@
             evt.preventDefault();
             var obj = {
               coordinate: this_.getCoordinateClicked()
-              data:null
+              data: ContextMenu.items[index].data || null
             };
-            if (ContextMenu.items[index].data != null){
-              obj.data = ContextMenu.items[index].data;
-            }
             this_.closeMenu();
             callback.call(undefined, obj, this_.map);
           }, false);
