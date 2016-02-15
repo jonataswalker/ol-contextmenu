@@ -47,36 +47,75 @@
           text: new ol.style.Text({
             offsetY: 25,
             text: ol.coordinate.format(coord4326, template, 2),
-            font: '14px Open Sans,sans-serif',
+            font: '15px Open Sans,sans-serif',
             fill: new ol.style.Fill({ color: '#111' }),
             stroke: new ol.style.Stroke({
               color: '#eee', width: 2
             })
           })
         }),
-        feature = new ol.Feature(new ol.geom.Point(obj.coordinate))
+        feature = new ol.Feature({
+          type: 'removable',
+          geometry: new ol.geom.Point(obj.coordinate)
+        })
       ;
       
       feature.setStyle(iconStyle);
       vectorLayer.getSource().addFeature(feature);
     }
   ;
+  var contextmenu_items = [
+    {
+      text: 'Center map here',
+      callback: center
+    },
+    {
+      text: 'Add a Marker',
+      icon: 'img/marker.png',
+      callback: marker
+    },
+    '-' // this is a separator
+  ];
   var contextmenu = new ContextMenu({
-    width: 170,
+    width: 190,
     default_items: true,
-    items: [
-        {
-          text: 'Center map here',
-          callback: center
-        },
-        {
-          text: 'Add a Marker',
-          icon: 'img/marker.png',
-          callback: marker
-        },
-        '-' // this is a separator
-    ]
+    items: contextmenu_items
   });
   map.addControl(contextmenu);
+  
+  var removeMarker = function(obj){
+    vectorLayer.getSource().removeFeature(obj.data.marker);
+  };
+  var removeMarkerItem = {
+    text: 'Remove this Marker',
+    icon: 'img/marker.png',
+    callback: removeMarker
+  };
+  
+  contextmenu.on('open', function(evt){
+    var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
+      return ft;
+    });
+    if (feature && feature.get('type') == 'removable') {
+      contextmenu.clear();
+      removeMarkerItem.data = {
+        marker: feature
+      };
+      contextmenu.push(removeMarkerItem);
+      
+    } else {
+      contextmenu.clear();
+      contextmenu.extend(contextmenu_items);
+      contextmenu.extend(contextmenu.getDefaultItems());
+    }
+  });
+  map.on('pointermove', function(e) {
+    if (e.dragging) return;
+         
+    var pixel = map.getEventPixel(e.originalEvent);
+    var hit = map.hasFeatureAtPixel(pixel);
+    
+    map.getTarget().style.cursor = hit ? 'pointer' : '';
+  });
 
 })(window, document);
