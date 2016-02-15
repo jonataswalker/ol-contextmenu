@@ -37,6 +37,35 @@ var contextmenu = new ContextMenu({
 map.addControl(contextmenu);
 ```
 
+##### Would you like to propagate custom data to the callback handler?
+```javascript
+var removeMarker = function(obj){
+  vectorLayer.getSource().removeFeature(obj.data.marker);
+};
+var removeMarkerItem = {
+  text: 'Remove this Marker',
+  icon: 'img/marker.png',
+  callback: removeMarker
+};
+
+contextmenu.on('open', function(evt){
+  var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
+    return ft;
+  });
+  if (feature) {
+    contextmenu.clear();
+    removeMarkerItem.data = {
+      marker: feature
+    };
+    contextmenu.push(removeMarkerItem);
+  } else {
+    contextmenu.clear();
+    contextmenu.extend(contextmenu_items);
+    contextmenu.extend(contextmenu.getDefaultItems());
+  }
+});
+```
+
 # API
 
 ## Constructor
@@ -62,18 +91,18 @@ Add items to the menu. This pushes each item in the provided array to the end of
 
 Example:
 ```js
-  var contextmenu = new ContextMenu();
-  map.addControl(contextmenu);
-  
-  var add_later = [
-    '-', // this is a separator
-    {
-      text: 'Add a Marker',
-      icon: 'img/marker.png',
-      callback: marker
-    }
-  ];
-  contextmenu.extend(add_later);
+var contextmenu = new ContextMenu();
+map.addControl(contextmenu);
+
+var add_later = [
+  '-', // this is a separator
+  {
+    text: 'Add a Marker',
+    icon: 'img/marker.png',
+    callback: marker
+  }
+];
+contextmenu.extend(add_later);
 ```
 
 #### contextmenu.push(item)
@@ -85,3 +114,31 @@ Insert the provided item at the end of the menu.
 #### contextmenu.pop(item)
 
 Remove the last item of the menu.
+
+#### contextmenu.getDefaultItems()
+
+Get an array of default items.
+
+
+## Events
+
+#### Listen and make some changes before context menu opens
+
+```javascript
+contextmenu.on('open', function(evt){
+  var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
+    return ft;
+  });
+  if (feature) {
+    // add some other items to the menu
+  }
+});
+```
+
+#### Any action when context menu gets closed?
+
+```javascript
+contextmenu.on('close', function(evt){
+  // it's upon you
+});
+```
