@@ -34,7 +34,7 @@
   opacity: 0;
   visibility: hidden;
   -webkit-transition: opacity .25s linear, visibility 0 linear .25s;
-          transition: opacity .25s linear, visibility 0 linear .25s;
+  transition: opacity .25s linear, visibility 0 linear .25s;
 }
 .ol-contextmenu-icon{
   text-indent: 20px;

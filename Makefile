@@ -1,4 +1,3 @@
-LAST_VERSION	:= 1.0.1
 NOW		:= $(shell date --iso=seconds)
 ROOT_DIR	:= $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 SRC_DIR 	:= $(ROOT_DIR)/src
@@ -8,6 +7,8 @@ JS_FINAL 	:= $(BUILD_DIR)/ol3-contextmenu.js
 CSS_COMBINED 	:= $(BUILD_DIR)/ol3-contextmenu.css
 CSS_FINAL 	:= $(BUILD_DIR)/ol3-contextmenu.min.css
 TMPFILE 	:= $(BUILD_DIR)/tmp
+PACKAGE_JSON 	:= $(ROOT_DIR)/package.json
+LAST_VERSION	:= $(shell cat $(PACKAGE_JSON) | node -pe "JSON.parse(require('fs').readFileSync('/dev/stdin').toString()).version")
 
 JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
 		   $(SRC_DIR)/base.js \
