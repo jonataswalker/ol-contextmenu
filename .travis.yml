@@ -1,0 +1,10 @@
+language: node_js
+
+node_js:
+  - "4"
+
+script: "make ci"
+
+branches:
+  only:
+    - master

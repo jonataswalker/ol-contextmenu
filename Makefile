@@ -52,6 +52,10 @@ build-watch: build watch
 watch:
 	$(PARALLELSHELL) "make watch-js" "make watch-css"
 
+.PHONY: ci
+ci: build
+
+.PHONY: build
 build: build-js build-css
 
 build-js: combine-js jshint uglifyjs addheader
