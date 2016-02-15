@@ -19,17 +19,17 @@ JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
 
 CSS_FILES 	:= $(SRC_DIR)/ol3-contextmenu.css
 
-CLEANCSS 	:= /usr/local/bin/cleancss
+CLEANCSS 	:= ./node_modules/.bin/cleancss
 CLEANCSSFLAGS 	:= --skip-restructuring
-POSTCSS 	:= /usr/bin/postcss
+POSTCSS 	:= ./node_modules/.bin/postcss
 POSTCSSFLAGS 	:= --use autoprefixer -b "last 2 versions"
-JSHINT 		:= /usr/bin/jshint
-UGLIFYJS 	:= /usr/bin/uglifyjs
-UGLIFYJSFLAGS 	:= --mangle --mangle-regex --screw-ie8 --lint -c warnings=true
-JS_BEAUTIFY	:= /usr/bin/js-beautify
+JSHINT 		:= ./node_modules/.bin/jshint
+UGLIFYJS 	:= ./node_modules/.bin/uglifyjs
+UGLIFYJSFLAGS 	:= --mangle --mangle-regex --screw-ie8 --lint -c warnings=false
+JS_BEAUTIFY	:= ./node_modules/.bin/js-beautify
 BEAUTIFYFLAGS 	:= -f - --indent-size 2 --preserve-newlines
-NODEMON 	:= /usr/bin/nodemon
-PARALLELSHELL 	:= /usr/bin/parallelshell
+NODEMON 	:= ./node_modules/.bin/nodemon
+PARALLELSHELL 	:= ./node_modules/.bin/parallelshell
 
 # just to create variables like NODEMON_JS_FLAGS when called
 define NodemonFlags

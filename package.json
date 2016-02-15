@@ -10,7 +10,8 @@
     "js-beautify": "latest",
     "uglify-js": "latest",
     "clean-css": "latest",
-    "postcss": "latest",
+    "autoprefixer": "latest",
+    "postcss-cli": "latest",
     "nodemon": "latest",
     "parallelshell": "latest"
   }
