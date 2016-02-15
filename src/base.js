@@ -58,6 +58,13 @@ ContextMenu.prototype.pop = function() {
 };
 
 /**
+ * @return {Array} Returns default items
+ */
+ContextMenu.prototype.getDefaultItems = function() {
+  return ContextMenu.defaultItems;
+};
+
+/**
  * Not supposed to be used on app.
  */
 ContextMenu.prototype.setMap = function(map) {
