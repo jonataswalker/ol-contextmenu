@@ -1,6 +1,7 @@
 (function(win, doc){
   ContextMenu.Internal = function(menu){
     this.map = undefined;
+    this.contextmenu = menu;
     this.container = menu.container;
     this.$html = menu.$html;
     this.coordinate_clicked = undefined;
@@ -16,7 +17,7 @@
     getCoordinateClicked: function() {
       return this.coordinate_clicked;
     },
-    openMenu: function(pixel) {
+    openMenu: function(pixel, coordinate) {
       var
         this_ = this,
         map_size = this.map.getSize(),
@@ -39,9 +40,17 @@
       utils.removeClass(this.container, 'hidden');
       this.container.style.left = left + 'px';
       this.container.style.top = top + 'px';
+      this.contextmenu.dispatchEvent({
+        type: ContextMenu.EventType.OPEN,
+        pixel: pixel,
+        coordinate: coordinate,
+      });
     },
     closeMenu: function(){
       utils.addClass(this.container, 'hidden');
+      this.contextmenu.dispatchEvent({
+        type: ContextMenu.EventType.CLOSE
+      });
     },
     getNextItemIndex: function(){
       return Object.keys(ContextMenu.items).length;
@@ -54,8 +63,8 @@
         menu = function(evt){
           evt.stopPropagation();
           evt.preventDefault();
-          this_.openMenu(map.getEventPixel(evt));
           this_.coordinate_clicked = map.getEventCoordinate(evt);
+          this_.openMenu(map.getEventPixel(evt), this_.coordinate_clicked);
           
           //one-time fire
           canvas.addEventListener('mousedown', {
@@ -82,7 +91,7 @@
           li.addEventListener('click', function(evt){
             evt.preventDefault();
             var obj = {
-              coordinate: this_.getCoordinateClicked()
+              coordinate: this_.getCoordinateClicked(),
               data: ContextMenu.items[index].data || null
             };
             this_.closeMenu();
@@ -91,6 +100,17 @@
         })(ContextMenu.items[index].callback);
       }
     }
+  };
+  
+  ContextMenu.EventType = {
+    /**
+     * Triggered when context menu is openned.
+     */
+    OPEN: 'open',
+    /**
+     * Triggered when context menu is closed.
+     */
+    CLOSE: 'close'
   };
   
   ContextMenu.items = {};
