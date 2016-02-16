@@ -1,5 +1,5 @@
 # OpenLayers 3 Custom Context Menu
-A `contextmenu` extension for OpenLayers 3.
+A `contextmenu` extension for OpenLayers 3. **Requires** OpenLayers **v3.11.0** or higher.
 
 ![contextmenu anim](https://raw.githubusercontent.com/jonataswalker/ol3-contextmenu/screenshot/images/anim.gif)
 
