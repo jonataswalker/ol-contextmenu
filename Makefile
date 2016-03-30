@@ -7,30 +7,29 @@ JS_FINAL 	:= $(BUILD_DIR)/ol3-contextmenu.js
 CSS_COMBINED 	:= $(BUILD_DIR)/ol3-contextmenu.css
 CSS_FINAL 	:= $(BUILD_DIR)/ol3-contextmenu.min.css
 TMPFILE 	:= $(BUILD_DIR)/tmp
-PACKAGE_JSON 	:= $(ROOT_DIR)/package.json
-LAST_VERSION	:= $(shell cat $(PACKAGE_JSON) | node -pe "JSON.parse(require('fs').readFileSync('/dev/stdin').toString()).version")
+LAST_VERSION	:= $(shell node -p "require('./package.json').version")
 
 JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
+		   $(SRC_DIR)/utils.js \
 		   $(SRC_DIR)/base.js \
 		   $(SRC_DIR)/internal.js \
 		   $(SRC_DIR)/html.js \
-		   $(SRC_DIR)/constants.js \
-		   $(SRC_DIR)/utils.js \
 		   $(SRC_DIR)/wrapper-tail.js
 
 CSS_FILES 	:= $(SRC_DIR)/ol3-contextmenu.css
 
-CLEANCSS 	:= ./node_modules/.bin/cleancss
+NODE_MODULES	:= ./node_modules/.bin
+CLEANCSS 	:= $(NODE_MODULES)/cleancss
 CLEANCSSFLAGS 	:= --skip-restructuring
-POSTCSS 	:= ./node_modules/.bin/postcss
+POSTCSS 	:= $(NODE_MODULES)/postcss
 POSTCSSFLAGS 	:= --use autoprefixer -b "last 2 versions"
-JSHINT 		:= ./node_modules/.bin/jshint
-UGLIFYJS 	:= ./node_modules/.bin/uglifyjs
-UGLIFYJSFLAGS 	:= --mangle --mangle-regex --screw-ie8 --lint -c warnings=false
-JS_BEAUTIFY	:= ./node_modules/.bin/js-beautify
+ESLINT 		:= $(NODE_MODULES)/eslint
+UGLIFYJS 	:= $(NODE_MODULES)/uglifyjs
+UGLIFYJSFLAGS 	:= --mangle --mangle-regex --screw-ie8 -c warnings=false
+JS_BEAUTIFY	:= $(NODE_MODULES)/js-beautify
 BEAUTIFYFLAGS 	:= -f - --indent-size 2 --preserve-newlines
-NODEMON 	:= ./node_modules/.bin/nodemon
-PARALLELSHELL 	:= ./node_modules/.bin/parallelshell
+NODEMON 	:= $(NODE_MODULES)/nodemon
+PARALLELSHELL 	:= $(NODE_MODULES)/parallelshell
 
 # just to create variables like NODEMON_JS_FLAGS when called
 define NodemonFlags
@@ -59,7 +58,7 @@ ci: build
 .PHONY: build
 build: build-js build-css
 
-build-js: combine-js jshint uglifyjs addheader
+build-js: combine-js lint uglifyjs addheader
 	@echo "Build JS ... OK"
 
 build-css: combine-css cleancss
@@ -68,8 +67,8 @@ build-css: combine-css cleancss
 uglifyjs:
 	@$(UGLIFYJS) $(JS_DEBUG) $(UGLIFYJSFLAGS) > $(JS_FINAL)
 
-jshint:
-	@$(JSHINT) $(JS_DEBUG)
+lint:
+	@$(ESLINT) $(JS_DEBUG)
 
 addheader-debug:
 	@echo "$$HEADER" | cat - $(JS_DEBUG) > $(TMPFILE) && mv $(TMPFILE) $(JS_DEBUG)
