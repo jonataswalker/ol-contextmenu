@@ -10,13 +10,13 @@ CM.Base = function(opt_options){
     width: 150,
     default_items: true
   };
-  this.options = utils.mergeOptions(defaults, opt_options);
-  this.$html = new CM.Html(this);
-  this.container = this.$html.container;
-  this.$internal = new CM.Internal(this);
+  CM.options = utils.mergeOptions(defaults, opt_options);
+  CM.$base = this;
+  CM.$html = new CM.Html();
+  CM.$internal = new CM.Internal();
   
   ol.control.Control.call(this, {
-    element: this.container
+    element: CM.container
   });
 };
 ol.inherits(CM.Base, ol.control.Control);
@@ -25,7 +25,10 @@ ol.inherits(CM.Base, ol.control.Control);
  * Remove all elements from the menu.
  */
 CM.Base.prototype.clear = function() {
-  utils.removeAllChildren(this.container);
+  Object.keys(CM.items).forEach(function(key) {
+    delete CM.items[key];
+  });
+  utils.removeAllChildren(CM.container);
 };
 
 /**
@@ -44,16 +47,17 @@ CM.Base.prototype.extend = function(arr) {
  */
 CM.Base.prototype.push = function(item) {
   utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
-  this.$html.addMenuEntry(item, this.$internal.getNextItemIndex());
+  CM.$html.addMenuEntry(item, CM.$internal.getNextItemIndex());
+  CM.$internal.positionContainer(CM.$internal.getPixelClicked());
 };
 
 /**
  * Remove the last item of the menu.
  */
 CM.Base.prototype.pop = function() {
-  var last = this.container.lastChild;
+  var last = CM.container.lastChild;
   if (last) {
-    this.container.removeChild(last);
+    CM.container.removeChild(last);
   }
 };
 
@@ -71,5 +75,5 @@ CM.Base.prototype.setMap = function(map) {
   ol.control.Control.prototype.setMap.call(this, map);
   //http://gis.stackexchange.com/a/136850/50718
   // let's start since now we have the map
-  this.$internal.init(map);
+  CM.$internal.init(map);
 };

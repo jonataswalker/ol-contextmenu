@@ -140,6 +140,45 @@ var utils = {
     return (!!obj && typeof obj === 'object' && 
     obj.nodeType === 1 && !!obj.nodeName);
   },
+  /*
+  * Abstraction to querySelectorAll for increased 
+  * performance and greater usability
+  * @param {String} selector
+  * @param {Element} context (optional)
+  * @param {Boolean} find_all (optional)
+  * @return (find_all) {Element} : {Array}
+  */
+  find: function(selector, context, find_all){
+    var simpleRe = /^(#?[\w-]+|\.[\w-.]+)$/, 
+        periodRe = /\./g, 
+        slice = Array.prototype.slice,
+        matches = [];
+
+    context = context || window.document;
+    
+    // Redirect call to the more performant function 
+    // if it's a simple selector and return an array
+    // for easier usage
+    if(simpleRe.test(selector)){
+      switch(selector[0]){
+        case '#':
+          matches = [utils.$(selector.substr(1))];
+          break;
+        case '.':
+          matches = slice.call(context.getElementsByClassName(
+            selector.substr(1).replace(periodRe, ' ')));
+          break;
+        default:
+          matches = slice.call(context.getElementsByTagName(selector));
+      }
+    } else{
+      // If not a simple selector, query the DOM as usual 
+      // and return an array for easier usage
+      matches = slice.call(context.querySelectorAll(selector));
+    }
+    
+    return (find_all) ? matches : matches[0];
+  },
   getAllChildren: function(node, tag){
     return [].slice.call(node.getElementsByTagName(tag));
   },
@@ -159,8 +198,7 @@ var utils = {
   getChildren: function(node, tag){
     return [].filter.call(node.childNodes, function(el) {
       return (tag) ? 
-        el.nodeType == 1 && el.tagName.toLowerCase() == tag
-        :
+        el.nodeType == 1 && el.tagName.toLowerCase() == tag :
         el.nodeType == 1;
     });
   },
@@ -189,6 +227,19 @@ var utils = {
     for (var attr1 in obj1) { obj3[attr1] = obj1[attr1]; }
     for (var attr2 in obj2) { obj3[attr2] = obj2[attr2]; }
     return obj3;
+  },
+  escapeRegExp: function (str) {
+    return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  },
+  /**
+    * Does str contain test?
+    * @param {String} test
+    * @param {String} str
+    * @returns Boolean
+  */
+  test: function (test, str) {
+    var regex = new RegExp(utils.escapeRegExp(test));
+    return regex.test(str);
   },
   createElement: function(node, html){
     var elem;
@@ -231,6 +282,41 @@ var utils = {
       frag.appendChild(temp.firstChild);
     }
     return frag;
+  },
+  clone: function(obj) {
+    var copy;
+
+    // Handle the 3 simple types, and null or undefined
+    if (null === obj || 'object' != typeof obj) return obj;
+
+    // Handle Date
+    if (obj instanceof Date) {
+      copy = new Date();
+      copy.setTime(obj.getTime());
+      return copy;
+    }
+
+    // Handle Array
+    if (obj instanceof Array) {
+      copy = [];
+      for (var i = 0, len = obj.length; i < len; i++) {
+        copy[i] = utils.clone(obj[i]);
+      }
+      return copy;
+    }
+
+    // Handle Object
+    if (obj instanceof Object) {
+      copy = {};
+      for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) {
+          copy[attr] = utils.clone(obj[attr]);
+        }
+      }
+      return copy;
+    }
+
+    throw new Error('Unable to copy obj! Its type is not supported.');
   },
   isDefAndNotNull: function(val) {
     // Note that undefined == null.

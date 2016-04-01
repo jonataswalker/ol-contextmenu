@@ -10,7 +10,7 @@ You can see [here a demo](http://rawgit.com/jonataswalker/ol3-contextmenu/master
 ##### CDN Hosted - [jsDelivr](http://www.jsdelivr.com/projects/openlayers.contextmenu)
 Load CSS and Javascript:
 ```HTML
-<link href="//cdn.jsdelivr.net/openlayers.contextmenu/latest/ol3-contextmenu.min.css"  rel="stylesheet">
+<link href="//cdn.jsdelivr.net/openlayers.contextmenu/latest/ol3-contextmenu.min.css" rel="stylesheet">
 <script src="//cdn.jsdelivr.net/openlayers.contextmenu/latest/ol3-contextmenu.js"></script>
 ```
 ##### Self hosted
@@ -37,6 +37,34 @@ var contextmenu = new ContextMenu({
 map.addControl(contextmenu);
 ```
 
+##### You can add a (nested) submenu like this:
+
+If you provide `items {Array}` a submenu will be created as a child of the current item. 
+
+```javascript
+var all_items = [
+  {
+    text: 'Some Actions',
+    items: [ // <---- this is a submenu
+      {
+        text: 'Action 1',
+        callback: action
+      },
+      {
+        text: 'Other action',
+        callback: action2
+      }
+    ]
+  },
+  {
+    text: 'Add a Marker',
+    icon: 'img/marker.png',
+    callback: marker
+  },
+  '-' // this is a separator
+];
+```
+
 ##### Would you like to propagate custom data to the callback handler?
 ```javascript
 var removeMarker = function(obj){
@@ -48,6 +76,7 @@ var removeMarkerItem = {
   callback: removeMarker
 };
 
+var restore = false;
 contextmenu.on('open', function(evt){
   var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
     return ft;
@@ -58,10 +87,12 @@ contextmenu.on('open', function(evt){
       marker: feature
     };
     contextmenu.push(removeMarkerItem);
-  } else {
+    restore = true;
+  } else if (restore) {
     contextmenu.clear();
     contextmenu.extend(contextmenu_items);
     contextmenu.extend(contextmenu.getDefaultItems());
+    restore = false;
   }
 });
 ```
@@ -73,9 +104,9 @@ contextmenu.on('open', function(evt){
 #### `new ContextMenu(options)`
 
 ###### `options` is an object with the following possible properties:
-* `default_items`: *true*; Whether the default items (which are: Zoom In/Out) are enabled
-* `width`: *150*; The menu's width
-* `items`: *[]*; An array of object|string
+* `default_items`: `true`; Whether the default items (which are: Zoom In/Out) are enabled
+* `width`: `150`; The menu's width
+* `items`: `[]`; An array of object|string
 
 ## Methods
 

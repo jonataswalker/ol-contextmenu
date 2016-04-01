@@ -70,6 +70,19 @@
       callback: center
     },
     {
+      text: 'Some Actions',
+      items: [
+        {
+          text: 'Center map here',
+          callback: center
+        },
+        {
+          text: 'Center map here',
+          callback: center
+        }
+      ]
+    },
+    {
       text: 'Add a Marker',
       icon: 'img/marker.png',
       callback: marker
@@ -77,7 +90,7 @@
     '-' // this is a separator
   ];
   var contextmenu = new ContextMenu({
-    width: 190,
+    width: 180,
     default_items: true,
     items: contextmenu_items
   });
@@ -91,7 +104,7 @@
     icon: 'img/marker.png',
     callback: removeMarker
   };
-  
+  var changed = false;
   contextmenu.on('open', function(evt){
     var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
       return ft;
@@ -102,11 +115,12 @@
         marker: feature
       };
       contextmenu.push(removeMarkerItem);
-      
-    } else {
+      changed = true;
+    } else if (changed) {
       contextmenu.clear();
       contextmenu.extend(contextmenu_items);
       contextmenu.extend(contextmenu.getDefaultItems());
+      changed = false;
     }
   });
   map.on('pointermove', function(e) {
