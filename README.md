@@ -1,5 +1,8 @@
 # OpenLayers 3 Custom Context Menu
-A `contextmenu` extension for OpenLayers 3. **Requires** OpenLayers **v3.11.0** or higher.
+
+[![Build Status](https://travis-ci.org/jonataswalker/ol3-contextmenu.svg?branch=master)](https://travis-ci.org/jonataswalker/ol3-contextmenu)
+
+A `contextmenu` extension for [OpenLayers 3](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
 
 ![contextmenu anim](https://raw.githubusercontent.com/jonataswalker/ol3-contextmenu/screenshot/images/anim.gif)
 
