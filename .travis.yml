@@ -3,8 +3,22 @@ language: node_js
 node_js:
   - "4"
 
-script: "make ci"
+cache:
+  directories:
+    - "travis-phantomjs"
+
+before_install:
+  - "if [ $(phantomjs --version) != '2.1.1' ]; then rm -rf $PWD/travis-phantomjs; mkdir -p $PWD/travis-phantomjs; fi"
+  - "if [ $(phantomjs --version) != '2.1.1' ]; then wget https://github.com/BIGjuevos/phantomjs-builds/archive/v2.1.1.tar.gz -O $PWD/travis-phantomjs/v2.1.1.tar.gz; fi"
+  - "if [ $(phantomjs --version) != '2.1.1' ]; then tar -xf $PWD/travis-phantomjs/v2.1.1.tar.gz -C $PWD/travis-phantomjs; fi"
+  - "if [ $(phantomjs --version) != '2.1.1' ]; then sudo ln -sf $PWD/travis-phantomjs/phantomjs-builds-2.1.1/bin/phantomjs $(which phantomjs); fi"
+  - "phantomjs --version"
+
+before_script:
+  
+script:
+  - xvfb-run -a make ci
 
 branches:
   only:
-    - master
+    - "master"
