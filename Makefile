@@ -9,6 +9,9 @@ CSS_FINAL 	:= $(BUILD_DIR)/ol3-contextmenu.min.css
 TMPFILE 	:= $(BUILD_DIR)/tmp
 LAST_VERSION	:= $(shell node -p "require('./package.json').version")
 
+TEST_DIR 	:= $(ROOT_DIR)/test/spec/
+TEST_INC_FILE 	:= $(ROOT_DIR)/test/include.js
+
 JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
 		   $(SRC_DIR)/utils.js \
 		   $(SRC_DIR)/base.js \
@@ -30,6 +33,9 @@ JS_BEAUTIFY	:= $(NODE_MODULES)/js-beautify
 BEAUTIFYFLAGS 	:= -f - --indent-size 2 --preserve-newlines
 NODEMON 	:= $(NODE_MODULES)/nodemon
 PARALLELSHELL 	:= $(NODE_MODULES)/parallelshell
+
+CASPERJS 	:= $(NODE_MODULES)/casperjs
+CASPERJSFLAGS 	:= test $(TEST_DIR) --includes=$(TEST_INC_FILE) --ssl-protocol=any --ignore-ssl-errors=true
 
 # just to create variables like NODEMON_JS_FLAGS when called
 define NodemonFlags
@@ -53,16 +59,20 @@ watch:
 	$(PARALLELSHELL) "make watch-js" "make watch-css"
 
 .PHONY: ci
-ci: build
+ci: build test
+
+.PHONY: test
+test:
+	@$(CASPERJS) $(CASPERJSFLAGS)
 
 .PHONY: build
 build: build-js build-css
 
 build-js: combine-js lint uglifyjs addheader
-	@echo "Build JS ... OK"
+	@echo `date +'%H:%M:%S'` " - build JS ... OK"
 
 build-css: combine-css cleancss
-	@echo "Build CSS ... OK"
+	@echo `date +'%H:%M:%S'` " - build CSS ... OK"
 
 uglifyjs:
 	@$(UGLIFYJS) $(JS_DEBUG) $(UGLIFYJSFLAGS) > $(JS_FINAL)

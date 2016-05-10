@@ -5,15 +5,19 @@
   "main": "ol3-contextmenu.js",
   "author": "Jonatas Walker",
   "license": "MIT",
+  "dependencies": {
+    "openlayers": "^3.15.1"
+  },
   "devDependencies": {
+    "autoprefixer": "latest",
+    "casperjs": "^1.1.1",
+    "clean-css": "latest",
     "eslint": "latest",
     "js-beautify": "latest",
-    "uglify-js": "latest",
-    "clean-css": "latest",
-    "autoprefixer": "latest",
-    "postcss-cli": "latest",
     "nodemon": "latest",
-    "parallelshell": "latest"
+    "parallelshell": "latest",
+    "postcss-cli": "latest",
+    "uglify-js": "latest"
   },
   "eslintConfig": {
     "env": {
@@ -43,11 +47,16 @@
       "no-undef": 2,
       "no-use-before-define": 2,
       "no-unused-vars": 1,
-      "no-unreachable": 2,
-      "strict": [1, "global"],
+      "strict": [
+        1,
+        "global"
+      ],
       "key-spacing": 1,
       "new-cap": 1,
-      "quotes": [2, "single"]
+      "quotes": [
+        2,
+        "single"
+      ]
     }
   }
 }
