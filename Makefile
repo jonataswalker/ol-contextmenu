@@ -1,3 +1,4 @@
+SHELL		:= /bin/bash
 NOW		:= $(shell date --iso=seconds)
 ROOT_DIR	:= $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 SRC_DIR 	:= $(ROOT_DIR)/src
@@ -7,10 +8,16 @@ JS_FINAL 	:= $(BUILD_DIR)/ol3-contextmenu.js
 CSS_COMBINED 	:= $(BUILD_DIR)/ol3-contextmenu.css
 CSS_FINAL 	:= $(BUILD_DIR)/ol3-contextmenu.min.css
 TMPFILE 	:= $(BUILD_DIR)/tmp
-LAST_VERSION	:= $(shell node -p "require('./package.json').version")
-
 TEST_DIR 	:= $(ROOT_DIR)/test/spec/
 TEST_INC_FILE 	:= $(ROOT_DIR)/test/include.js
+
+define GetFromPkg
+$(shell node -p "require('./package.json').$(1)")
+endef
+
+LAST_VERSION	:= $(call GetFromPkg,version)
+DESCRIPTION	:= $(call GetFromPkg,description)
+PROJECT_URL	:= $(call GetFromPkg,homepage)
 
 JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
 		   $(SRC_DIR)/utils.js \
@@ -37,17 +44,14 @@ PARALLELSHELL 	:= $(NODE_MODULES)/parallelshell
 CASPERJS 	:= $(NODE_MODULES)/casperjs
 CASPERJSFLAGS 	:= test $(TEST_DIR) --includes=$(TEST_INC_FILE) --ssl-protocol=any --ignore-ssl-errors=true
 
-# just to create variables like NODEMON_JS_FLAGS when called
-define NodemonFlags
-	UP_LANG = $(shell echo $(1) | tr '[:lower:]' '[:upper:]')
-	NODEMON_$$(UP_LANG)_FLAGS := --on-change-only --watch "$(SRC_DIR)" --ext "$(1)" --exec "make build-$(1)"
-endef
 
 define HEADER
-// Custom Context Menu for Openlayers 3.
-// https://github.com/jonataswalker/ol3-contextmenu
-// Version: v$(LAST_VERSION)
-// Built: $(NOW)
+/**
+ * $(DESCRIPTION)
+ * $(PROJECT_URL)
+ * Version: v$(LAST_VERSION)
+ * Built: $(NOW)
+ */
 
 endef
 export HEADER
@@ -97,12 +101,10 @@ combine-js:
 combine-css:
 	@cat $(CSS_FILES) | $(POSTCSS) $(POSTCSSFLAGS) > $(CSS_COMBINED)
 
-watch-js: $(JS_FILES)
-	$(eval $(call NodemonFlags,js))
-	@$(NODEMON) $(NODEMON_JS_FLAGS)
+watch-js: $(SRC_DIR)
+	@$(NODEMON) --on-change-only --watch $^ --ext js --exec "make build-js"
 
-watch-css: $(CSS_FILES)
-	$(eval $(call NodemonFlags,css))
-	@$(NODEMON) $(NODEMON_CSS_FLAGS)
+watch-css: $(SRC_DIR)
+	@$(NODEMON) --on-change-only --watch $^ --ext css --exec "make build-css"
 	
 .DEFAULT_GOAL := build
