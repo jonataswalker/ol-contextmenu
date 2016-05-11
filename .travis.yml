@@ -4,8 +4,10 @@ node_js:
   - "4"
 
 cache:
+  bundler: true
   directories:
-    - "travis-phantomjs"
+    - travis-phantomjs
+    - node_modules
 
 before_install:
   - "if [ $(phantomjs --version) != '2.1.1' ]; then rm -rf $PWD/travis-phantomjs; mkdir -p $PWD/travis-phantomjs; fi"
