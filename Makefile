@@ -3,10 +3,6 @@ NOW		:= $(shell date --iso=seconds)
 ROOT_DIR	:= $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 SRC_DIR 	:= $(ROOT_DIR)/src
 BUILD_DIR 	:= $(ROOT_DIR)/build
-JS_DEBUG 	:= $(BUILD_DIR)/ol3-contextmenu-debug.js
-JS_FINAL 	:= $(BUILD_DIR)/ol3-contextmenu.js
-CSS_COMBINED 	:= $(BUILD_DIR)/ol3-contextmenu.css
-CSS_FINAL 	:= $(BUILD_DIR)/ol3-contextmenu.min.css
 TMPFILE 	:= $(BUILD_DIR)/tmp
 TEST_DIR 	:= $(ROOT_DIR)/test/spec/
 TEST_INC_FILE 	:= $(ROOT_DIR)/test/include.js
@@ -19,27 +15,40 @@ LAST_VERSION	:= $(call GetFromPkg,version)
 DESCRIPTION	:= $(call GetFromPkg,description)
 PROJECT_URL	:= $(call GetFromPkg,homepage)
 
-JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
-		   $(SRC_DIR)/utils.js \
-		   $(SRC_DIR)/base.js \
-		   $(SRC_DIR)/internal.js \
-		   $(SRC_DIR)/html.js \
-		   $(SRC_DIR)/wrapper-tail.js
+JS_DEBUG	:= $(ROOT_DIR)/$(call GetFromPkg,rollup.dest)
+JS_FINAL	:= $(ROOT_DIR)/$(call GetFromPkg,main)
 
-CSS_FILES 	:= $(SRC_DIR)/ol3-contextmenu.css
+CSS_COMBINED 	:= $(BUILD_DIR)/ol3-contextmenu.css
+CSS_FINAL 	:= $(BUILD_DIR)/ol3-contextmenu.min.css
+
+JS_SRC 		:= $(SRC_DIR)/js
+SASS_SRC 	:= $(SRC_DIR)/sass
+SASS_VENDOR_SRC	:= $(SASS_SRC)/vendor
+
+SASS_MAIN_FILE 	:= $(SASS_SRC)/main.scss
+
 
 NODE_MODULES	:= ./node_modules/.bin
+
 CLEANCSS 	:= $(NODE_MODULES)/cleancss
 CLEANCSSFLAGS 	:= --skip-restructuring
+
 POSTCSS 	:= $(NODE_MODULES)/postcss
-POSTCSSFLAGS 	:= --use autoprefixer -b "last 2 versions"
+POSTCSSFLAGS 	:= --use autoprefixer -b "last 3 versions, ie >= 9" --replace
+
 ESLINT 		:= $(NODE_MODULES)/eslint
+
 UGLIFYJS 	:= $(NODE_MODULES)/uglifyjs
 UGLIFYJSFLAGS 	:= --mangle --mangle-regex --screw-ie8 -c warnings=false
-JS_BEAUTIFY	:= $(NODE_MODULES)/js-beautify
-BEAUTIFYFLAGS 	:= -f - --indent-size 2 --preserve-newlines
+
 NODEMON 	:= $(NODE_MODULES)/nodemon
 PARALLELSHELL 	:= $(NODE_MODULES)/parallelshell
+
+SASS	 	:= $(NODE_MODULES)/node-sass
+SASSFLAGS	:= --importer node_modules/node-sass-json-importer/dist/node-sass-json-importer.js
+
+ROLLUP	 	:= $(NODE_MODULES)/rollup
+ROLLUPFLAGS 	:= -c config/rollup.config.js
 
 CASPERJS 	:= $(NODE_MODULES)/casperjs
 CASPERJSFLAGS 	:= test $(TEST_DIR) --includes=$(TEST_INC_FILE) --ssl-protocol=any --ignore-ssl-errors=true
@@ -72,39 +81,64 @@ test:
 .PHONY: build
 build: build-js build-css
 
-build-js: combine-js lint uglifyjs addheader
+.PHONY: build-js
+build-js: bundle-js lint uglifyjs add-js-header
 	@echo `date +'%H:%M:%S'` " - build JS ... OK"
 
-build-css: combine-css cleancss
-	@echo `date +'%H:%M:%S'` " - build CSS ... OK"
+.PHONY: build-css
+build-css: compile-sass prefix-css cleancss add-css-header
+	@echo `date +'%H:%M:%S'` "Build CSS ... OK"
 
-uglifyjs:
-	@$(UGLIFYJS) $(JS_DEBUG) $(UGLIFYJSFLAGS) > $(JS_FINAL)
+.PHONY: compile-sass
+compile-sass: $(SASS_MAIN_FILE)
+	@$(SASS) $(SASSFLAGS) $^ $(CSS_COMBINED)
 
-lint:
-	@$(ESLINT) $(JS_DEBUG)
+.PHONY: prefix-css
+prefix-css: $(CSS_COMBINED)
+	@$(POSTCSS) $(POSTCSSFLAGS) $^
 
-addheader-debug:
-	@echo "$$HEADER" | cat - $(JS_DEBUG) > $(TMPFILE) && mv $(TMPFILE) $(JS_DEBUG)
+.PHONY: bundle-js
+bundle-js:
+	@$(ROLLUP) $(ROLLUPFLAGS)
 
-addheader-min:
-	@echo "$$HEADER" | cat - $(JS_FINAL) > $(TMPFILE) && mv $(TMPFILE) $(JS_FINAL)
+.PHONY: uglifyjs
+uglifyjs: $(JS_DEBUG)
+	@$(UGLIFYJS) $^ $(UGLIFYJSFLAGS) > $(JS_FINAL)
 
-addheader: addheader-debug addheader-min
+.PHONY: lint
+lint: $(JS_DEBUG)
+	@$(ESLINT) $^
 
-cleancss:
-	@cat $(CSS_COMBINED) | $(CLEANCSS) $(CLEANCSSFLAGS) > $(CSS_FINAL)
+.PHONY: add-js-header-debug
+add-js-header-debug: $(JS_DEBUG)
+	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
 
-combine-js:
-	@cat $(JS_FILES) | $(JS_BEAUTIFY) $(BEAUTIFYFLAGS) > $(JS_DEBUG)
+.PHONY: add-js-header-min
+add-js-header-min: $(JS_FINAL)
+	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
 
-combine-css:
-	@cat $(CSS_FILES) | $(POSTCSS) $(POSTCSSFLAGS) > $(CSS_COMBINED)
+.PHONY: add-js-header
+add-js-header: add-js-header-debug add-js-header-min
 
-watch-js: $(SRC_DIR)
+.PHONY: add-css-header-debug
+add-css-header-debug: $(CSS_COMBINED)
+	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
+
+.PHONY: add-css-header-min
+add-css-header-min: $(CSS_FINAL)
+	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
+
+.PHONY: add-css-header
+add-css-header: add-css-header-debug add-css-header-min
+
+.PHONY: build
+cleancss: $(CSS_COMBINED)
+	@cat $^ | $(CLEANCSS) $(CLEANCSSFLAGS) > $(CSS_FINAL)
+
+watch-js: $(JS_SRC)
 	@$(NODEMON) --on-change-only --watch $^ --ext js --exec "make build-js"
 
-watch-css: $(SRC_DIR)
-	@$(NODEMON) --on-change-only --watch $^ --ext css --exec "make build-css"
+watch-css: $(SASS_SRC)
+	@$(NODEMON) --on-change-only --watch $^ --ext scss --ignore $(SASS_VENDOR_SRC) --exec "make build-css"
 	
 .DEFAULT_GOAL := build

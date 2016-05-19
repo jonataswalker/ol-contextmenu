@@ -1,0 +1,16 @@
+// dependencies
+@import "partials/functions";
+@import "partials/mixins";
+@import "vendor/utilities";
+
+// global project variables
+
+@import "../../config/vars.json";
+
+
+
+$font-size: 13px;
+
+
+// partials
+@import "partials/grids";

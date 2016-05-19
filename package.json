@@ -1,6 +1,6 @@
 {
   "name": "ol3-contextmenu",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Custom Context Menu for Openlayers 3",
   "main": "build/ol3-contextmenu.js",
   "author": "Jonatas Walker",
@@ -13,19 +13,28 @@
   "bugs": {
     "url": "https://github.com/jonataswalker/ol3-contextmenu/issues"
   },
+  "rollup": {
+    "entry": "src/js/base.js",
+    "dest": "build/ol3-contextmenu-debug.js",
+    "moduleName": "ContextMenu"
+  },
   "dependencies": {
     "openlayers": "^3.15.1"
   },
   "devDependencies": {
-    "autoprefixer": "latest",
+    "autoprefixer": "^6.3.6",
     "casperjs": "^1.1.1",
-    "clean-css": "latest",
-    "eslint": "latest",
-    "js-beautify": "latest",
-    "nodemon": "latest",
-    "parallelshell": "latest",
-    "postcss-cli": "latest",
-    "uglify-js": "latest"
+    "clean-css": "^3.4.12",
+    "eslint": "^2.9.0",
+    "node-sass": "^3.7.0",
+    "node-sass-json-importer": "^1.0.6",
+    "nodemon": "^1.9.2",
+    "parallelshell": "^2.0.0",
+    "postcss-cli": "^2.5.1",
+    "rollup": "^0.26.2",
+    "rollup-plugin-buble": "^0.7.0",
+    "rollup-plugin-json": "^2.0.0",
+    "uglify-js": "^2.6.2"
   },
   "eslintConfig": {
     "env": {
@@ -62,7 +71,7 @@
       "key-spacing": 1,
       "new-cap": 1,
       "quotes": [
-        2,
+        1,
         "single"
       ]
     }
