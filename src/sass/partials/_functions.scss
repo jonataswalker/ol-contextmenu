@@ -1,0 +1,24 @@
+@function strip-unit($value) {
+  @if type-of($value) != "number" {
+    @warn "You tried to remove unit from NaN (#{type-of($value)})";
+    @return $value;
+  }
+  @return $value / ($value * 0 + 1);
+}
+
+@function sum-pixel($v1, $v2) {
+  @return strip-unit($v1) + strip-unit($v2) * 1px;
+}
+
+/// Map deep get
+/// @param {Map} $map - Map
+/// @param {Arglist} $keys - Key chain
+/// @return {*} - Desired value
+@function map-deep-get($map, $keys...) {
+  $value: $map;
+  @each $key in $keys {
+    $value: map-get($value, $key);
+  }
+  @return $value;
+}
+
