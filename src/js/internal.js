@@ -129,7 +129,12 @@ export class Internal {
     let this_ = this,
         map = this.map,
         canvas = map.getTargetElement(),
-        menu = function(evt){
+        menu = function(evt) {
+
+          if (this_.Base.disabled) {
+            return;
+          }
+
           evt.stopPropagation();
           evt.preventDefault();
           this_.coordinate_clicked = map.getEventCoordinate(evt);

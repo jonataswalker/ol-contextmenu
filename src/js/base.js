@@ -19,6 +19,7 @@ export default class Base extends ol.control.Control {
     );
     
     this.options = utils.mergeOptions(constants.defaultOptions, opt_options);
+    this.disabled = false;
     
     Base.Internal = new Internal(this);
     Base.Html = new Html(this);
@@ -39,6 +40,27 @@ export default class Base extends ol.control.Control {
   }
   
   /**
+   * Enable menu
+   */
+  enable() {
+    this.disabled = false;
+  }
+  
+  /**
+   * Disable menu
+   */
+  disable() {
+    this.disabled = true;
+  }
+  
+  /**
+   * @return {Array} Returns default items
+   */
+  getDefaultItems() {
+    return constants.defaultItems;
+  }
+  
+  /**
    * Add items to the menu. This pushes each item in the provided array
    * to the end of the menu.
    * @param {Array} arr Array.
@@ -46,16 +68,6 @@ export default class Base extends ol.control.Control {
   extend(arr) {
     utils.assert(Array.isArray(arr), '@param `arr` should be an Array.');
     arr.forEach(this.push, this);
-  }
-  
-  /**
-   * Insert the provided item at the end of the menu.
-   * @param {Object|String} item Item.
-   */
-  push(item) {
-    utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
-    Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
-    Base.Internal.positionContainer(Base.Internal.getPixelClicked());
   }
   
   /**
@@ -69,10 +81,13 @@ export default class Base extends ol.control.Control {
   }
   
   /**
-   * @return {Array} Returns default items
+   * Insert the provided item at the end of the menu.
+   * @param {Object|String} item Item.
    */
-  getDefaultItems() {
-    return constants.defaultItems;
+  push(item) {
+    utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
+    Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
+    Base.Internal.positionContainer(Base.Internal.getPixelClicked());
   }
   
   /**
