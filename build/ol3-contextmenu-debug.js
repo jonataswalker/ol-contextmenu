@@ -1,8 +1,8 @@
 /**
  * Custom Context Menu for Openlayers 3
  * https://github.com/jonataswalker/ol3-contextmenu
- * Version: v2.0.1
- * Built: 2016-05-23T11:41:14-0300
+ * Version: v2.1.0
+ * Built: 2016-05-23T15:06:24-0300
  */
 
 (function (global, factory) {
@@ -288,6 +288,10 @@
 
 	var eventType = {
 	  /**
+	   * Triggered before context menu is openned.
+	   */
+	  BEFOREOPEN: 'beforeopen',
+	  /**
 	   * Triggered when context menu is openned.
 	   */
 	  OPEN: 'open',
@@ -465,7 +469,7 @@
 	  this.Base.dispatchEvent({
 	    type: eventType.OPEN,
 	    pixel: pixel,
-	    coordinate: coordinate,
+	    coordinate: coordinate
 	  });
 	};
 
@@ -484,11 +488,22 @@
 	  var this_ = this,
 	      map = this.map,
 	      canvas = map.getTargetElement(),
-	      menu = function(evt){
-	        evt.stopPropagation();
-	        evt.preventDefault();
+	      menu = function(evt) {
 	        this_.coordinate_clicked = map.getEventCoordinate(evt);
 	        this_.pixel_clicked = map.getEventPixel(evt);
+
+	        this_.Base.dispatchEvent({
+	          type: eventType.BEFOREOPEN,
+	          pixel: this_.pixel_clicked,
+	          coordinate: this_.coordinate_clicked
+	        });
+	          
+	        if (this_.Base.disabled) {
+	          return;
+	        }
+
+	        evt.stopPropagation();
+	        evt.preventDefault();
 	        this_.openMenu(this_.pixel_clicked, this_.coordinate_clicked);
 	          
 	        //one-time fire
@@ -655,6 +670,7 @@
 	    );
 	    
 	    this.options = utils.mergeOptions(defaultOptions, opt_options);
+	    this.disabled = false;
 	    
 	    Base.Internal = new Internal(this);
 	    Base.Html = new Html(this);
@@ -678,6 +694,27 @@
 	  };
 	  
 	  /**
+	   * Enable menu
+	   */
+	  Base.prototype.enable = function enable() {
+	    this.disabled = false;
+	  };
+	  
+	  /**
+	   * Disable menu
+	   */
+	  Base.prototype.disable = function disable() {
+	    this.disabled = true;
+	  };
+	  
+	  /**
+	   * @return {Array} Returns default items
+	   */
+	  Base.prototype.getDefaultItems = function getDefaultItems() {
+	    return defaultItems;
+	  };
+	  
+	  /**
 	   * Add items to the menu. This pushes each item in the provided array
 	   * to the end of the menu.
 	   * @param {Array} arr Array.
@@ -685,16 +722,6 @@
 	  Base.prototype.extend = function extend(arr) {
 	    utils.assert(Array.isArray(arr), '@param `arr` should be an Array.');
 	    arr.forEach(this.push, this);
-	  };
-	  
-	  /**
-	   * Insert the provided item at the end of the menu.
-	   * @param {Object|String} item Item.
-	   */
-	  Base.prototype.push = function push(item) {
-	    utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
-	    Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
-	    Base.Internal.positionContainer(Base.Internal.getPixelClicked());
 	  };
 	  
 	  /**
@@ -708,10 +735,13 @@
 	  };
 	  
 	  /**
-	   * @return {Array} Returns default items
+	   * Insert the provided item at the end of the menu.
+	   * @param {Object|String} item Item.
 	   */
-	  Base.prototype.getDefaultItems = function getDefaultItems() {
-	    return defaultItems;
+	  Base.prototype.push = function push(item) {
+	    utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
+	    Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
+	    Base.Internal.positionContainer(Base.Internal.getPixelClicked());
 	  };
 	  
 	  /**
