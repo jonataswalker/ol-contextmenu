@@ -110,7 +110,7 @@ export class Internal {
     this.Base.dispatchEvent({
       type: constants.eventType.OPEN,
       pixel: pixel,
-      coordinate: coordinate,
+      coordinate: coordinate
     });
   }
 
@@ -130,15 +130,21 @@ export class Internal {
         map = this.map,
         canvas = map.getTargetElement(),
         menu = function(evt) {
+          this_.coordinate_clicked = map.getEventCoordinate(evt);
+          this_.pixel_clicked = map.getEventPixel(evt);
 
+          this_.Base.dispatchEvent({
+            type: constants.eventType.BEFOREOPEN,
+            pixel: this_.pixel_clicked,
+            coordinate: this_.coordinate_clicked
+          });
+          
           if (this_.Base.disabled) {
             return;
           }
 
           evt.stopPropagation();
           evt.preventDefault();
-          this_.coordinate_clicked = map.getEventCoordinate(evt);
-          this_.pixel_clicked = map.getEventPixel(evt);
           this_.openMenu(this_.pixel_clicked, this_.coordinate_clicked);
           
           //one-time fire
