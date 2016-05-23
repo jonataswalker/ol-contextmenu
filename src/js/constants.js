@@ -3,6 +3,10 @@ import utils from './utils';
 
 export const eventType = {
   /**
+   * Triggered before context menu is openned.
+   */
+  BEFOREOPEN: 'beforeopen',
+  /**
    * Triggered when context menu is openned.
    */
   OPEN: 'open',

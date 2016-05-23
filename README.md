@@ -159,13 +159,30 @@ Get an array of default items.
 
 ## Events
 
-#### Listen and make some changes before context menu opens
+#### If you want to disable this plugin under certain circumstances, listen to `beforeopen`
+
+```javascript
+contextmenu.on('beforeopen', function(evt){
+  var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
+    return ft;
+  });
+
+  if (feature) { // open only on features
+    contextmenu.disable();
+  } else {
+    contextmenu.enable();
+  }
+});
+```
+
+#### Listen and make some changes when context menu opens
 
 ```javascript
 contextmenu.on('open', function(evt){
   var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
     return ft;
   });
+
   if (feature) {
     // add some other items to the menu
   }
