@@ -92,8 +92,12 @@ export class Html {
       frag = utils.createFragment(html);
       element = document.createElement('li');
       
-      if(item.icon){
-        item.classname += ' ' + vars.namespace + vars.icon_class;
+      if (item.icon) {
+        if (item.classname === '') {
+          item.classname = vars.namespace + vars.icon_class;
+        } else if (item.classname.indexOf(vars.namespace + vars.icon_class) === -1) {
+          item.classname += ' ' + vars.namespace + vars.icon_class;
+        }
         element.setAttribute('style', 'background-image:url('+ item.icon +')');
       }
       
