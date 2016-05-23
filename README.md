@@ -27,14 +27,17 @@ var contextmenu = new ContextMenu({
   items: [
     {
       text: 'Center map here',
-      callback: center //center is your callback function
+      classname: 'some-style-class', // add some CSS rules
+      callback: center // `center` is your callback function
     },
     {
       text: 'Add a Marker',
-      icon: 'img/marker.png',  //this can be relative or absolute
+      classname: 'some-style-class', // you can add this icon with a CSS class
+                                     // instead of `icon` property (see next line)
+      icon: 'img/marker.png',  // this can be relative or absolute
       callback: marker
     },
-    '-' //this is a separator
+    '-' // this is a separator
   ]
 });
 map.addControl(contextmenu);
@@ -48,7 +51,7 @@ If you provide `items {Array}` a submenu will be created as a child of the curre
 var all_items = [
   {
     text: 'Some Actions',
-    items: [ // <---- this is a submenu
+    items: [ // <== this is a submenu
       {
         text: 'Action 1',
         callback: action
@@ -119,7 +122,7 @@ Remove all elements from the menu.
 
 #### contextmenu.extend(arr)
 
-@param {Array} arr Array.
+`@param {Array} arr`
 
 Add items to the menu. This pushes each item in the provided array to the end of the menu.
 
@@ -141,7 +144,7 @@ contextmenu.extend(add_later);
 
 #### contextmenu.push(item)
 
-@param {Object|String} item Item.
+`@param {Object|String} item`
 
 Insert the provided item at the end of the menu.
 
