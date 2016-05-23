@@ -57,16 +57,16 @@
         feature = new ol.Feature({
           type: 'removable',
           geometry: new ol.geom.Point(obj.coordinate)
-        })
-      ;
+        });
       
       feature.setStyle(iconStyle);
       vectorLayer.getSource().addFeature(feature);
-    }
-  ;
+    };
+
   var contextmenu_items = [
     {
       text: 'Center map here',
+      classname: 'bold',
       callback: center
     },
     {
@@ -89,6 +89,7 @@
     },
     '-' // this is a separator
   ];
+
   var contextmenu = new ContextMenu({
     width: 180,
     default_items: true,
@@ -101,9 +102,10 @@
   };
   var removeMarkerItem = {
     text: 'Remove this Marker',
-    icon: 'img/marker.png',
+    classname: 'marker',
     callback: removeMarker
   };
+
   var changed = false;
   contextmenu.on('open', function(evt){
     var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
@@ -123,6 +125,7 @@
       changed = false;
     }
   });
+
   map.on('pointermove', function(e) {
     if (e.dragging) return;
          
