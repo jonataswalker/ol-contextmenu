@@ -1,8 +1,8 @@
 /**
  * Custom Context Menu for Openlayers 3
  * https://github.com/jonataswalker/ol3-contextmenu
- * Version: v2.0.0
- * Built: 2016-05-19T07:32:31-0300
+ * Version: v2.0.1
+ * Built: 2016-05-23T11:41:14-0300
  */
 
 (function (global, factory) {
@@ -610,8 +610,12 @@
 	    frag = utils.createFragment(html);
 	    element = document.createElement('li');
 	      
-	    if(item.icon){
-	      item.classname += ' ' + namespace + icon_class;
+	    if (item.icon) {
+	      if (item.classname === '') {
+	        item.classname = namespace + icon_class;
+	      } else if (item.classname.indexOf(namespace + icon_class) === -1) {
+	        item.classname += ' ' + namespace + icon_class;
+	      }
 	      element.setAttribute('style', 'background-image:url('+ item.icon +')');
 	    }
 	      
