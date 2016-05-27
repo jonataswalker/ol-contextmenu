@@ -1,16 +1,9 @@
 var require = patchRequire(require);
 
 // path here is relative to where this will be injected
+var config      = require('../config');
 var fs          = require('fs');
 var server      = require('webserver').create();
-var ol          = require('openlayers');
-var config      = require('../config');
-var vars        = require('../../config/vars.json');
-var ContextMenu = require('../../build/ol3-contextmenu');
-
-// to be include/available in tests files
-var elements = config.elements;
-var contextmenu = new ContextMenu();
 
 // server
 server.listen('127.0.0.1:' + config.port, function(req, res) {
@@ -18,13 +11,13 @@ server.listen('127.0.0.1:' + config.port, function(req, res) {
       ext = req.url.substring(req.url.indexOf('.') + 1),
       file = '',
       contentTypes = {
-        css   : 'text/css',
-        html  : 'text/html',
-        js    : 'application/javascript',
         png   : 'image/png',
         gif   : 'image/gif',
         jpg   : 'image/jpeg',
-        jpeg  : 'image/jpeg'
+        jpeg  : 'image/jpeg',
+        css   : 'text/css',
+        html  : 'text/html',
+        js    : 'application/javascript'
       };
 
   res.statusCode = 200;
@@ -39,6 +32,14 @@ server.listen('127.0.0.1:' + config.port, function(req, res) {
   }
   res.write(file);
   res.close();
+});
+
+casper.on('resource.received', function(resource) {
+//   this.echo(resource.url + " is OK", "INFO");
+});
+
+casper.on('remote.message', function(msg) {
+  this.echo(msg + " is remote.message", "INFO");
 });
 
 // test suites completion listener

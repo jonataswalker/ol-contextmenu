@@ -3,27 +3,21 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/ol3/3.15.1/ol.css">
+    <link rel="stylesheet" href="../node_modules/openlayers/dist/ol.css">
     <link rel="stylesheet" href="../build/ol3-contextmenu.min.css">
   </head>
   <body>
-    <div id="map"></div>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/ol3/3.15.1/ol.js"></script>
-    <script src="../build/ol3-contextmenu-debug.js"></script>
     <script>
-      var baseLayer = new ol.layer.Tile({
-            source: new ol.source.MapQuest({ layer: 'osm' })
-          }),
-          map = new ol.Map({
-            target: document.getElementById('map'),
-            layers: [baseLayer],
-            view: new ol.View({
-              center: [0, 0],
-              zoom: 1
-            })
-          });
-      var contextmenu = new ContextMenu();
-      map.addControl(contextmenu);
+      var loaded = false, domready = false;
+      document.addEventListener('DOMContentLoaded', function () {
+        domready = true;
+      });
+      window.addEventListener('load', function() {
+        loaded = true;
+      });
     </script>
+    <div id="map"></div>
+    <script src="../node_modules/openlayers/dist/ol.js"></script>
+    <script src="../build/ol3-contextmenu.js"></script>
   </body>
 </html>
