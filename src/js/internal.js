@@ -114,7 +114,7 @@ export class Internal {
     });
   }
 
-  closeMenu(){
+  closeMenu() {
     utils.addClass(this.Base.container, vars.namespace + vars.hidden_class);
     this.Base.dispatchEvent({
       type: constants.eventType.CLOSE

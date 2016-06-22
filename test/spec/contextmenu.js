@@ -64,8 +64,46 @@ casper.test.begin('Assert DOM Elements', 3, function(test) {
       elements.container + '>li', contextmenu.getDefaultItems().length);
   });
   
+  casper.run(function() {
+    test.done();
+  });
+});
+
+casper.test.begin('Assert API Methods', 1, function(test) {
+  
+  casper.start(config.url).waitFor(function() {
+    return casper.evaluate(function() {
+      return window.domready === true;
+    });
+  });
+  
+  casper.thenEvaluate(function(options, map_id) {
+    var map = new ol.Map({
+      target: map_id,
+      layers: [],
+      view: new ol.View({
+        center: [0, 0],
+        zoom: 1
+      })
+    });
+    
+    window.contextmenu = new ContextMenu(options);
+    map.addControl(contextmenu);
+  }, ctx_options, map_id);
+  
   casper.then(function() {
-    this.capture('map.png');
+    this.mouse.rightclick('#' + map_id);
+  });
+  
+  casper.waitUntilVisible(elements.container, function() {
+    casper.evaluate(function() {
+      window.contextmenu.close();
+    });
+  });
+  
+  casper.then(function() {
+    test.assertExists(
+      elements.container +'.'+ vars.namespace + vars.hidden_class);
   });
   
   casper.run(function() {

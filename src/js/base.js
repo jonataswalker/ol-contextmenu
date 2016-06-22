@@ -40,6 +40,13 @@ export default class Base extends ol.control.Control {
   }
   
   /**
+   * Close the menu programmatically.
+   */
+  close() {
+    Base.Internal.closeMenu();
+  }
+  
+  /**
    * Enable menu
    */
   enable() {
