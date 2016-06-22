@@ -1,8 +1,8 @@
 /**
  * Custom Context Menu for Openlayers 3
  * https://github.com/jonataswalker/ol3-contextmenu
- * Version: v2.1.0
- * Built: 2016-05-23T15:06:24-0300
+ * Version: v2.2.0
+ * Built: 2016-06-22T11:07:55-0300
  */
 
 (function (global, factory) {
@@ -473,7 +473,7 @@
 	  });
 	};
 
-	Internal.prototype.closeMenu = function closeMenu(){
+	Internal.prototype.closeMenu = function closeMenu() {
 	  utils.addClass(this.Base.container, namespace + hidden_class);
 	  this.Base.dispatchEvent({
 	    type: eventType.CLOSE
@@ -691,6 +691,13 @@
 	      delete Base.Internal.items[key];
 	    });
 	    utils.removeAllChildren(this.container);
+	  };
+	  
+	  /**
+	   * Close the menu programmatically.
+	   */
+	  Base.prototype.close = function close() {
+	    Base.Internal.closeMenu();
 	  };
 	  
 	  /**
