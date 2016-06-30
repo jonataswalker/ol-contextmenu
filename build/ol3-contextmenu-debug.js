@@ -1,8 +1,8 @@
 /**
  * Custom Context Menu for Openlayers 3
  * https://github.com/jonataswalker/ol3-contextmenu
- * Version: v2.2.0
- * Built: 2016-06-22T11:07:55-0300
+ * Version: v2.2.1
+ * Built: 2016-06-30T02:19:19-0300
  */
 
 (function (global, factory) {
@@ -42,7 +42,7 @@
 	    var this$1 = this;
 
 	    if (Array.isArray(element)) {
-	      element.forEach(function ( each ) { this$1.addClass(each, classname) });
+	      element.forEach(function (each) { this$1.addClass(each, classname) });
 	      return;
 	    }
 	    
@@ -56,9 +56,9 @@
 	    }
 	  },
 	  _addClass: function _addClass(el, c, timeout) {
-	    // use native if available
 	    var this$1 = this;
 
+	    // use native if available
 	    if (el.classList) {
 	      el.classList.add(c);
 	    } else {
@@ -79,7 +79,7 @@
 	    var this$1 = this;
 
 	    if (Array.isArray(element)) {
-	      element.forEach(function ( each ) { this$1.removeClass(each, classname, timeout) });
+	      element.forEach(function (each) { this$1.removeClass(each, classname, timeout) });
 	      return;
 	    }
 	    
@@ -124,7 +124,7 @@
 	    var this$1 = this;
 
 	    if (Array.isArray(element)) {
-	      element.forEach(function ( each ) { this$1.toggleClass(each, classname) });
+	      element.forEach(function (each) { this$1.toggleClass(each, classname) });
 	      return;
 	    }
 	    
@@ -278,7 +278,7 @@
 	        if(!hOP.call(topics, topic)) return;
 	        
 	        // Cycle through topics queue, fire!
-	        topics[topic].forEach(function ( item ) {
+	        topics[topic].forEach(function (item) {
 	          item(info !== undefined ? info : {});
 	        });
 	      }
@@ -383,38 +383,40 @@
 	  return this;
 	};
 	  
-	Internal.prototype.init = function init(map) {
+	Internal.prototype.init = function init (map) {
 	  this.map = map;
 	  // subscribe
 	  this.setListeners();
 	  // publish
 	  this.Base.constructor.Html.createMenu();
-	  this.lineHeight = this.Base.container.offsetHeight / this.getItemsLength();
+	  this.lineHeight = this.getItemsLength() > 0 ?
+	    this.Base.container.offsetHeight / this.getItemsLength() :
+	    this.Base.constructor.Html.cloneAndGetLineHeight();
 	};
 
-	Internal.prototype.getItemsLength = function getItemsLength() {
-	  var this$1 = this;
+	Internal.prototype.getItemsLength = function getItemsLength () {
+	    var this$1 = this;
 
-	    var count = 0;
-	  Object.keys(this.items).forEach(function ( k ) {
+	  var count = 0;
+	  Object.keys(this.items).forEach(function (k) {
 	    if (this$1.items[k].submenu || this$1.items[k].separator) return;
 	    count++;
 	  });
 	  return count;
 	};
 
-	Internal.prototype.getPixelClicked = function getPixelClicked() {
+	Internal.prototype.getPixelClicked = function getPixelClicked () {
 	  return this.pixel_clicked;
 	};
 
-	Internal.prototype.getCoordinateClicked = function getCoordinateClicked() {
+	Internal.prototype.getCoordinateClicked = function getCoordinateClicked () {
 	  return this.coordinate_clicked;
 	};
 
-	Internal.prototype.positionContainer = function positionContainer(pixel) {
-	  var this$1 = this;
+	Internal.prototype.positionContainer = function positionContainer (pixel) {
+	    var this$1 = this;
 
-	    var map_size = this.map.getSize(),
+	  var map_size = this.map.getSize(),
 	      map_w = map_size[0],
 	      map_h = map_size[1],
 	      // how much (width) space left over
@@ -457,13 +459,13 @@
 	    } else {
 	      this.submenu.last_left = this.submenu.left;
 	    }
-	    uls.forEach(function ( ul ) {
+	    uls.forEach(function (ul) {
 	      ul.style.left = this$1.submenu.last_left;
 	    });
 	  }
 	};
 
-	Internal.prototype.openMenu = function openMenu(pixel, coordinate) {
+	Internal.prototype.openMenu = function openMenu (pixel, coordinate) {
 	  this.positionContainer(pixel);
 	    
 	  this.Base.dispatchEvent({
@@ -473,18 +475,18 @@
 	  });
 	};
 
-	Internal.prototype.closeMenu = function closeMenu() {
+	Internal.prototype.closeMenu = function closeMenu () {
 	  utils.addClass(this.Base.container, namespace + hidden_class);
 	  this.Base.dispatchEvent({
 	    type: eventType.CLOSE
 	  });
 	};
 
-	Internal.prototype.getNextItemIndex = function getNextItemIndex() {
+	Internal.prototype.getNextItemIndex = function getNextItemIndex () {
 	  return ++this.counter;
 	};
 
-	Internal.prototype.setListeners = function setListeners() {
+	Internal.prototype.setListeners = function setListeners () {
 	  var this_ = this,
 	      map = this.map,
 	      canvas = map.getTargetElement(),
@@ -517,12 +519,12 @@
 	  canvas.addEventListener('contextmenu', menu, false);
 	    
 	  // subscribe to later menu entries
-	  events.subscribe(eventType.ADD_MENU_ENTRY, function ( obj ) {
+	  events.subscribe(eventType.ADD_MENU_ENTRY, function (obj) {
 	    this_.setItemListener(obj.element, obj.index);
 	  });
 	};
 
-	Internal.prototype.setItemListener = function setItemListener(li, index) {
+	Internal.prototype.setItemListener = function setItemListener (li, index) {
 	  var this_ = this;
 	  if(li && typeof this.items[index].callback === 'function') {
 	    (function(callback){
@@ -548,7 +550,7 @@
 	  return this;
 	};
 	  
-	Html.prototype.createContainer = function createContainer() {
+	Html.prototype.createContainer = function createContainer () {
 	  var container = document.createElement('ul');
 	  container.className = [
 	    namespace + container_class,
@@ -559,7 +561,7 @@
 	  return container;
 	};
 	  
-	Html.prototype.createMenu = function createMenu() {
+	Html.prototype.createMenu = function createMenu () {
 	  var options = this.Base.options, items = [];
 	    
 	  if ('items' in options) {
@@ -569,17 +571,17 @@
 	    items = defaultItems;
 	  }
 	    
-	  //no item
+	  // no item
 	  if(items.length === 0) return false;
 	    
 	  // create entries
 	  items.forEach(this.addMenuEntry, this);
 	};
 	  
-	Html.prototype.addMenuEntry = function addMenuEntry(item) {
-	  var this$1 = this;
+	Html.prototype.addMenuEntry = function addMenuEntry (item) {
+	    var this$1 = this;
 
-	    var $internal = this.Base.constructor.Internal;
+	  var $internal = this.Base.constructor.Internal;
 	  var index = $internal.getNextItemIndex();
 	  var submenu_class$$ = namespace + submenu_class;
 	    
@@ -598,7 +600,7 @@
 	    ul.style.width = this.Base.options.width + 'px';
 	    li.appendChild(ul);
 	      
-	    item.items.forEach(function ( each ) {
+	    item.items.forEach(function (each) {
 	      this$1.generateHtmlAndPublish(ul, each, $internal.getNextItemIndex(), true);
 	    });
 	  } else {
@@ -606,7 +608,7 @@
 	  }
 	};
 	  
-	Html.prototype.generateHtmlAndPublish = function generateHtmlAndPublish(parent, item, i, submenu) {
+	Html.prototype.generateHtmlAndPublish = function generateHtmlAndPublish (parent, item, index, submenu) {
 	  var html, frag, element, separator = false;
 	  var $internal = this.Base.constructor.Internal;
 	    
@@ -634,14 +636,14 @@
 	      element.setAttribute('style', 'background-image:url('+ item.icon +')');
 	    }
 	      
-	    element.id = 'index' + i;
+	    element.id = 'index' + index;
 	    element.className = item.classname;
 	    element.appendChild(frag);
 	    parent.appendChild(element);
 	  }
 	    
-	  $internal.items[i] = {
-	    id: i,
+	  $internal.items[index] = {
+	    id: index,
 	    submenu: submenu || 0,
 	    separator: separator,
 	    callback: item.callback,
@@ -650,11 +652,38 @@
 	    
 	  // publish to add listener
 	  events.publish(eventType.ADD_MENU_ENTRY, {
-	    index: i,
+	    index: index,
 	    element: element
 	  });
 	    
 	  return element;
+	};
+	  
+	Html.prototype.removeMenuEntry = function removeMenuEntry (index) {
+	  var element = utils.find('#index' + index, this.container);
+	  if (element) {
+	    this.container.removeChild(element);
+	  }
+	  delete this.Base.constructor.Internal.items[index];
+	};
+	  
+	Html.prototype.cloneAndGetLineHeight = function cloneAndGetLineHeight () {
+	  // for some reason I have to calculate with 2 items
+	  var cloned = this.container.cloneNode();
+	  var frag = utils.createFragment('<span>Foo</span>');
+	  var frag2 = utils.createFragment('<span>Foo</span>');
+	  var element = document.createElement('li');
+	  var element2 = document.createElement('li');
+	    
+	  element.appendChild(frag);
+	  element2.appendChild(frag2);
+	  cloned.appendChild(element);
+	  cloned.appendChild(element2);
+	    
+	  this.container.parentNode.appendChild(cloned);
+	  var height = cloned.offsetHeight / 2;
+	  this.container.parentNode.removeChild(cloned);
+	  return height;
 	};
 
 	/**
@@ -680,44 +709,44 @@
 	    });
 	  }
 
+	  if ( superclass ) Base.__proto__ = superclass;
 	  Base.prototype = Object.create( superclass && superclass.prototype );
 	  Base.prototype.constructor = Base;
 	  
 	  /**
 	   * Remove all elements from the menu.
 	   */
-	  Base.prototype.clear = function clear() {
-	    Object.keys(Base.Internal.items).forEach(function ( key ) {
-	      delete Base.Internal.items[key];
+	  Base.prototype.clear = function clear () {
+	    Object.keys(Base.Internal.items).forEach(function (k) {
+	      Base.Html.removeMenuEntry(k);
 	    });
-	    utils.removeAllChildren(this.container);
 	  };
 	  
 	  /**
 	   * Close the menu programmatically.
 	   */
-	  Base.prototype.close = function close() {
+	  Base.prototype.close = function close () {
 	    Base.Internal.closeMenu();
 	  };
 	  
 	  /**
 	   * Enable menu
 	   */
-	  Base.prototype.enable = function enable() {
+	  Base.prototype.enable = function enable () {
 	    this.disabled = false;
 	  };
 	  
 	  /**
 	   * Disable menu
 	   */
-	  Base.prototype.disable = function disable() {
+	  Base.prototype.disable = function disable () {
 	    this.disabled = true;
 	  };
 	  
 	  /**
 	   * @return {Array} Returns default items
 	   */
-	  Base.prototype.getDefaultItems = function getDefaultItems() {
+	  Base.prototype.getDefaultItems = function getDefaultItems () {
 	    return defaultItems;
 	  };
 	  
@@ -726,7 +755,7 @@
 	   * to the end of the menu.
 	   * @param {Array} arr Array.
 	   */
-	  Base.prototype.extend = function extend(arr) {
+	  Base.prototype.extend = function extend (arr) {
 	    utils.assert(Array.isArray(arr), '@param `arr` should be an Array.');
 	    arr.forEach(this.push, this);
 	  };
@@ -734,7 +763,7 @@
 	  /**
 	   * Remove the last item of the menu.
 	   */
-	  Base.prototype.pop = function pop() {
+	  Base.prototype.pop = function pop () {
 	    var last = this.container.lastChild;
 	    if (last) {
 	      this.container.removeChild(last);
@@ -745,7 +774,7 @@
 	   * Insert the provided item at the end of the menu.
 	   * @param {Object|String} item Item.
 	   */
-	  Base.prototype.push = function push(item) {
+	  Base.prototype.push = function push (item) {
 	    utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
 	    Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
 	    Base.Internal.positionContainer(Base.Internal.getPixelClicked());
@@ -754,7 +783,7 @@
 	  /**
 	   * Not supposed to be used on app.
 	   */
-	  Base.prototype.setMap = function setMap(map) {
+	  Base.prototype.setMap = function setMap (map) {
 	    ol.control.Control.prototype.setMap.call(this, map);
 	    //http://gis.stackexchange.com/a/136850/50718
 	    // let's start since now we have the map

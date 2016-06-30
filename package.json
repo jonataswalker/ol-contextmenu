@@ -1,6 +1,6 @@
 {
   "name": "ol3-contextmenu",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Custom Context Menu for Openlayers 3",
   "main": "build/ol3-contextmenu.js",
   "author": "Jonatas Walker",
@@ -19,22 +19,22 @@
     "moduleName": "ContextMenu"
   },
   "dependencies": {
-    "openlayers": "^3.15.1"
+    "openlayers": "^3.16.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
     "casperjs": "^1.1.1",
-    "clean-css": "^3.4.12",
-    "eslint": "^2.9.0",
-    "node-sass": "^3.7.0",
-    "node-sass-json-importer": "^1.0.6",
+    "clean-css": "^3.4.18",
+    "eslint": "^2.13.1",
+    "node-sass": "^3.8.0",
+    "node-sass-json-importer": "^2.1.1",
     "nodemon": "^1.9.2",
     "parallelshell": "^2.0.0",
-    "postcss-cli": "^2.5.1",
-    "rollup": "^0.26.2",
-    "rollup-plugin-buble": "^0.7.0",
-    "rollup-plugin-json": "^2.0.0",
-    "uglify-js": "^2.6.2"
+    "postcss-cli": "^2.5.2",
+    "rollup": "^0.33.0",
+    "rollup-plugin-buble": "^0.12.1",
+    "rollup-plugin-json": "^2.0.1",
+    "uglify-js": "^2.6.4"
   },
   "eslintConfig": {
     "env": {
@@ -52,7 +52,7 @@
       "no-alert": 2,
       "no-caller": 2,
       "no-eval": 2,
-      "no-proto": 2,
+      "no-proto": 1,
       "no-redeclare": 2,
       "valid-typeof": 2,
       "no-unreachable": 2,

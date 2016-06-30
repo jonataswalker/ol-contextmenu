@@ -33,10 +33,9 @@ export default class Base extends ol.control.Control {
    * Remove all elements from the menu.
    */
   clear() {
-    Object.keys(Base.Internal.items).forEach(key => {
-      delete Base.Internal.items[key];
+    Object.keys(Base.Internal.items).forEach(k => {
+      Base.Html.removeMenuEntry(k);
     });
-    utils.removeAllChildren(this.container);
   }
   
   /**

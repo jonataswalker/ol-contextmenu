@@ -38,7 +38,7 @@ export class Html {
       items = constants.defaultItems;
     }
     
-    //no item
+    // no item
     if(items.length === 0) return false;
     
     // create entries
@@ -73,7 +73,7 @@ export class Html {
     }
   }
   
-  generateHtmlAndPublish(parent, item, i, submenu) {
+  generateHtmlAndPublish(parent, item, index, submenu) {
     let html, frag, element, separator = false;
     const $internal = this.Base.constructor.Internal;
     
@@ -101,14 +101,14 @@ export class Html {
         element.setAttribute('style', 'background-image:url('+ item.icon +')');
       }
       
-      element.id = 'index' + i;
+      element.id = 'index' + index;
       element.className = item.classname;
       element.appendChild(frag);
       parent.appendChild(element);
     }
     
-    $internal.items[i] = {
-      id: i,
+    $internal.items[index] = {
+      id: index,
       submenu: submenu || 0,
       separator: separator,
       callback: item.callback,
@@ -117,10 +117,37 @@ export class Html {
     
     // publish to add listener
     constants.events.publish(constants.eventType.ADD_MENU_ENTRY, {
-      index: i,
+      index: index,
       element: element
     });
     
     return element;
+  }
+  
+  removeMenuEntry(index) {
+    const element = utils.find('#index' + index, this.container);
+    if (element) {
+      this.container.removeChild(element);
+    }
+    delete this.Base.constructor.Internal.items[index];
+  }
+  
+  cloneAndGetLineHeight() {
+    // for some reason I have to calculate with 2 items
+    const cloned = this.container.cloneNode();
+    const frag = utils.createFragment('<span>Foo</span>');
+    const frag2 = utils.createFragment('<span>Foo</span>');
+    const element = document.createElement('li');
+    const element2 = document.createElement('li');
+    
+    element.appendChild(frag);
+    element2.appendChild(frag2);
+    cloned.appendChild(element);
+    cloned.appendChild(element2);
+    
+    this.container.parentNode.appendChild(cloned);
+    const height = cloned.offsetHeight / 2;
+    this.container.parentNode.removeChild(cloned);
+    return height;
   }
 }
