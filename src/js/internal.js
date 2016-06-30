@@ -34,7 +34,9 @@ export class Internal {
     this.setListeners();
     // publish
     this.Base.constructor.Html.createMenu();
-    this.lineHeight = this.Base.container.offsetHeight / this.getItemsLength();
+    this.lineHeight = this.getItemsLength() > 0 ?
+      this.Base.container.offsetHeight / this.getItemsLength() :
+      this.Base.constructor.Html.cloneAndGetLineHeight();
   }
 
   getItemsLength() {
