@@ -23,12 +23,12 @@ export default class Base extends ol.control.Control {
     
     Base.Internal = new Internal(this);
     Base.Html = new Html(this);
-    
+
     super({
       element: this.container
     });
   }
-  
+
   /**
    * Remove all elements from the menu.
    */
@@ -44,28 +44,28 @@ export default class Base extends ol.control.Control {
   close() {
     Base.Internal.closeMenu();
   }
-  
+
   /**
    * Enable menu
    */
   enable() {
     this.disabled = false;
   }
-  
+
   /**
    * Disable menu
    */
   disable() {
     this.disabled = true;
   }
-  
+
   /**
    * @return {Array} Returns default items
    */
   getDefaultItems() {
     return constants.defaultItems;
   }
-  
+
   /**
    * Add items to the menu. This pushes each item in the provided array
    * to the end of the menu.
@@ -80,10 +80,8 @@ export default class Base extends ol.control.Control {
    * Remove the last item of the menu.
    */
   pop() {
-    let last = this.container.lastChild;
-    if (last) {
-      this.container.removeChild(last);
-    }
+    const keys = Object.keys(Base.Internal.items);
+    Base.Html.removeMenuEntry(keys[keys.length - 1]);
   }
   
   /**
@@ -93,7 +91,13 @@ export default class Base extends ol.control.Control {
   push(item) {
     utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
     Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
-    Base.Internal.positionContainer(Base.Internal.getPixelClicked());
+  }
+  
+  /**
+   * Remove the first item of the menu.
+   */
+  shift() {
+    Base.Html.removeMenuEntry(Object.keys(Base.Internal.items)[0]);
   }
   
   /**
