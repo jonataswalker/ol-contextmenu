@@ -54,7 +54,8 @@ export class Html {
       // submenu - only a second level
       item.classname = item.classname || '';
       if (!utils.contains(submenu_class, item.classname)) {
-        item.classname += ' ' + submenu_class;
+        item.classname = 
+          item.classname.length > 0 ? ' ' + submenu_class : submenu_class;
       }
       
       let li = this.generateHtmlAndPublish(this.container, item, index);
@@ -79,7 +80,14 @@ export class Html {
     
     // separator
     if (typeof item === 'string' && item.trim() == '-') {
-      html = '<li class="'+ vars.namespace + vars.separator_class +'"><hr></li>';
+      html = [
+        '<li id="index',
+        index,
+        '" class="',
+        vars.namespace,
+        vars.separator_class,
+        '"><hr></li>'
+      ].join('');
       frag = utils.createFragment(html);
       // http://stackoverflow.com/a/13347298/4640499
       element = [].slice.call(frag.childNodes, 0)[0];

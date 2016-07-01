@@ -17,7 +17,7 @@ export default {
    */
   addClass(element, classname, timeout) {
     if (Array.isArray(element)) {
-      element.forEach(each => { this.addClass(each, classname) });
+      element.forEach(each => { this.addClass(each, classname); });
       return;
     }
     
@@ -39,7 +39,7 @@ export default {
     }
     
     if (timeout && this.isNumeric(timeout)) {
-      window.setTimeout(() => { this._removeClass(el, c) }, timeout);
+      window.setTimeout(() => { this._removeClass(el, c); }, timeout);
     }
   },
   /**
@@ -50,7 +50,7 @@ export default {
    */
   removeClass(element, classname, timeout) {
     if (Array.isArray(element)) {
-      element.forEach(each => { this.removeClass(each, classname, timeout) });
+      element.forEach(each => { this.removeClass(each, classname, timeout); });
       return;
     }
     
@@ -91,7 +91,7 @@ export default {
    */
   toggleClass(element, classname) {
     if (Array.isArray(element)) {
-      element.forEach(each => { this.toggleClass(each, classname) });
+      element.forEach(each => { this.toggleClass(each, classname); });
       return;
     }
     

@@ -152,7 +152,11 @@ contextmenu.extend(add_later);
 
 Insert the provided item at the end of the menu.
 
-#### contextmenu.pop(item)
+#### contextmenu.shift()
+
+Remove the first item of the menu.
+
+#### contextmenu.pop()
 
 Remove the last item of the menu.
 
