@@ -7,7 +7,7 @@ CM.Html = function(){
 
 CM.Html.prototype = {
   createContainer: function() {
-    var classes = CM.Constants.css;
+    var classes = CM.Constants.css + " " + CM.options.cssClass;
     var container = document.createElement('ul');
     container.className = classes.container +' '+ classes.hidden;
     container.style.width = parseInt(CM.options.width, 10) + 'px';

@@ -8,7 +8,8 @@ CM.Base = function(opt_options){
   
   var defaults = {
     width: 150,
-    default_items: true
+    default_items: true,
+      cssClass: ""
   };
   CM.options = utils.mergeOptions(defaults, opt_options);
   CM.$base = this;
