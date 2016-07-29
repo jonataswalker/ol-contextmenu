@@ -25,7 +25,7 @@ body {
 .marker {
   text-indent: 20px;
   background-size: 20px auto;
-  background-image: url("img/marker.png");
+  background-image: url("img/pin_drop.png");
   background-repeat: no-repeat;
   background-position: left center;
 }
