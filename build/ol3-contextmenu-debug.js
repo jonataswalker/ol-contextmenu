@@ -1,8 +1,8 @@
 /**
  * Custom Context Menu for Openlayers 3
  * https://github.com/jonataswalker/ol3-contextmenu
- * Version: v2.2.1
- * Built: 2016-06-30T02:19:19-0300
+ * Version: v2.2.2
+ * Built: 2016-07-29T09:38:39-03:00
  */
 
 (function (global, factory) {
@@ -42,7 +42,7 @@
 	    var this$1 = this;
 
 	    if (Array.isArray(element)) {
-	      element.forEach(function (each) { this$1.addClass(each, classname) });
+	      element.forEach(function (each) { this$1.addClass(each, classname); });
 	      return;
 	    }
 	    
@@ -66,7 +66,7 @@
 	    }
 	    
 	    if (timeout && this.isNumeric(timeout)) {
-	      window.setTimeout(function () { this$1._removeClass(el, c) }, timeout);
+	      window.setTimeout(function () { this$1._removeClass(el, c); }, timeout);
 	    }
 	  },
 	  /**
@@ -79,7 +79,7 @@
 	    var this$1 = this;
 
 	    if (Array.isArray(element)) {
-	      element.forEach(function (each) { this$1.removeClass(each, classname, timeout) });
+	      element.forEach(function (each) { this$1.removeClass(each, classname, timeout); });
 	      return;
 	    }
 	    
@@ -124,7 +124,7 @@
 	    var this$1 = this;
 
 	    if (Array.isArray(element)) {
-	      element.forEach(function (each) { this$1.toggleClass(each, classname) });
+	      element.forEach(function (each) { this$1.toggleClass(each, classname); });
 	      return;
 	    }
 	    
@@ -589,7 +589,8 @@
 	    // submenu - only a second level
 	    item.classname = item.classname || '';
 	    if (!utils.contains(submenu_class$$, item.classname)) {
-	      item.classname += ' ' + submenu_class$$;
+	      item.classname = 
+	        item.classname.length > 0 ? ' ' + submenu_class$$ : submenu_class$$;
 	    }
 	      
 	    var li = this.generateHtmlAndPublish(this.container, item, index);
@@ -614,7 +615,14 @@
 	    
 	  // separator
 	  if (typeof item === 'string' && item.trim() == '-') {
-	    html = '<li class="'+ namespace + separator_class +'"><hr></li>';
+	    html = [
+	      '<li id="index',
+	      index,
+	      '" class="',
+	      namespace,
+	      separator_class,
+	      '"><hr></li>'
+	    ].join('');
 	    frag = utils.createFragment(html);
 	    // http://stackoverflow.com/a/13347298/4640499
 	    element = [].slice.call(frag.childNodes, 0)[0];
@@ -703,7 +711,7 @@
 	    
 	    Base.Internal = new Internal(this);
 	    Base.Html = new Html(this);
-	    
+
 	    superclass.call(this, {
 	      element: this.container
 	    });
@@ -712,11 +720,12 @@
 	  if ( superclass ) Base.__proto__ = superclass;
 	  Base.prototype = Object.create( superclass && superclass.prototype );
 	  Base.prototype.constructor = Base;
-	  
+
 	  /**
 	   * Remove all elements from the menu.
 	   */
 	  Base.prototype.clear = function clear () {
+	    console.info(Base.Internal.items);
 	    Object.keys(Base.Internal.items).forEach(function (k) {
 	      Base.Html.removeMenuEntry(k);
 	    });
@@ -728,28 +737,28 @@
 	  Base.prototype.close = function close () {
 	    Base.Internal.closeMenu();
 	  };
-	  
+
 	  /**
 	   * Enable menu
 	   */
 	  Base.prototype.enable = function enable () {
 	    this.disabled = false;
 	  };
-	  
+
 	  /**
 	   * Disable menu
 	   */
 	  Base.prototype.disable = function disable () {
 	    this.disabled = true;
 	  };
-	  
+
 	  /**
 	   * @return {Array} Returns default items
 	   */
 	  Base.prototype.getDefaultItems = function getDefaultItems () {
 	    return defaultItems;
 	  };
-	  
+
 	  /**
 	   * Add items to the menu. This pushes each item in the provided array
 	   * to the end of the menu.
@@ -764,10 +773,8 @@
 	   * Remove the last item of the menu.
 	   */
 	  Base.prototype.pop = function pop () {
-	    var last = this.container.lastChild;
-	    if (last) {
-	      this.container.removeChild(last);
-	    }
+	    var keys = Object.keys(Base.Internal.items);
+	    Base.Html.removeMenuEntry(keys[keys.length - 1]);
 	  };
 	  
 	  /**
@@ -777,7 +784,13 @@
 	  Base.prototype.push = function push (item) {
 	    utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
 	    Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
-	    Base.Internal.positionContainer(Base.Internal.getPixelClicked());
+	  };
+	  
+	  /**
+	   * Remove the first item of the menu.
+	   */
+	  Base.prototype.shift = function shift () {
+	    Base.Html.removeMenuEntry(Object.keys(Base.Internal.items)[0]);
 	  };
 	  
 	  /**
