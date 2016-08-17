@@ -25,9 +25,6 @@ export const defaultOptions = {
   default_items: true
 };
 
-// internal pub/sub
-export const events = utils.events();
-
 export const defaultItems = [
   {
     text: 'Zoom In',
