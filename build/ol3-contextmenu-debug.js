@@ -1,8 +1,8 @@
 /**
  * Custom Context Menu for Openlayers 3
  * https://github.com/jonataswalker/ol3-contextmenu
- * Version: v2.2.2
- * Built: 2016-07-29T09:38:39-03:00
+ * Version: v2.2.3
+ * Built: 2016-08-17T16:02:54-03:00
  */
 
 (function (global, factory) {
@@ -252,37 +252,6 @@
 	      }
 	      throw message; // Fallback
 	    }
-	  },
-	  events: function events() {
-	    var topics = {};
-	    var hOP = topics.hasOwnProperty;
-	    
-	    return {
-	      subscribe: function(topic, listener) {
-	        // Create the topic's object if not yet created
-	        if(!hOP.call(topics, topic)) topics[topic] = [];
-	        
-	        // Add the listener to queue
-	        var index = topics[topic].push(listener) -1;
-	        
-	        // Provide handle back for removal of topic
-	        return {
-	          remove: function() {
-	            delete topics[topic][index];
-	          }
-	        };
-	      },
-	      publish: function(topic, info) {
-	        // If the topic doesn't exist, or there's no listeners
-	        // in queue, just leave
-	        if(!hOP.call(topics, topic)) return;
-	        
-	        // Cycle through topics queue, fire!
-	        topics[topic].forEach(function (item) {
-	          item(info !== undefined ? info : {});
-	        });
-	      }
-	    };
 	  }
 	};
 
@@ -309,9 +278,6 @@
 	  width: 150,
 	  default_items: true
 	};
-
-	// internal pub/sub
-	var events = utils.events();
 
 	var defaultItems = [
 	  {
@@ -385,9 +351,7 @@
 	  
 	Internal.prototype.init = function init (map) {
 	  this.map = map;
-	  // subscribe
 	  this.setListeners();
-	  // publish
 	  this.Base.constructor.Html.createMenu();
 	  this.lineHeight = this.getItemsLength() > 0 ?
 	    this.Base.container.offsetHeight / this.getItemsLength() :
@@ -517,11 +481,6 @@
 	        }, false);
 	      };
 	  canvas.addEventListener('contextmenu', menu, false);
-	    
-	  // subscribe to later menu entries
-	  events.subscribe(eventType.ADD_MENU_ENTRY, function (obj) {
-	    this_.setItemListener(obj.element, obj.index);
-	  });
 	};
 
 	Internal.prototype.setItemListener = function setItemListener (li, index) {
@@ -658,11 +617,7 @@
 	    data: item.data || null
 	  };
 	    
-	  // publish to add listener
-	  events.publish(eventType.ADD_MENU_ENTRY, {
-	    index: index,
-	    element: element
-	  });
+	  $internal.setItemListener(element, index);
 	    
 	  return element;
 	};
@@ -725,7 +680,6 @@
 	   * Remove all elements from the menu.
 	   */
 	  Base.prototype.clear = function clear () {
-	    console.info(Base.Internal.items);
 	    Object.keys(Base.Internal.items).forEach(function (k) {
 	      Base.Html.removeMenuEntry(k);
 	    });
