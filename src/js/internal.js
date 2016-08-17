@@ -30,9 +30,7 @@ export class Internal {
   
   init(map) {
     this.map = map;
-    // subscribe
     this.setListeners();
-    // publish
     this.Base.constructor.Html.createMenu();
     this.lineHeight = this.getItemsLength() > 0 ?
       this.Base.container.offsetHeight / this.getItemsLength() :
@@ -158,11 +156,6 @@ export class Internal {
           }, false);
         };
     canvas.addEventListener('contextmenu', menu, false);
-    
-    // subscribe to later menu entries
-    constants.events.subscribe(constants.eventType.ADD_MENU_ENTRY, obj => {
-      this_.setItemListener(obj.element, obj.index);
-    });
   }
 
   setItemListener(li, index) {

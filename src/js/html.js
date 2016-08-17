@@ -123,11 +123,7 @@ export class Html {
       data: item.data || null
     };
     
-    // publish to add listener
-    constants.events.publish(constants.eventType.ADD_MENU_ENTRY, {
-      index: index,
-      element: element
-    });
+    $internal.setItemListener(element, index);
     
     return element;
   }
