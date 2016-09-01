@@ -12,26 +12,59 @@ export class Internal {
    * @param {Function} base Base class.
    */
   constructor(base) {
+    /**
+     * @type {ol.control.Control}
+     */
     this.Base = base;
-
+    /**
+     * @type {ol.Map}
+     */
     this.map = undefined;
+    /**
+     * @type {Element}
+     */
+    this.map_element = undefined;
+    /**
+     * @type {ol.Coordinate}
+     */
     this.coordinate_clicked = undefined;
+    /**
+     * @type {ol.Pixel}
+     */
     this.pixel_clicked = undefined;
+    /**
+     * @type {Number}
+     */
     this.counter = 0;
+    /**
+     * @type {Number}
+     */
     this.lineHeight = 0;
+    /**
+     * @type {Object}
+     */
     this.items = {};
+    /**
+     * @type {Object}
+     */
     this.submenu = {
       left: this.Base.options.width - 15 + 'px',
       last_left: '' // string + px
     };
+    /**
+     * @type {Function}
+     */
+    this.event_handler = this.handleEvent.bind(this);
     
     return this;
   }
   
   init(map) {
     this.map = map;
+    this.map_element = map.getTargetElement();
     this.setListeners();
     this.Base.constructor.Html.createMenu();
+
     this.lineHeight = this.getItemsLength() > 0 ?
       this.Base.container.offsetHeight / this.getItemsLength() :
       this.Base.constructor.Html.cloneAndGetLineHeight();
@@ -126,36 +159,40 @@ export class Internal {
   }
 
   setListeners() {
-    let this_ = this,
-        map = this.map,
-        canvas = map.getTargetElement(),
-        menu = function(evt) {
-          this_.coordinate_clicked = map.getEventCoordinate(evt);
-          this_.pixel_clicked = map.getEventPixel(evt);
+    this.map_element.addEventListener('contextmenu', this.event_handler, false);
+  }
 
-          this_.Base.dispatchEvent({
-            type: constants.eventType.BEFOREOPEN,
-            pixel: this_.pixel_clicked,
-            coordinate: this_.coordinate_clicked
-          });
-          
-          if (this_.Base.disabled) {
-            return;
-          }
-
-          evt.stopPropagation();
-          evt.preventDefault();
-          this_.openMenu(this_.pixel_clicked, this_.coordinate_clicked);
-          
-          //one-time fire
-          canvas.addEventListener('mousedown', {
-            handleEvent: function (evt) {
-              this_.closeMenu();
-              canvas.removeEventListener(evt.type, this, false);
-            }
-          }, false);
-        };
-    canvas.addEventListener('contextmenu', menu, false);
+  removeListeners() {
+    this.map_element.removeEventListener('contextmenu', this.event_handler, false);
+  }
+  
+  handleEvent(evt) {
+    const this_ = this;
+    
+    this_.coordinate_clicked = this.map.getEventCoordinate(evt);
+    this_.pixel_clicked = this.map.getEventPixel(evt);
+    
+    this_.Base.dispatchEvent({
+      type: constants.eventType.BEFOREOPEN,
+      pixel: this_.pixel_clicked,
+      coordinate: this_.coordinate_clicked
+    });
+    
+    if (this_.Base.disabled) {
+      return;
+    }
+    
+    evt.stopPropagation();
+    evt.preventDefault();
+    this_.openMenu(this_.pixel_clicked, this_.coordinate_clicked);
+    
+    //one-time fire
+    evt.target.addEventListener('mousedown', {
+      handleEvent: function (e) {
+        this_.closeMenu();
+        evt.target.removeEventListener(e.type, this, false);
+      }
+    }, false);
   }
 
   setItemListener(li, index) {

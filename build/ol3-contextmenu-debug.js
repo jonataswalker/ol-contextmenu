@@ -1,8 +1,8 @@
 /**
  * Custom Context Menu for Openlayers 3
  * https://github.com/jonataswalker/ol3-contextmenu
- * Version: v2.2.3
- * Built: 2016-08-17T16:02:54-03:00
+ * Version: v2.2.4
+ * Built: 2016-09-01T19:04:10-03:00
  */
 
 (function (global, factory) {
@@ -333,26 +333,59 @@
 	 * @class Internal
 	 */
 	var Internal = function Internal(base) {
+	  /**
+	   * @type {ol.control.Control}
+	   */
 	  this.Base = base;
-
+	  /**
+	   * @type {ol.Map}
+	   */
 	  this.map = undefined;
+	  /**
+	   * @type {Element}
+	   */
+	  this.map_element = undefined;
+	  /**
+	   * @type {ol.Coordinate}
+	   */
 	  this.coordinate_clicked = undefined;
+	  /**
+	   * @type {ol.Pixel}
+	   */
 	  this.pixel_clicked = undefined;
+	  /**
+	   * @type {Number}
+	   */
 	  this.counter = 0;
+	  /**
+	   * @type {Number}
+	   */
 	  this.lineHeight = 0;
+	  /**
+	   * @type {Object}
+	   */
 	  this.items = {};
+	  /**
+	   * @type {Object}
+	   */
 	  this.submenu = {
 	    left: this.Base.options.width - 15 + 'px',
 	    last_left: '' // string + px
 	  };
+	  /**
+	   * @type {Function}
+	   */
+	  this.event_handler = this.handleEvent.bind(this);
 	    
 	  return this;
 	};
 	  
 	Internal.prototype.init = function init (map) {
 	  this.map = map;
+	  this.map_element = map.getTargetElement();
 	  this.setListeners();
 	  this.Base.constructor.Html.createMenu();
+
 	  this.lineHeight = this.getItemsLength() > 0 ?
 	    this.Base.container.offsetHeight / this.getItemsLength() :
 	    this.Base.constructor.Html.cloneAndGetLineHeight();
@@ -451,36 +484,40 @@
 	};
 
 	Internal.prototype.setListeners = function setListeners () {
-	  var this_ = this,
-	      map = this.map,
-	      canvas = map.getTargetElement(),
-	      menu = function(evt) {
-	        this_.coordinate_clicked = map.getEventCoordinate(evt);
-	        this_.pixel_clicked = map.getEventPixel(evt);
+	  this.map_element.addEventListener('contextmenu', this.event_handler, false);
+	};
 
-	        this_.Base.dispatchEvent({
-	          type: eventType.BEFOREOPEN,
-	          pixel: this_.pixel_clicked,
-	          coordinate: this_.coordinate_clicked
-	        });
-	          
-	        if (this_.Base.disabled) {
-	          return;
-	        }
-
-	        evt.stopPropagation();
-	        evt.preventDefault();
-	        this_.openMenu(this_.pixel_clicked, this_.coordinate_clicked);
-	          
-	        //one-time fire
-	        canvas.addEventListener('mousedown', {
-	          handleEvent: function (evt) {
-	            this_.closeMenu();
-	            canvas.removeEventListener(evt.type, this, false);
-	          }
-	        }, false);
-	      };
-	  canvas.addEventListener('contextmenu', menu, false);
+	Internal.prototype.removeListeners = function removeListeners () {
+	  this.map_element.removeEventListener('contextmenu', this.event_handler, false);
+	};
+	  
+	Internal.prototype.handleEvent = function handleEvent (evt) {
+	  var this_ = this;
+	    
+	  this_.coordinate_clicked = this.map.getEventCoordinate(evt);
+	  this_.pixel_clicked = this.map.getEventPixel(evt);
+	    
+	  this_.Base.dispatchEvent({
+	    type: eventType.BEFOREOPEN,
+	    pixel: this_.pixel_clicked,
+	    coordinate: this_.coordinate_clicked
+	  });
+	    
+	  if (this_.Base.disabled) {
+	    return;
+	  }
+	    
+	  evt.stopPropagation();
+	  evt.preventDefault();
+	  this_.openMenu(this_.pixel_clicked, this_.coordinate_clicked);
+	    
+	  //one-time fire
+	  evt.target.addEventListener('mousedown', {
+	    handleEvent: function (e) {
+	      this_.closeMenu();
+	      evt.target.removeEventListener(e.type, this, false);
+	    }
+	  }, false);
 	};
 
 	Internal.prototype.setItemListener = function setItemListener (li, index) {
@@ -752,9 +789,13 @@
 	   */
 	  Base.prototype.setMap = function setMap (map) {
 	    ol.control.Control.prototype.setMap.call(this, map);
-	    //http://gis.stackexchange.com/a/136850/50718
-	    // let's start since now we have the map
-	    Base.Internal.init(map);
+	    if (map) {
+	      // let's start since now we have the map
+	      Base.Internal.init(map);
+	    } else {
+	      // I'm removed from the map - remove listeners
+	      Base.Internal.removeListeners();
+	    }
 	  };
 
 	  return Base;
