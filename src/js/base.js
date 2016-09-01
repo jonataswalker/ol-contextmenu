@@ -105,8 +105,12 @@ export default class Base extends ol.control.Control {
    */
   setMap(map) {
     ol.control.Control.prototype.setMap.call(this, map);
-    //http://gis.stackexchange.com/a/136850/50718
-    // let's start since now we have the map
-    Base.Internal.init(map);
+    if (map) {
+      // let's start since now we have the map
+      Base.Internal.init(map);
+    } else {
+      // I'm removed from the map - remove listeners
+      Base.Internal.removeListeners();
+    }
   }
 }
