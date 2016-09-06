@@ -176,9 +176,9 @@ contextmenu.on('beforeopen', function(evt){
   });
 
   if (feature) { // open only on features
-    contextmenu.disable();
-  } else {
     contextmenu.enable();
+  } else {
+    contextmenu.disable();
   }
 });
 ```
