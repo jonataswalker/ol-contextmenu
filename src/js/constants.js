@@ -1,5 +1,4 @@
 import * as vars from '../../config/vars.json';
-import utils from './utils';
 
 export const eventType = {
   /**
@@ -29,21 +28,19 @@ export const defaultItems = [
   {
     text: 'Zoom In',
     classname: [
-      vars.namespace + vars.zoom_in_class, 
+      vars.namespace + vars.zoom_in_class,
       vars.namespace + vars.icon_class
     ].join(' '),
-    callback: function(obj, map){
-      var
-        view = map.getView(),
-        pan = ol.animation.pan({
-          duration: 1000,
-          source: view.getCenter()
-        }),
-        zoom = ol.animation.zoom({
-          duration: 1000,
-          resolution: view.getResolution()
-        })
-      ;
+    callback: (obj, map) => {
+      var view = map.getView(),
+          pan = ol.animation.pan({
+            duration: 1000,
+            source: view.getCenter()
+          }),
+          zoom = ol.animation.zoom({
+            duration: 1000,
+            resolution: view.getResolution()
+          });
 
       map.beforeRender(pan, zoom);
       view.setCenter(obj.coordinate);
@@ -56,18 +53,16 @@ export const defaultItems = [
       vars.namespace + vars.zoom_out_class,
       vars.namespace + vars.icon_class
     ].join(' '),
-    callback: function(obj, map){
-      var
-        view = map.getView(),
-        pan = ol.animation.pan({
-          duration: 1000,
-          source: view.getCenter()
-        }),
-        zoom = ol.animation.zoom({
-          duration: 1000,
-          resolution: view.getResolution()
-        })
-      ;
+    callback: (obj, map) => {
+      var view = map.getView(),
+          pan = ol.animation.pan({
+            duration: 1000,
+            source: view.getCenter()
+          }),
+          zoom = ol.animation.zoom({
+            duration: 1000,
+            resolution: view.getResolution()
+          });
       map.beforeRender(pan, zoom);
       view.setCenter(obj.coordinate);
       view.setZoom(+view.getZoom() - 1);

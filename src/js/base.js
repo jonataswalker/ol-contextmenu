@@ -2,7 +2,6 @@ import { Internal } from './internal';
 import { Html } from './html';
 import utils from './utils';
 import * as constants from './constants';
-import * as vars from '../../config/vars.json';
 
 /**
  * @class Base
@@ -17,16 +16,17 @@ export default class Base extends ol.control.Control {
     utils.assert(typeof opt_options == 'object',
       '@param `opt_options` should be object type!'
     );
-    
+
     this.options = utils.mergeOptions(constants.defaultOptions, opt_options);
     this.disabled = false;
-    
+
     Base.Internal = new Internal(this);
     Base.Html = new Html(this);
 
     super({
       element: this.container
     });
+
   }
 
   /**
@@ -37,7 +37,7 @@ export default class Base extends ol.control.Control {
       Base.Html.removeMenuEntry(k);
     });
   }
-  
+
   /**
    * Close the menu programmatically.
    */
@@ -75,7 +75,7 @@ export default class Base extends ol.control.Control {
     utils.assert(Array.isArray(arr), '@param `arr` should be an Array.');
     arr.forEach(this.push, this);
   }
-  
+
   /**
    * Remove the last item of the menu.
    */
@@ -83,7 +83,7 @@ export default class Base extends ol.control.Control {
     const keys = Object.keys(Base.Internal.items);
     Base.Html.removeMenuEntry(keys[keys.length - 1]);
   }
-  
+
   /**
    * Insert the provided item at the end of the menu.
    * @param {Object|String} item Item.
@@ -92,14 +92,14 @@ export default class Base extends ol.control.Control {
     utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
     Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
   }
-  
+
   /**
    * Remove the first item of the menu.
    */
   shift() {
     Base.Html.removeMenuEntry(Object.keys(Base.Internal.items)[0]);
   }
-  
+
   /**
    * Not supposed to be used on app.
    */

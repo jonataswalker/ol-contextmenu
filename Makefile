@@ -138,7 +138,7 @@ uglifyjs: $(JS_DEBUG)
 	@$(UGLIFYJS) $^ $(UGLIFYJSFLAGS) > $(JS_FINAL)
 
 .PHONY: lint
-lint: $(JS_DEBUG)
+lint: $(JS_SRC)
 	@$(ESLINT) $^
 
 .PHONY: add-js-header-debug

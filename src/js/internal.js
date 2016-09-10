@@ -55,10 +55,10 @@ export class Internal {
      * @type {Function}
      */
     this.event_handler = this.handleEvent.bind(this);
-    
+
     return this;
   }
-  
+
   init(map) {
     this.map = map;
     this.map_element = map.getTargetElement();
@@ -102,9 +102,9 @@ export class Internal {
           h: Math.round(this.lineHeight * this.getItemsLength())
         },
         // submenus <ul>
-        uls = utils.find('li.' + vars.namespace + vars.submenu_class + '>ul', 
+        uls = utils.find('li.' + vars.namespace + vars.submenu_class + '>ul',
             this.Base.container, true);
-    
+
     if (space_left_w >= menu_size.w) {
       this.Base.container.style.right = 'auto';
       this.Base.container.style.left = `${pixel[0] + 5}px`;
@@ -120,9 +120,9 @@ export class Internal {
       this.Base.container.style.top = 'auto';
       this.Base.container.style.bottom = 0;
     }
-    
+
     utils.removeClass(this.Base.container, vars.namespace + vars.hidden_class);
-    
+
     if (uls.length) {
       if (space_left_w < (menu_size.w * 2)) {
         // no space (at right) for submenu
@@ -139,7 +139,7 @@ export class Internal {
 
   openMenu(pixel, coordinate) {
     this.positionContainer(pixel);
-    
+
     this.Base.dispatchEvent({
       type: constants.eventType.OPEN,
       pixel: pixel,
@@ -165,27 +165,27 @@ export class Internal {
   removeListeners() {
     this.map_element.removeEventListener('contextmenu', this.event_handler, false);
   }
-  
+
   handleEvent(evt) {
     const this_ = this;
-    
+
     this_.coordinate_clicked = this.map.getEventCoordinate(evt);
     this_.pixel_clicked = this.map.getEventPixel(evt);
-    
+
     this_.Base.dispatchEvent({
       type: constants.eventType.BEFOREOPEN,
       pixel: this_.pixel_clicked,
       coordinate: this_.coordinate_clicked
     });
-    
+
     if (this_.Base.disabled) {
       return;
     }
-    
+
     evt.stopPropagation();
     evt.preventDefault();
     this_.openMenu(this_.pixel_clicked, this_.coordinate_clicked);
-    
+
     //one-time fire
     evt.target.addEventListener('mousedown', {
       handleEvent: function (e) {
@@ -197,16 +197,16 @@ export class Internal {
 
   setItemListener(li, index) {
     const this_ = this;
-    if(li && typeof this.items[index].callback === 'function') {
-      (function(callback){
-        li.addEventListener('click', function(evt){
+    if (li && typeof this.items[index].callback === 'function') {
+      (function (callback) {
+        li.addEventListener('click', function (evt) {
           evt.preventDefault();
           let obj = {
             coordinate: this_.getCoordinateClicked(),
             data: this_.items[index].data || null
           };
           this_.closeMenu();
-          callback.call(undefined, obj, this_.map);
+          callback(obj, this_.map);
         }, false);
       })(this.items[index].callback);
     }
