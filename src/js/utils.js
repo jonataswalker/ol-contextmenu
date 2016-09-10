@@ -17,29 +17,33 @@ export default {
    */
   addClass(element, classname, timeout) {
     if (Array.isArray(element)) {
-      element.forEach(each => { this.addClass(each, classname); });
+      element.forEach(each => {
+        this.addClass(each, classname);
+      });
       return;
     }
-    
+
     const array = (Array.isArray(classname)) ? classname : classname.split(/\s+/);
     let i = array.length;
-    
-    while(i--) {
+
+    while (i--) {
       if (!this.hasClass(element, array[i])) {
         this._addClass(element, array[i], timeout);
       }
     }
   },
-  _addClass(el, c, timeout) {
+  _addClass(el, klass, timeout) {
     // use native if available
     if (el.classList) {
-      el.classList.add(c);
+      el.classList.add(klass);
     } else {
-      el.className = (el.className +' '+ c).trim();
+      el.className = (el.className + ' ' + klass).trim();
     }
-    
+
     if (timeout && this.isNumeric(timeout)) {
-      window.setTimeout(() => { this._removeClass(el, c); }, timeout);
+      window.setTimeout(() => {
+        this._removeClass(el, klass);
+      }, timeout);
     }
   },
   /**
@@ -50,28 +54,30 @@ export default {
    */
   removeClass(element, classname, timeout) {
     if (Array.isArray(element)) {
-      element.forEach(each => { this.removeClass(each, classname, timeout); });
+      element.forEach(each => {
+        this.removeClass(each, classname, timeout);
+      });
       return;
     }
-    
+
     const array = (Array.isArray(classname)) ? classname : classname.split(/\s+/);
     let i = array.length;
-    
-    while(i--) {
+
+    while (i--) {
       if (this.hasClass(element, array[i])) {
         this._removeClass(element, array[i], timeout);
       }
     }
   },
-  _removeClass(el, c, timeout) {
+  _removeClass(el, klass, timeout) {
     if (el.classList) {
-      el.classList.remove(c);
+      el.classList.remove(klass);
     } else {
-      el.className = (el.className.replace(this.classRegex(c), ' ')).trim();
+      el.className = (el.className.replace(this.classRegex(klass), ' ')).trim();
     }
     if (timeout && this.isNumeric(timeout)) {
       window.setTimeout(() => {
-        this._addClass(el, c);
+        this._addClass(el, klass);
       }, timeout);
     }
   },
@@ -91,10 +97,12 @@ export default {
    */
   toggleClass(element, classname) {
     if (Array.isArray(element)) {
-      element.forEach(each => { this.toggleClass(each, classname); });
+      element.forEach(each => {
+        this.toggleClass(each, classname);
+      });
       return;
     }
-    
+
     // use native if available
     if (element.classList) {
       element.classList.toggle(classname);
@@ -116,28 +124,27 @@ export default {
       return (!!obj && obj instanceof HTMLElement);
     }
     // Older browsers
-    return (!!obj && typeof obj === 'object' && 
-      obj.nodeType === 1 && !!obj.nodeName);
+    return (!!obj && typeof obj === 'object' && obj.nodeType === 1 && !!obj.nodeName);
   },
   /**
-   * Abstraction to querySelectorAll for increased 
+   * Abstraction to querySelectorAll for increased
    * performance and greater usability
    * @param {String} selector
    * @param {Element} context (optional)
    * @param {Boolean} find_all (optional)
    * @return (find_all) {Element} : {Array}
    */
-  find: function(selector, context = window.document, find_all){
-    let simpleRe = /^(#?[\w-]+|\.[\w-.]+)$/, 
-        periodRe = /\./g, 
+  find(selector, context = window.document, find_all) {
+    let simpleRe = /^(#?[\w-]+|\.[\w-.]+)$/,
+        periodRe = /\./g,
         slice = Array.prototype.slice,
         matches = [];
 
-    // Redirect call to the more performant function 
+    // Redirect call to the more performant function
     // if it's a simple selector and return an array
     // for easier usage
-    if(simpleRe.test(selector)){
-      switch(selector[0]){
+    if (simpleRe.test(selector)) {
+      switch (selector[0]) {
         case '#':
           matches = [this.$(selector.substr(1))];
           break;
@@ -148,12 +155,12 @@ export default {
         default:
           matches = slice.call(context.getElementsByTagName(selector));
       }
-    } else{
-      // If not a simple selector, query the DOM as usual 
+    } else {
+      // If not a simple selector, query the DOM as usual
       // and return an array for easier usage
       matches = slice.call(context.querySelectorAll(selector));
     }
-    
+
     return (find_all) ? matches : matches[0];
   },
   getAllChildren(node, tag) {
@@ -163,7 +170,7 @@ export default {
     return (!str || 0 === str.length);
   },
   emptyArray(array) {
-    while(array.length) array.pop();
+    while (array.length) array.pop();
   },
   removeAllChildren(node) {
     while (node.firstChild) {
@@ -171,7 +178,7 @@ export default {
     }
   },
   /**
-   * Overwrites obj1's values with obj2's and adds 
+   * Overwrites obj1's values with obj2's and adds
    * obj2's if non existent in obj1
    * @returns obj3 a new object based on obj1 and obj2
    */
@@ -201,10 +208,10 @@ export default {
   },
   isDefAndNotNull(val) {
     // Note that undefined == null.
-    return val != null;
+    return val != null; // eslint-disable-line no-eq-null
   },
   assertEqual(a, b, message) {
-    if (a != b) {
+    if (a !== b) {
       throw new Error(message + ' mismatch: ' + a + ' != ' + b);
     }
   },
