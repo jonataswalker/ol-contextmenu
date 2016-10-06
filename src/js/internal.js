@@ -135,19 +135,29 @@ export class Internal {
         this.submenu.last_left = this.submenu.left;
       }
       uls.forEach(ul => {
+        // is there enough space for submenu height?
+        let viewport = utils.getViewportSize();
+        let sub_offset = utils.offset(ul);
+        let sub_height = sub_offset.height;
+        let sub_top = space_left_h - sub_height;
+
+        if (sub_top < 0) {
+          sub_top = sub_height - (viewport.h - sub_offset.top);
+          ul.style.top = `-${sub_top}px`;
+        }
         ul.style.left = this.submenu.last_left;
       });
     }
   }
 
   openMenu(pixel, coordinate) {
-    this.opened = true;
-    this.positionContainer(pixel);
     this.Base.dispatchEvent({
       type: EVENT_TYPE.OPEN,
       pixel: pixel,
       coordinate: coordinate
     });
+    this.opened = true;
+    this.positionContainer(pixel);
   }
 
   closeMenu() {

@@ -167,6 +167,22 @@ export default {
 
     return (find_all) ? matches : matches[0];
   },
+  offset(element) {
+    const rect = element.getBoundingClientRect();
+    const docEl = document.documentElement;
+    return {
+      left: rect.left + window.pageXOffset - docEl.clientLeft,
+      top: rect.top + window.pageYOffset - docEl.clientTop,
+      width: element.offsetWidth,
+      height: element.offsetHeight
+    };
+  },
+  getViewportSize() {
+    return {
+      w: window.innerWidth || document.documentElement.clientWidth,
+      h: window.innerHeight || document.documentElement.clientHeight
+    };
+  },
   getAllChildren(node, tag) {
     return [].slice.call(node.getElementsByTagName(tag));
   },
