@@ -53,7 +53,7 @@ export class Internal {
     /**
      * @type {Function}
      */
-    this.event_handler = this.handleEvent.bind(this);
+    this.eventHandler = this.handleEvent.bind(this);
 
     return this;
   }
@@ -158,12 +158,13 @@ export class Internal {
   }
 
   setListeners() {
-    this.map_element.addEventListener('contextmenu', this.event_handler, false);
+    this.map_element.addEventListener(
+        this.Base.options.eventType, this.eventHandler, false);
   }
 
   removeListeners() {
     this.map_element.removeEventListener(
-        'contextmenu', this.event_handler, false);
+        this.Base.options.eventType, this.eventHandler, false);
   }
 
   handleEvent(evt) {
@@ -181,9 +182,11 @@ export class Internal {
     if (this_.Base.disabled) {
       return;
     }
-
-    evt.stopPropagation();
-    evt.preventDefault();
+    if (this.Base.options.eventType === EVENT_TYPE.CONTEXTMENU) {
+      // don't be intrusive with other event types
+      evt.stopPropagation();
+      evt.preventDefault();
+    }
     this_.openMenu(this_.pixel_clicked, this_.coordinate_clicked);
 
     //one-time fire

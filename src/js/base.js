@@ -17,6 +17,10 @@ export default class Base extends ol.control.Control {
       '@param `opt_options` should be object type!'
     );
 
+    // keep old `default_items` compatibility
+    if ('default_items' in opt_options) {
+      DEFAULT_ITEMS.defaultItems = opt_options.default_items;
+    }
     this.options = utils.mergeOptions(DEFAULT_ITEMS, opt_options);
     this.disabled = false;
 
@@ -26,7 +30,6 @@ export default class Base extends ol.control.Control {
     super({
       element: this.container
     });
-
   }
 
   /**

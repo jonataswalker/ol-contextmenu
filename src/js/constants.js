@@ -16,7 +16,11 @@ export const eventType = {
   /**
    * Internal. Triggered when a menu entry is added.
    */
-  ADD_MENU_ENTRY: 'add-menu-entry'
+  ADD_MENU_ENTRY: 'add-menu-entry',
+  /**
+   * Internal.
+   */
+  CONTEXTMENU: 'contextmenu'
 };
 
 export const VARS = _VARS;
@@ -37,7 +41,8 @@ export const CLASSNAME = {
 
 export const defaultOptions = {
   width: 150,
-  default_items: true
+  eventType: eventType.CONTEXTMENU,
+  defaultItems: true
 };
 
 export const defaultItems = [
