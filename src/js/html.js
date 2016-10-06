@@ -31,15 +31,13 @@ export class Html {
     let options = this.Base.options, items = [];
 
     if ('items' in options) {
-      items = (options.default_items) ?
+      items = (options.defaultItems) ?
           options.items.concat(DEFAULT_ITEMS) : options.items;
-    } else if (options.default_items) {
+    } else if (options.defaultItems) {
       items = DEFAULT_ITEMS;
     }
-
     // no item
     if (items.length === 0) return false;
-
     // create entries
     items.forEach(this.addMenuEntry, this);
   }

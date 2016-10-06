@@ -23,7 +23,7 @@ Download [latest release](https://github.com/jonataswalker/ol3-contextmenu/relea
 ```javascript
 var contextmenu = new ContextMenu({
   width: 170,
-  default_items: true, //default_items are (for now) Zoom In/Zoom Out
+  defaultItems: true, // defaultItems are (for now) Zoom In/Zoom Out
   items: [
     {
       text: 'Center map here',
@@ -110,7 +110,7 @@ contextmenu.on('open', function(evt){
 #### `new ContextMenu(options)`
 
 ###### `options` is an object with the following possible properties:
-* `default_items`: `true`; Whether the default items (which are: Zoom In/Out) are enabled
+* `defaultItems`: `true`; Whether the default items (which are: Zoom In/Out) are enabled
 * `width`: `150`; The menu's width
 * `items`: `[]`; An array of object|string
 

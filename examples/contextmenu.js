@@ -91,7 +91,6 @@
 
   var contextmenu = new ContextMenu({
     width: 180,
-    default_items: true,
     items: contextmenu_items
   });
   map.addControl(contextmenu);

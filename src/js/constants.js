@@ -37,7 +37,7 @@ export const CLASSNAME = {
 
 export const defaultOptions = {
   width: 150,
-  default_items: true
+  defaultItems: true
 };
 
 export const defaultItems = [
