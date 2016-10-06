@@ -1,7 +1,7 @@
 import { Internal } from './internal';
 import { Html } from './html';
 import utils from './utils';
-import * as constants from './constants';
+import { defaultItems as DEFAULT_ITEMS } from './constants';
 
 /**
  * @class Base
@@ -17,7 +17,7 @@ export default class Base extends ol.control.Control {
       '@param `opt_options` should be object type!'
     );
 
-    this.options = utils.mergeOptions(constants.defaultOptions, opt_options);
+    this.options = utils.mergeOptions(DEFAULT_ITEMS, opt_options);
     this.disabled = false;
 
     Base.Internal = new Internal(this);
@@ -63,7 +63,7 @@ export default class Base extends ol.control.Control {
    * @return {Array} Returns default items
    */
   getDefaultItems() {
-    return constants.defaultItems;
+    return DEFAULT_ITEMS;
   }
 
   /**
@@ -89,7 +89,8 @@ export default class Base extends ol.control.Control {
    * @param {Object|String} item Item.
    */
   push(item) {
-    utils.assert(utils.isDefAndNotNull(item), '@param `item` must be informed.');
+    utils.assert(
+        utils.isDefAndNotNull(item), '@param `item` must be informed.');
     Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
   }
 

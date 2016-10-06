@@ -6,7 +6,7 @@ var fs          = require('fs');
 var server      = require('webserver').create();
 
 // server
-server.listen('127.0.0.1:' + config.port, function(req, res) {
+server.listen('127.0.0.1:' + config.port, function (req, res) {
   var file_path = fs.workingDirectory + req.url,
       ext = req.url.substring(req.url.indexOf('.') + 1),
       file = '',
@@ -34,15 +34,15 @@ server.listen('127.0.0.1:' + config.port, function(req, res) {
   res.close();
 });
 
-casper.on('resource.received', function(resource) {
-//   this.echo(resource.url + " is OK", "INFO");
+casper.on('resource.received', function (resource) {
+//   this.echo(resource.url + ' is OK', 'INFO');
 });
 
-casper.on('remote.message', function(msg) {
-  this.echo(msg + " is remote.message", "INFO");
+casper.on('remote.message', function (msg) {
+  this.echo(msg + ' is remote.message', 'INFO');
 });
 
 // test suites completion listener
-casper.test.on('tests.complete', function() {
+casper.test.on('tests.complete', function () {
   server.close();
 });

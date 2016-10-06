@@ -88,15 +88,23 @@ help:
 	@echo "- ci                      Run the full continuous integration process"
 	@echo
 
-
 .PHONY: npm-install
 npm-install: install
 
-.PHONY: install
-install: package.json
+$(BUILD_DIR)/timestamps/node-modules-timestamp: package.json
 	@mkdir -p $(@D)
 	npm install
 	@touch $@
+
+.PHONY: install
+install: $(BUILD_DIR)/timestamps/node-modules-timestamp
+
+.PHONY: clean
+clean:
+	@rm -f $(BUILD_DIR)/timestamps/eslint-timestamp
+	@rm -f $(JS_FINAL)
+	@rm -f $(JS_DEBUG)
+
 
 build-watch: build watch
 
@@ -104,14 +112,14 @@ watch:
 	$(PARALLELSHELL) "make watch-js" "make watch-css"
 
 .PHONY: ci
-ci: build test
+ci: test
 
 .PHONY: test
 test: build
 	@$(CASPERJS) $(CASPERJSFLAGS)
 
 .PHONY: build
-build: install build-js build-css
+build: install clean build-js build-css
 
 .PHONY: build-js
 build-js: bundle-js lint uglifyjs add-js-header
@@ -131,15 +139,21 @@ prefix-css: $(CSS_COMBINED)
 
 .PHONY: bundle-js
 bundle-js:
+	@mkdir -p $(BUILD_DIR)
 	@$(ROLLUP) $(ROLLUPFLAGS)
 
 .PHONY: uglifyjs
 uglifyjs: $(JS_DEBUG)
 	@$(UGLIFYJS) $^ $(UGLIFYJSFLAGS) > $(JS_FINAL)
 
-.PHONY: lint
-lint: $(JS_SRC)
+$(BUILD_DIR)/timestamps/eslint-timestamp: $(SRC_DIR) $(ROOT_DIR)/test/
+	@mkdir -p $(@D)
+	@echo "Running eslint ..."
 	@$(ESLINT) $^
+	@touch $@
+
+.PHONY: lint
+lint: $(BUILD_DIR)/timestamps/eslint-timestamp
 
 .PHONY: add-js-header-debug
 add-js-header-debug: $(JS_DEBUG)
