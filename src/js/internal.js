@@ -1,5 +1,4 @@
-import * as vars from '../../config/vars.json';
-import * as constants from './constants';
+import { CLASSNAME, eventType as EVENT_TYPE } from './constants';
 import utils from './utils';
 
 
@@ -102,7 +101,7 @@ export class Internal {
           h: Math.round(this.lineHeight * this.getItemsLength())
         },
         // submenus <ul>
-        uls = utils.find('li.' + vars.namespace + vars.submenu_class + '>ul',
+        uls = utils.find('li.' + CLASSNAME.submenu + '>ul',
             this.Base.container, true);
 
     if (space_left_w >= menu_size.w) {
@@ -121,7 +120,7 @@ export class Internal {
       this.Base.container.style.bottom = 0;
     }
 
-    utils.removeClass(this.Base.container, vars.namespace + vars.hidden_class);
+    utils.removeClass(this.Base.container, CLASSNAME.hidden);
 
     if (uls.length) {
       if (space_left_w < (menu_size.w * 2)) {
@@ -141,16 +140,16 @@ export class Internal {
     this.positionContainer(pixel);
 
     this.Base.dispatchEvent({
-      type: constants.eventType.OPEN,
+      type: EVENT_TYPE.OPEN,
       pixel: pixel,
       coordinate: coordinate
     });
   }
 
   closeMenu() {
-    utils.addClass(this.Base.container, vars.namespace + vars.hidden_class);
+    utils.addClass(this.Base.container, CLASSNAME.hidden);
     this.Base.dispatchEvent({
-      type: constants.eventType.CLOSE
+      type: EVENT_TYPE.CLOSE
     });
   }
 
@@ -163,7 +162,8 @@ export class Internal {
   }
 
   removeListeners() {
-    this.map_element.removeEventListener('contextmenu', this.event_handler, false);
+    this.map_element.removeEventListener(
+        'contextmenu', this.event_handler, false);
   }
 
   handleEvent(evt) {
@@ -173,7 +173,7 @@ export class Internal {
     this_.pixel_clicked = this.map.getEventPixel(evt);
 
     this_.Base.dispatchEvent({
-      type: constants.eventType.BEFOREOPEN,
+      type: EVENT_TYPE.BEFOREOPEN,
       pixel: this_.pixel_clicked,
       coordinate: this_.coordinate_clicked
     });

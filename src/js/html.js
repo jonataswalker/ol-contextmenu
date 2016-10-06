@@ -1,5 +1,4 @@
-import * as vars from '../../config/vars.json';
-import * as constants from './constants';
+import { CLASSNAME, defaultItems as DEFAULT_ITEMS } from './constants';
 import utils from './utils';
 
 
@@ -20,9 +19,9 @@ export class Html {
   createContainer() {
     let container = document.createElement('ul');
     container.className = [
-      vars.namespace + vars.container_class,
-      vars.namespace + vars.hidden_class,
-      vars.ol_unselectable_class
+      CLASSNAME.container,
+      CLASSNAME.hidden,
+      CLASSNAME.OL_unselectable
     ].join(' ');
     container.style.width = parseInt(this.Base.options.width, 10) + 'px';
     return container;
@@ -33,9 +32,9 @@ export class Html {
 
     if ('items' in options) {
       items = (options.default_items) ?
-        options.items.concat(constants.defaultItems) : options.items;
+          options.items.concat(DEFAULT_ITEMS) : options.items;
     } else if (options.default_items) {
-      items = constants.defaultItems;
+      items = DEFAULT_ITEMS;
     }
 
     // no item
@@ -48,7 +47,7 @@ export class Html {
   addMenuEntry(item) {
     const $internal = this.Base.constructor.Internal;
     let index = $internal.getNextItemIndex();
-    const submenu_class = vars.namespace + vars.submenu_class;
+    const submenu_class = CLASSNAME.submenu;
 
     if (item.items && Array.isArray(item.items)) {
       // submenu - only a second level
@@ -61,13 +60,14 @@ export class Html {
       let li = this.generateHtmlAndPublish(this.container, item, index);
       let ul = document.createElement('ul');
 
-      ul.className = vars.namespace + vars.container_class;
+      ul.className = CLASSNAME.container;
       ul.style.left = $internal.submenu.last_left || $internal.submenu.left;
       ul.style.width = this.Base.options.width + 'px';
       li.appendChild(ul);
 
       item.items.forEach(each => {
-        this.generateHtmlAndPublish(ul, each, $internal.getNextItemIndex(), true);
+        this.generateHtmlAndPublish(
+            ul, each, $internal.getNextItemIndex(), true);
       });
     } else {
       this.generateHtmlAndPublish(this.container, item, index);
@@ -82,7 +82,7 @@ export class Html {
     if (typeof item === 'string' && item.trim() === '-') {
       html = [
         '<li id="index', index,
-        '" class="', vars.namespace, vars.separator_class,
+        '" class="', CLASSNAME.separator,
         '"><hr></li>'
       ].join('');
       frag = utils.createFragment(html);
@@ -99,11 +99,12 @@ export class Html {
 
       if (item.icon) {
         if (item.classname === '') {
-          item.classname = vars.namespace + vars.icon_class;
-        } else if (item.classname.indexOf(vars.namespace + vars.icon_class) === -1) {
-          item.classname += ' ' + vars.namespace + vars.icon_class;
+          item.classname = CLASSNAME.icon;
+        } else if (item.classname.indexOf(CLASSNAME.icon) === -1) {
+          item.classname += ' ' + CLASSNAME.icon;
         }
-        element.setAttribute('style', 'background-image:url(' + item.icon + ')');
+        element.setAttribute(
+            'style', 'background-image:url(' + item.icon + ')');
       }
 
       element.id = 'index' + index;

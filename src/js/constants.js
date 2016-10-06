@@ -1,4 +1,4 @@
-import * as vars from '../../config/vars.json';
+import * as _VARS from '../../config/vars.json';
 
 export const eventType = {
   /**
@@ -19,6 +19,22 @@ export const eventType = {
   ADD_MENU_ENTRY: 'add-menu-entry'
 };
 
+export const VARS = _VARS;
+
+/**
+ * DOM Elements classname
+ */
+export const CLASSNAME = {
+  container       : _VARS.namespace + _VARS.container_class,
+  separator       : _VARS.namespace + _VARS.separator_class,
+  submenu         : _VARS.namespace + _VARS.submenu_class,
+  hidden          : _VARS.namespace + _VARS.hidden_class,
+  icon            : _VARS.namespace + _VARS.icon_class,
+  zoomIn          : _VARS.namespace + _VARS.zoom_in_class,
+  zoomOut         : _VARS.namespace + _VARS.zoom_out_class,
+  OL_unselectable : _VARS.ol_unselectable_class
+};
+
 export const defaultOptions = {
   width: 150,
   default_items: true
@@ -27,12 +43,9 @@ export const defaultOptions = {
 export const defaultItems = [
   {
     text: 'Zoom In',
-    classname: [
-      vars.namespace + vars.zoom_in_class,
-      vars.namespace + vars.icon_class
-    ].join(' '),
+    classname: [CLASSNAME.zoomIn, CLASSNAME.icon].join(' '),
     callback: (obj, map) => {
-      var view = map.getView(),
+      const view = map.getView(),
           pan = ol.animation.pan({
             duration: 1000,
             source: view.getCenter()
@@ -49,12 +62,9 @@ export const defaultItems = [
   },
   {
     text: 'Zoom Out',
-    classname: [
-      vars.namespace + vars.zoom_out_class,
-      vars.namespace + vars.icon_class
-    ].join(' '),
+    classname: [CLASSNAME.zoomOut, CLASSNAME.icon].join(' '),
     callback: (obj, map) => {
-      var view = map.getView(),
+      const view = map.getView(),
           pan = ol.animation.pan({
             duration: 1000,
             source: view.getCenter()
