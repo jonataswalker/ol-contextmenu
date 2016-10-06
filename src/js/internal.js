@@ -136,9 +136,6 @@ export class Internal {
       }
       uls.forEach(ul => {
         // is there enough space for submenu height?
-        let countChild = [].filter.call(ul.childNodes, function (el) {
-          return el.nodeType === 1;
-        }).length;
         let viewport = utils.getViewportSize();
         let sub_offset = utils.offset(ul);
         let sub_height = sub_offset.height;
