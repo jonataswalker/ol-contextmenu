@@ -10,7 +10,7 @@ var contextmenu,
     map_id = 'map',
     ctx_options = {
       width: 180,
-      default_items: true
+      defaultItems: true
     };
 
 casper.options.waitTimeout = 1000;
@@ -64,7 +64,7 @@ casper.test.begin('Assert DOM Elements', 3, function (test) {
   });
 });
 
-casper.test.begin('Assert API Methods', 8, function (test) {
+casper.test.begin('Assert API Methods', 9, function (test) {
   casper.start(config.url).waitFor(function () {
     return casper.evaluate(function () {
       return window.domready === true;
@@ -81,6 +81,7 @@ casper.test.begin('Assert API Methods', 8, function (test) {
     });
 
     window.contextmenu = new ContextMenu(options);
+    window.opened = false;
     map.addControl(contextmenu);
   }, ctx_options, map_id);
 
@@ -164,6 +165,20 @@ casper.test.begin('Assert API Methods', 8, function (test) {
     test.assertElementCount(elements.container + '>li',
         default_items.length + 1, 'Ok, push() method');
   });
+
+  // isOpened()
+  closeAndRightClick();
+  casper.waitFor(function () {
+    return this.evaluate(function () {
+      window.opened = window.contextmenu.isOpened();
+      return window.opened === true;
+    });
+  }, function then() {
+    test.pass('Ok, #isOpened method');
+  }, function timeout() {
+    test.fail('Failed #isOpened method');
+  });
+
   casper.run(function () {
     test.done();
   });
@@ -180,12 +195,14 @@ function assertContainerHidden(test, msg) {
 }
 
 function closeAndRightClick() {
+  close();
+  rightClick();
+}
+function close() {
   casper.thenEvaluate(function () {
     window.contextmenu.close();
   });
-  rightClick();
 }
-
 function rightClick() {
   casper.then(function () {
     this.mouse.rightclick('#' + map_id);

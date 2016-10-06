@@ -44,6 +44,10 @@ export class Internal {
      */
     this.items = {};
     /**
+     * @type {Boolean}
+     */
+    this.opened = false;
+    /**
      * @type {Object}
      */
     this.submenu = {
@@ -137,8 +141,8 @@ export class Internal {
   }
 
   openMenu(pixel, coordinate) {
+    this.opened = true;
     this.positionContainer(pixel);
-
     this.Base.dispatchEvent({
       type: EVENT_TYPE.OPEN,
       pixel: pixel,
@@ -147,6 +151,7 @@ export class Internal {
   }
 
   closeMenu() {
+    this.opened = false;
     utils.addClass(this.Base.container, CLASSNAME.hidden);
     this.Base.dispatchEvent({
       type: EVENT_TYPE.CLOSE

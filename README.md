@@ -165,6 +165,10 @@ Remove the last item of the menu.
 
 Get an array of default items.
 
+#### contextmenu.isOpened()
+
+WWhether the menu is opened.
+
 
 ## Events
 
