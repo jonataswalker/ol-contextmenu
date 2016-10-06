@@ -110,6 +110,7 @@ contextmenu.on('open', function(evt){
 #### `new ContextMenu(options)`
 
 ###### `options` is an object with the following possible properties:
+* `eventType`: `contextmenu`; The listening event type (You could use `'click'`, `'dblclick'`)
 * `defaultItems`: `true`; Whether the default items (which are: Zoom In/Out) are enabled
 * `width`: `150`; The menu's width
 * `items`: `[]`; An array of object|string
