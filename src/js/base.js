@@ -1,7 +1,10 @@
 import { Internal } from './internal';
 import { Html } from './html';
 import utils from './utils';
-import { defaultItems as DEFAULT_ITEMS } from './constants';
+import {
+  defaultOptions as DEFAULT_OPTIONS,
+  defaultItems as DEFAULT_ITEMS
+} from './constants';
 
 /**
  * @class Base
@@ -19,9 +22,9 @@ export default class Base extends ol.control.Control {
 
     // keep old `default_items` compatibility
     if ('default_items' in opt_options) {
-      DEFAULT_ITEMS.defaultItems = opt_options.default_items;
+      DEFAULT_OPTIONS.defaultItems = opt_options.default_items;
     }
-    this.options = utils.mergeOptions(DEFAULT_ITEMS, opt_options);
+    this.options = utils.mergeOptions(DEFAULT_OPTIONS, opt_options);
     this.disabled = false;
 
     Base.Internal = new Internal(this);
@@ -77,6 +80,13 @@ export default class Base extends ol.control.Control {
   extend(arr) {
     utils.assert(Array.isArray(arr), '@param `arr` should be an Array.');
     arr.forEach(this.push, this);
+  }
+
+  /**
+   * Am I opened?.
+   */
+  isOpened() {
+    return Base.Internal.opened;
   }
 
   /**
