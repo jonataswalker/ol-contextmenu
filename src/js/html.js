@@ -1,4 +1,7 @@
-import { CLASSNAME, defaultItems as DEFAULT_ITEMS } from './constants';
+import {
+  CLASSNAME,
+  defaultItems as DEFAULT_ITEMS
+} from './constants';
 import utils from './utils';
 
 
@@ -45,14 +48,14 @@ export class Html {
   addMenuEntry(item) {
     const $internal = this.Base.constructor.Internal;
     let index = $internal.getNextItemIndex();
-    const submenu_class = CLASSNAME.submenu;
 
     if (item.items && Array.isArray(item.items)) {
       // submenu - only a second level
       item.classname = item.classname || '';
-      if (!utils.contains(submenu_class, item.classname)) {
-        item.classname =
-          item.classname.length > 0 ? ' ' + submenu_class : submenu_class;
+      if (!utils.contains(CLASSNAME.submenu, item.classname)) {
+        item.classname = item.classname.length > 0
+          ? ' ' + CLASSNAME.submenu
+          : CLASSNAME.submenu;
       }
 
       let li = this.generateHtmlAndPublish(this.container, item, index);
