@@ -1,10 +1,8 @@
 sudo: required
 dist: trusty
-
 language: node_js
-
 node_js:
-  - "6"
+  - '6'
 
 cache:
   bundler: true
@@ -13,18 +11,25 @@ cache:
     - node_modules
 
 before_install:
-  - "if [ $(phantomjs --version) != '2.1.1' ]; then rm -rf $PWD/travis-phantomjs; mkdir -p $PWD/travis-phantomjs; fi"
-  - "if [ $(phantomjs --version) != '2.1.1' ]; then wget https://github.com/BIGjuevos/phantomjs-builds/archive/v2.1.1.tar.gz -O $PWD/travis-phantomjs/v2.1.1.tar.gz; fi"
-  - "if [ $(phantomjs --version) != '2.1.1' ]; then tar -xf $PWD/travis-phantomjs/v2.1.1.tar.gz -C $PWD/travis-phantomjs; fi"
-  - "if [ $(phantomjs --version) != '2.1.1' ]; then sudo ln -sf $PWD/travis-phantomjs/phantomjs-builds-2.1.1/bin/phantomjs $(which phantomjs); fi"
-  - "phantomjs --version"
+  - if [ $(phantomjs --version) != '2.1.1' ]; then rm -rf $PWD/travis-phantomjs; mkdir -p $PWD/travis-phantomjs; fi
+  - if [ $(phantomjs --version) != '2.1.1' ]; then wget https://github.com/BIGjuevos/phantomjs-builds/archive/v2.1.1.tar.gz -O $PWD/travis-phantomjs/v2.1.1.tar.gz; fi
+  - if [ $(phantomjs --version) != '2.1.1' ]; then tar -xf $PWD/travis-phantomjs/v2.1.1.tar.gz -C $PWD/travis-phantomjs; fi
+  - if [ $(phantomjs --version) != '2.1.1' ]; then sudo ln -sf $PWD/travis-phantomjs/phantomjs-builds-2.1.1/bin/phantomjs $(which phantomjs); fi
+  - phantomjs --version
 
-before_script:
-  
+
 script:
   - xvfb-run -a make ci
 
 branches:
   only:
-    - "master"
-    - /^greenkeeper-.*$/
+    - master
+    - "/^greenkeeper-.*$/"
+
+addons:
+  sauce_connect: true
+
+env:
+  global:
+    - secure: qCZrcGuqXY5mjBLAN5rIeR6S6DxI10ge7SSAw5oZcwU45vYPPFWiD1BT5TX6wcymGxci7NeY11eF7w+pFwHLTUS+VCX/2K/a3yvFRPt4Z2/hibvKI/5oBzack+lCcMQlM5ekwTChRuviMOdgy5Snx701bhBFzUb2fFtBeqdNQH4Kda9+WpkvAMfYXJ4XWs49W5YApJoiL22GuZXm6K69hI3gaPCWldzYsopRUGWwuH8gFjdoacqtBTrnwg8t9Hsi8fULguTh7Lsi5YDj6dCjNXYnVDynFD96RlNZe1gQ5O6BpFavDbQuhZAx521h5Z+Q3xSzvTVS7dWh5R5NAOa0r3yZSEY8zsVuCgnJGX7vf6p3CyfvzLsR1BEB+Yb3eHww8L6HLi1MTVmwQoI2MA0wkIeZl8wDeZ6ch9OCxbiyQIGVaGgww5sDzGZPyp8fPn1bu4le0eXPHTKUB9xB4Sx199CbfP81c9k7y+vIOk3QBKX1rGQ0pqEWihO3wkT2gCkOI9Fszo8GPSrXBnxmpq3HTga934y+prUInWcrNSidKFNnqr1mO13CZwMcyFLe5pqRRnD1Y06ktxCzuMSpzpr5v6RDAI+5QOSKzrOURvaXWHMUsfaBRJq2Z1X7GhwktcYFM3LpjzpM/gnNMzoH65Ru1i5ZeBvlcObr1Ai76CmURfg=
+    - secure: 0XeBSXBECyatfUdyC46JuxJDL1znKcMf08t4kU/Cc4Hk1u3hdLKcFm1JygvUhsQitWphiJy/JnW2jfQvMZ4cjo8IOs8vK96lQNom645EaI5WzD2HbTObMYnFhqaAE2L7i091A67VSks9D5+cQPqnQaiMH/RYeKQmhkMgIJ5k5sToCRNxR2rY/tPc3h3KJAUiX9pDUnlboM1uJ4hYaU7ttLIut3uGWqRB3fS5vGu8buTYQ93iqtCh0P2aBeH4805iAJoVb3s43EFdWFB7RYs6lmzUMuHoLaF52WDbtHRHUyscBlidcMlehJQAb6ENgi3QnhdYJWMxruUkMcWNktgMamOxn5aYGjRobAYNElffpVVtz5eVxRtaRJpEaS/K2ZGD1QpPeyI6YIWZ1qPNpA3HZ5zQiv9UD8c5hVsXYWAySCP5P4QXNOHIp8olhK2I8Te071y05mx5eEc0cu2KfRIysxvJO8jtgwzvQahoKwNV77u6R66Dz0UUoJmTZAQuOn/zaDf6oGG88MBH/7dv9EFuKmzMvBgafTnOCdibx4kzqnIqldv36Wm8zsqEKHgu1Z460w03T3K+GrmRLIMVm0N3oK/Y6GLP+juVZvt4g0UVwgFmBeJg0rDMClz0ol8yVuRGdHnK72EtcAiWHuF3mJ5EaSMjmFAYIyrb23np/dn5PHM=
