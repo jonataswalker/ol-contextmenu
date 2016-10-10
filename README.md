@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/jonataswalker/ol3-contextmenu.svg?branch=master)](https://travis-ci.org/jonataswalker/ol3-contextmenu)
 
+[![NPM](https://nodei.co/npm/ol3-contextmenu.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/ol3-contextmenu/)
+
 A `contextmenu` extension for [OpenLayers 3](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
 
 ![contextmenu anim](https://raw.githubusercontent.com/jonataswalker/ol3-contextmenu/screenshot/images/anim.gif)
