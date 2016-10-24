@@ -18,6 +18,12 @@ Load CSS and Javascript:
 <link href="//cdn.jsdelivr.net/openlayers.contextmenu/latest/ol3-contextmenu.min.css" rel="stylesheet">
 <script src="//cdn.jsdelivr.net/openlayers.contextmenu/latest/ol3-contextmenu.js"></script>
 ```
+##### CDN Hosted - UNPKG
+Load CSS and Javascript:
+```HTML
+<link href="https://unpkg.com/ol3-contextmenu/build/ol3-contextmenu.min.css" rel="stylesheet">
+<script src="https://unpkg.com/ol3-contextmenu/build/ol3-contextmenu.js"></script>
+```
 ##### Self hosted
 Download [latest release](https://github.com/jonataswalker/ol3-contextmenu/releases/latest) and (obviously) load CSS and Javascript.
 
