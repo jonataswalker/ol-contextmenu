@@ -96,7 +96,7 @@ export default class Base extends ol.control.Control {
     if (this.isOpened()) {
       Base.Internal.positionContainer(pixel);
     }
-  };
+  }
 
   /**
    * Remove the last item of the menu.
