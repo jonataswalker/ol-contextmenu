@@ -90,6 +90,15 @@ export default class Base extends ol.control.Control {
   }
 
   /**
+   * Update the menus position.
+   */
+  updatePosition(pixel) {
+    if (this.isOpened()) {
+      Base.Internal.positionContainer(pixel);
+    }
+  };
+
+  /**
    * Remove the last item of the menu.
    */
   pop() {
