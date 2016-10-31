@@ -829,6 +829,12 @@ var Base = (function (superclass) {
     return Base.Internal.opened;
   };
 
+  Base.prototype.updatePosition = function updatePosition (pixel) {
+    if (this.isOpened()) {
+      Base.Internal.positionContainer(pixel);
+    }
+  };
+
   /**
    * Remove the last item of the menu.
    */
