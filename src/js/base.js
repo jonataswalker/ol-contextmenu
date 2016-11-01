@@ -90,6 +90,16 @@ export default class Base extends ol.control.Control {
   }
 
   /**
+   * Update the menu's position.
+   */
+  updatePosition(pixel) {
+    utils.assert(Array.isArray(pixel), '@param `pixel` should be an Array.');
+    if (this.isOpened()) {
+      Base.Internal.positionContainer(pixel);
+    }
+  }
+
+  /**
    * Remove the last item of the menu.
    */
   pop() {
