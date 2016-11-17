@@ -57,7 +57,8 @@ casper.test.begin('Assert DOM Elements', 3, function (test) {
   casper.waitUntilVisible(elements.container, function () {
     test.assert(true, 'Container is visible');
     test.assertExists(elements.container);
-    test.assertElementCount(elements.container + '>li', default_items.length);
+    test.assertElementCount(
+      elements.container + '>ul>li', default_items.length);
   });
   casper.run(function () {
     test.done();
@@ -101,8 +102,8 @@ casper.test.begin('Assert API Methods', 9, function (test) {
     window.contextmenu.extend(items);
   }, default_items);
   casper.then(function () {
-    test.assertElementCount(
-      elements.container + '>li', default_items.length, 'Ok, extend() method');
+    test.assertElementCount(elements.container + '>ul>li',
+        default_items.length, 'Ok, extend() method');
   });
 
   // clear()
@@ -114,7 +115,7 @@ casper.test.begin('Assert API Methods', 9, function (test) {
   });
   casper.then(function () {
     test.assertElementCount(
-      elements.container + '>li', 0, 'Ok, clear() method');
+      elements.container + '>ul>li', 0, 'Ok, clear() method');
   });
 
   // enable() && disable()
@@ -142,15 +143,15 @@ casper.test.begin('Assert API Methods', 9, function (test) {
   }, default_items);
   closeAndRightClick();
   casper.then(function () {
-    test.assertElementCount(
-      elements.container + '>li', default_items.length - 1, 'Ok, pop() method');
+    test.assertElementCount(elements.container + '>ul>li',
+        default_items.length - 1, 'Ok, pop() method');
   });
   casper.thenEvaluate(function () {
     window.contextmenu.shift();
   });
   closeAndRightClick();
   casper.then(function () {
-    test.assertElementCount(elements.container + '>li',
+    test.assertElementCount(elements.container + '>ul>li',
         default_items.length - 2, 'Ok, shift() method');
   });
 
@@ -162,7 +163,7 @@ casper.test.begin('Assert API Methods', 9, function (test) {
   }, default_items);
   closeAndRightClick();
   casper.then(function () {
-    test.assertElementCount(elements.container + '>li',
+    test.assertElementCount(elements.container + '>ul>li',
         default_items.length + 1, 'Ok, push() method');
   });
 

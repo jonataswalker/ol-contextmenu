@@ -4,7 +4,6 @@ import {
 } from './constants';
 import utils from './utils';
 
-
 /**
  * @class Html
  */
@@ -19,24 +18,26 @@ export class Html {
     return this;
   }
 
-  createContainer() {
-    let container = document.createElement('ul');
-    container.className = [
-      CLASSNAME.container,
-      CLASSNAME.hidden,
-      CLASSNAME.OL_unselectable
-    ].join(' ');
+  createContainer(hidden) {
+    const container = document.createElement('div');
+    const ul = document.createElement('ul');
+    const klasses =  [CLASSNAME.container, CLASSNAME.OL_unselectable];
+
+    hidden && klasses.push(CLASSNAME.hidden);
+    container.className = klasses.join(' ');
     container.style.width = parseInt(this.Base.options.width, 10) + 'px';
+    container.appendChild(ul);
     return container;
   }
 
   createMenu() {
-    let options = this.Base.options, items = [];
+    let items = [];
 
-    if ('items' in options) {
-      items = (options.defaultItems) ?
-          options.items.concat(DEFAULT_ITEMS) : options.items;
-    } else if (options.defaultItems) {
+    if ('items' in this.Base.options) {
+      items = (this.Base.options.defaultItems)
+        ? this.Base.options.items.concat(DEFAULT_ITEMS)
+        : this.Base.options.items;
+    } else if (this.Base.options.defaultItems) {
       items = DEFAULT_ITEMS;
     }
     // no item
@@ -46,50 +47,43 @@ export class Html {
   }
 
   addMenuEntry(item) {
-    const $internal = this.Base.constructor.Internal;
-    let index = $internal.getNextItemIndex();
-
     if (item.items && Array.isArray(item.items)) {
       // submenu - only a second level
       item.classname = item.classname || '';
       if (!utils.contains(CLASSNAME.submenu, item.classname)) {
-        item.classname = item.classname.length > 0
+        item.classname = item.classname.length
           ? ' ' + CLASSNAME.submenu
           : CLASSNAME.submenu;
       }
 
-      let li = this.generateHtmlAndPublish(this.container, item, index);
-      let ul = document.createElement('ul');
-
-      ul.className = CLASSNAME.container;
-      ul.style.left = $internal.submenu.last_left || $internal.submenu.left;
-      ul.style.width = this.Base.options.width + 'px';
-      li.appendChild(ul);
+      let li = this.generateHtmlAndPublish(this.container, item);
+      let sub = this.createContainer();
+      sub.style.left = this.Base.Internal.submenu.lastLeft ||
+          this.Base.Internal.submenu.left;
+      li.appendChild(sub);
 
       item.items.forEach(each => {
-        this.generateHtmlAndPublish(
-            ul, each, $internal.getNextItemIndex(), true);
+        this.generateHtmlAndPublish(sub, each, true);
       });
     } else {
-      this.generateHtmlAndPublish(this.container, item, index);
+      this.generateHtmlAndPublish(this.container, item);
     }
   }
 
-  generateHtmlAndPublish(parent, item, index, submenu) {
+  generateHtmlAndPublish(parent, item, submenu) {
     let html, frag, element, separator = false;
-    const $internal = this.Base.constructor.Internal;
+    const index = utils.getUniqueId();
 
     // separator
     if (typeof item === 'string' && item.trim() === '-') {
       html = [
-        '<li id="index', index,
-        '" class="', CLASSNAME.separator,
-        '"><hr></li>'
+        '<li id="', index, '" class="', CLASSNAME.separator, '">',
+        '<hr></li>'
       ].join('');
       frag = utils.createFragment(html);
       // http://stackoverflow.com/a/13347298/4640499
       element = [].slice.call(frag.childNodes, 0)[0];
-      parent.appendChild(frag);
+      parent.firstChild.appendChild(frag);
       // to exclude from lineHeight calculation
       separator = true;
     } else {
@@ -108,31 +102,27 @@ export class Html {
             'style', 'background-image:url(' + item.icon + ')');
       }
 
-      element.id = 'index' + index;
+      element.id = index;
       element.className = item.classname;
       element.appendChild(frag);
-      parent.appendChild(element);
+      parent.firstChild.appendChild(element);
     }
 
-    $internal.items[index] = {
+    this.Base.Internal.items[index] = {
       id: index,
       submenu: submenu || 0,
       separator: separator,
       callback: item.callback,
       data: item.data || null
     };
-
-    $internal.setItemListener(element, index);
-
+    this.Base.Internal.setItemListener(element, index);
     return element;
   }
 
   removeMenuEntry(index) {
-    const element = utils.find('#index' + index, this.container);
-    if (element) {
-      this.container.removeChild(element);
-    }
-    delete this.Base.constructor.Internal.items[index];
+    const element = utils.find('#' + index, this.container.firstChild);
+    element && this.container.firstChild.removeChild(element);
+    delete this.Base.Internal.items[index];
   }
 
   cloneAndGetLineHeight() {

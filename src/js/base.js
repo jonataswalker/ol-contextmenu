@@ -1,10 +1,11 @@
-import { Internal } from './internal';
-import { Html } from './html';
-import utils from './utils';
 import {
   defaultOptions as DEFAULT_OPTIONS,
   defaultItems as DEFAULT_ITEMS
 } from './constants';
+
+import { Internal } from './internal';
+import { Html } from './html';
+import utils from './utils';
 
 /**
  * @class Base
@@ -27,8 +28,8 @@ export default class Base extends ol.control.Control {
     this.options = utils.mergeOptions(DEFAULT_OPTIONS, opt_options);
     this.disabled = false;
 
-    Base.Internal = new Internal(this);
-    Base.Html = new Html(this);
+    this.Internal = new Internal(this);
+    this.Html = new Html(this);
 
     super({
       element: this.container
@@ -39,8 +40,8 @@ export default class Base extends ol.control.Control {
    * Remove all elements from the menu.
    */
   clear() {
-    Object.keys(Base.Internal.items).forEach(k => {
-      Base.Html.removeMenuEntry(k);
+    Object.keys(this.Internal.items).forEach(k => {
+      this.Html.removeMenuEntry(k);
     });
   }
 
@@ -48,7 +49,7 @@ export default class Base extends ol.control.Control {
    * Close the menu programmatically.
    */
   close() {
-    Base.Internal.closeMenu();
+    this.Internal.closeMenu();
   }
 
   /**
@@ -86,7 +87,7 @@ export default class Base extends ol.control.Control {
    * Am I opened?.
    */
   isOpened() {
-    return Base.Internal.opened;
+    return this.Internal.opened;
   }
 
   /**
@@ -95,7 +96,7 @@ export default class Base extends ol.control.Control {
   updatePosition(pixel) {
     utils.assert(Array.isArray(pixel), '@param `pixel` should be an Array.');
     if (this.isOpened()) {
-      Base.Internal.positionContainer(pixel);
+      this.Internal.positionContainer(pixel);
     }
   }
 
@@ -103,8 +104,8 @@ export default class Base extends ol.control.Control {
    * Remove the last item of the menu.
    */
   pop() {
-    const keys = Object.keys(Base.Internal.items);
-    Base.Html.removeMenuEntry(keys[keys.length - 1]);
+    const keys = Object.keys(this.Internal.items);
+    this.Html.removeMenuEntry(keys[keys.length - 1]);
   }
 
   /**
@@ -114,14 +115,14 @@ export default class Base extends ol.control.Control {
   push(item) {
     utils.assert(
         utils.isDefAndNotNull(item), '@param `item` must be informed.');
-    Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
+    this.Html.addMenuEntry(item);
   }
 
   /**
    * Remove the first item of the menu.
    */
   shift() {
-    Base.Html.removeMenuEntry(Object.keys(Base.Internal.items)[0]);
+    this.Html.removeMenuEntry(Object.keys(this.Internal.items)[0]);
   }
 
   /**
@@ -131,10 +132,10 @@ export default class Base extends ol.control.Control {
     ol.control.Control.prototype.setMap.call(this, map);
     if (map) {
       // let's start since now we have the map
-      Base.Internal.init(map);
+      this.Internal.init(map, this);
     } else {
       // I'm removed from the map - remove listeners
-      Base.Internal.removeListeners();
+      this.Internal.removeListeners();
     }
   }
 }
