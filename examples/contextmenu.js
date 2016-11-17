@@ -78,6 +78,46 @@
           text: 'Add a Marker',
           icon: 'img/pin_drop.png',
           callback: marker
+        },
+        {
+          text: 'Center map here',
+          icon: 'img/center.png',
+          callback: center
+        },
+        {
+          text: 'Add a Marker',
+          icon: 'img/pin_drop.png',
+          callback: marker
+        },
+        {
+          text: 'Center map here',
+          icon: 'img/center.png',
+          callback: center
+        },
+        {
+          text: 'Add a Marker',
+          icon: 'img/pin_drop.png',
+          callback: marker
+        },
+        {
+          text: 'Center map here',
+          icon: 'img/center.png',
+          callback: center
+        },
+        {
+          text: 'Add a Marker',
+          icon: 'img/pin_drop.png',
+          callback: marker
+        },
+        {
+          text: 'Center map here',
+          icon: 'img/center.png',
+          callback: center
+        },
+        {
+          text: 'Add a Marker',
+          icon: 'img/pin_drop.png',
+          callback: marker
         }
       ]
     },
@@ -94,6 +134,8 @@
     items: contextmenu_items
   });
   map.addControl(contextmenu);
+  
+  console.info(contextmenu);
   
   var removeMarker = function(obj){
     vectorLayer.getSource().removeFeature(obj.data.marker);

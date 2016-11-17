@@ -175,7 +175,13 @@ Get an array of default items.
 
 #### contextmenu.isOpened()
 
-WWhether the menu is opened.
+Whether the menu is opened.
+
+#### contextmenu.updatePosition(pixel)
+
+`@param {Array} pixel`
+
+Update menu's position.
 
 
 ## Events

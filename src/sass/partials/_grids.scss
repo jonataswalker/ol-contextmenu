@@ -1,80 +1,84 @@
 .#{$namespace}#{$container_class} {
 	position: absolute;
-    padding: 10px;
+  padding: $container-padding;
+  background: #fff;
+  color: #222;
+  font-size: $font-size;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.2) 3px 3px 5px;
+  box-sizing: border-box;
+  @include simple-nested-reset;
+
+  *,
+  *::before,
+  *::after {
+      box-sizing: inherit;
+  }
+
+  &.#{$namespace}#{$hidden_class} {
+    opacity: 0;
+    visibility: hidden;
+    transition: visibility 0s linear 300ms, opacity 300ms;
+  }
+
+  ul {
     list-style: none;
-    background: #fff;
-    color: #222;
-    font-size: $font-size;
-    border-radius: 5px;
-    box-shadow: rgba(0, 0, 0, 0.2) 3px 3px 5px;
-    box-sizing: border-box;
-    @include nested-reset;
+  }
 
-	*,
-	*::before,
-	*::after {
-	    box-sizing: inherit;
-	}
+  li {
+    position: relative;
+    line-height: 20px;
+    padding: 2px 5px;
 
-    &.#{$namespace}#{$hidden_class} {
-        opacity: 0;
-        visibility: hidden;
-        transition: visibility 0s linear 300ms, opacity 300ms;
+    &:not(.#{$namespace}#{$separator_class}):hover {
+      cursor: pointer;
+      background-color: #333;
+      color: #eee;
+    }
+  }
+
+  li.#{$namespace}#{$submenu_class} {
+    .#{$namespace}#{$container_class} {
+      border: 1px solid #eee;
+      padding: $container-padding;
+      top: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: visibility 0s linear 300ms, opacity 300ms;
     }
 
-    li {
-        position: relative;
-        line-height: 20px;
-        padding: 2px 5px;
-
-        &:not(.#{$namespace}#{$separator_class}):hover {
-            cursor: pointer;
-            background-color: #333;
-            color: #eee;
-        }
+    &:hover .#{$namespace}#{$container_class} {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
     }
 
-    li.#{$namespace}#{$submenu_class} {
-        ul {
-            border: 1px solid #eee;
-            top: 0;
-            opacity: 0;
-            visibility: hidden;
-            transition: visibility 0s linear 300ms, opacity 300ms;
-        }
-
-        &:hover ul {
-            opacity: 1;
-            visibility: visible;
-            transition-delay: 0s;
-        }
-
-        &::after{
-          position: absolute;
-          top: 7px;
-          right: 10px;
-          content: "";
-          display: inline-block;
-          width: 0.6em;
-          height: 0.6em;
-          border-right: 0.3em solid #222;
-          border-top: 0.3em solid #222;
-          transform: rotate(45deg);
-        }
-
-        &:hover::after {
-            border-color: #eee;
-        }
+    &::after{
+      position: absolute;
+      top: 7px;
+      right: 10px;
+      content: "";
+      display: inline-block;
+      width: 0.6em;
+      height: 0.6em;
+      border-right: 0.3em solid #222;
+      border-top: 0.3em solid #222;
+      transform: rotate(45deg);
     }
-    li.#{$namespace}#{$separator_class} {
-        padding: 0;
 
-        hr {
-            border: 0;
-            height: 1px;
-            background-image: linear-gradient(to left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
-        }
+    &:hover::after {
+      border-color: #eee;
     }
+  }
+  li.#{$namespace}#{$separator_class} {
+    padding: 0;
+
+    hr {
+      border: 0;
+      height: 1px;
+      background-image: linear-gradient(to left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+    }
+  }
 }
 
 .#{$namespace}#{$icon_class} {

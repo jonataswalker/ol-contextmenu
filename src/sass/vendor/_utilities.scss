@@ -11,8 +11,8 @@
   dl, dt, dd, ol, ul, li,
   fieldset, form, label, legend,
   table, caption, tbody, tfoot, thead, tr, th, td,
-  article, aside, canvas, details, embed, 
-  figure, figcaption, footer, header, hgroup, 
+  article, aside, canvas, details, embed,
+  figure, figcaption, footer, header, hgroup,
   menu, nav, output, ruby, section, summary,
   time, mark, audio, video {
     @include reset-box-model;
@@ -46,8 +46,8 @@
   dl, dt, dd, ol, ul, li,
   fieldset, form, label, legend,
   table, caption, tbody, tfoot, thead, tr, th, td,
-  article, aside, canvas, details, embed, 
-  figure, figcaption, footer, header, hgroup, 
+  article, aside, canvas, details, embed,
+  figure, figcaption, footer, header, hgroup,
   menu, nav, output, ruby, section, summary,
   time, mark, audio, video {
     @include reset-box-model;
@@ -58,6 +58,13 @@
     @include reset-table-cell; }
   q, blockquote {
     @include reset-quotation; }
+  a img {
+    @include reset-image-anchor-border; } }
+
+@mixin simple-nested-reset {
+  div, span, a, img, ul, li {
+    @include reset-box-model;
+    @include reset-font; }
   a img {
     @include reset-image-anchor-border; } }
 
@@ -101,7 +108,7 @@
 @mixin reset-quotation {
   quotes: none;
   &:before, &:after {
-    content: ""; 
+    content: "";
     content: none; } }
 
 // Resets the border.

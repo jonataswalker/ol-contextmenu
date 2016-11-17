@@ -2,7 +2,7 @@
  * Custom Context Menu for Openlayers 3
  * https://github.com/jonataswalker/ol3-contextmenu
  * Version: v2.3.0
- * Built: 2016-10-06T17:47:50-03:00
+ * Built: 2016-11-17T16:06:20-02:00
  */
 
 (function (global, factory) {
@@ -66,6 +66,7 @@ var CLASSNAME = {
 
 var defaultOptions = {
   width: 150,
+  scrollAt: 4,
   eventType: eventType.CONTEXTMENU,
   defaultItems: true
 };
@@ -350,6 +351,10 @@ var utils = {
   contains: function contains(str_test, str) {
     return !!~str.indexOf(str_test);
   },
+  getUniqueId: function getUniqueId() {
+//     return (new Date().getTime()).toString(36);
+    return '_' + Math.random().toString(36).substr(2, 9);
+  },
   isDefAndNotNull: function isDefAndNotNull(val) {
     // Note that undefined == null.
     return val != null; // eslint-disable-line no-eq-null
@@ -376,65 +381,60 @@ var utils = {
  */
 var Internal = function Internal(base) {
   /**
-   * @type {ol.control.Control}
-   */
+  * @type {ol.control.Control}
+  */
   this.Base = base;
   /**
-   * @type {ol.Map}
-   */
+    * @type {ol.Map}
+    */
   this.map = undefined;
   /**
-   * @type {Element}
-   */
-  this.map_element = undefined;
+    * @type {Element}
+    */
+  this.mapElement = undefined;
   /**
-   * @type {ol.Coordinate}
-   */
-  this.coordinate_clicked = undefined;
+    * @type {ol.Coordinate}
+    */
+  this.coordinateClicked = undefined;
   /**
-   * @type {ol.Pixel}
-   */
-  this.pixel_clicked = undefined;
+    * @type {ol.Pixel}
+    */
+  this.pixelClicked = undefined;
   /**
-   * @type {Number}
-   */
-  this.counter = 0;
-  /**
-   * @type {Number}
-   */
+    * @type {Number}
+    */
   this.lineHeight = 0;
   /**
-   * @type {Object}
-   */
+    * @type {Object}
+    */
   this.items = {};
   /**
-   * @type {Boolean}
-   */
+    * @type {Boolean}
+    */
   this.opened = false;
   /**
-   * @type {Object}
-   */
+    * @type {Object}
+    */
   this.submenu = {
-    left: this.Base.options.width - 15 + 'px',
-    last_left: '' // string + px
+    left: base.options.width - 15 + 'px',
+    lastLeft: '' // string + px
   };
   /**
-   * @type {Function}
-   */
+    * @type {Function}
+    */
   this.eventHandler = this.handleEvent.bind(this);
-
   return this;
 };
 
 Internal.prototype.init = function init (map) {
   this.map = map;
-  this.map_element = map.getTargetElement();
+  this.mapElement = map.getTargetElement();
   this.setListeners();
-  this.Base.constructor.Html.createMenu();
+  this.Base.Html.createMenu();
 
-  this.lineHeight = this.getItemsLength() > 0 ?
-    this.Base.container.offsetHeight / this.getItemsLength() :
-    this.Base.constructor.Html.cloneAndGetLineHeight();
+  this.lineHeight = this.getItemsLength() > 0
+    ? this.Base.container.offsetHeight / this.getItemsLength()
+    : this.Base.Html.cloneAndGetLineHeight();
 };
 
 Internal.prototype.getItemsLength = function getItemsLength () {
@@ -449,11 +449,11 @@ Internal.prototype.getItemsLength = function getItemsLength () {
 };
 
 Internal.prototype.getPixelClicked = function getPixelClicked () {
-  return this.pixel_clicked;
+  return this.pixelClicked;
 };
 
 Internal.prototype.getCoordinateClicked = function getCoordinateClicked () {
-  return this.coordinate_clicked;
+  return this.coordinateClicked;
 };
 
 Internal.prototype.positionContainer = function positionContainer (pixel) {
@@ -472,8 +472,8 @@ Internal.prototype.positionContainer = function positionContainer (pixel) {
         // since offsetHeight is like cached
         h: Math.round(this.lineHeight * this.getItemsLength())
       },
-      // submenus <ul>
-      uls = utils.find('li.' + CLASSNAME.submenu + '>ul',
+      // submenus
+      subs = utils.find('li.' + CLASSNAME.submenu + '> div',
           this.Base.container, true);
 
   if (space_left_w >= menu_size.w) {
@@ -494,26 +494,26 @@ Internal.prototype.positionContainer = function positionContainer (pixel) {
 
   utils.removeClass(this.Base.container, CLASSNAME.hidden);
 
-  if (uls.length) {
+  if (subs.length) {
     if (space_left_w < (menu_size.w * 2)) {
       // no space (at right) for submenu
       // position them at left
-      this.submenu.last_left = "-" + (menu_size.w) + "px";
+      this.submenu.lastLeft = "-" + (menu_size.w) + "px";
     } else {
-      this.submenu.last_left = this.submenu.left;
+      this.submenu.lastLeft = this.submenu.left;
     }
-    uls.forEach(function (ul) {
+    subs.forEach(function (sub) {
       // is there enough space for submenu height?
       var viewport = utils.getViewportSize();
-      var sub_offset = utils.offset(ul);
+      var sub_offset = utils.offset(sub);
       var sub_height = sub_offset.height;
       var sub_top = space_left_h - sub_height;
 
       if (sub_top < 0) {
         sub_top = sub_height - (viewport.h - sub_offset.top);
-        ul.style.top = "-" + sub_top + "px";
+        sub.style.top = "-" + sub_top + "px";
       }
-      ul.style.left = this$1.submenu.last_left;
+      sub.style.left = this$1.submenu.lastLeft;
     });
   }
 };
@@ -536,33 +536,29 @@ Internal.prototype.closeMenu = function closeMenu () {
   });
 };
 
-Internal.prototype.getNextItemIndex = function getNextItemIndex () {
-  return ++this.counter;
-};
-
 Internal.prototype.setListeners = function setListeners () {
-  this.map_element.addEventListener(
+  this.mapElement.addEventListener(
       this.Base.options.eventType, this.eventHandler, false);
 };
 
 Internal.prototype.removeListeners = function removeListeners () {
-  this.map_element.removeEventListener(
+  this.mapElement.removeEventListener(
       this.Base.options.eventType, this.eventHandler, false);
 };
 
 Internal.prototype.handleEvent = function handleEvent (evt) {
   var this_ = this;
 
-  this_.coordinate_clicked = this.map.getEventCoordinate(evt);
-  this_.pixel_clicked = this.map.getEventPixel(evt);
+  this.coordinateClicked = this.map.getEventCoordinate(evt);
+  this.pixelClicked = this.map.getEventPixel(evt);
 
-  this_.Base.dispatchEvent({
+  this.Base.dispatchEvent({
     type: eventType.BEFOREOPEN,
-    pixel: this_.pixel_clicked,
-    coordinate: this_.coordinate_clicked
+    pixel: this.pixelClicked,
+    coordinate: this.coordinateClicked
   });
 
-  if (this_.Base.disabled) {
+  if (this.Base.disabled) {
     return;
   }
   if (this.Base.options.eventType === eventType.CONTEXTMENU) {
@@ -570,7 +566,7 @@ Internal.prototype.handleEvent = function handleEvent (evt) {
     evt.stopPropagation();
     evt.preventDefault();
   }
-  this_.openMenu(this_.pixel_clicked, this_.coordinate_clicked);
+  this.openMenu(this.pixelClicked, this.coordinateClicked);
 
   //one-time fire
   evt.target.addEventListener('mousedown', {
@@ -607,24 +603,26 @@ var Html = function Html(base) {
   return this;
 };
 
-Html.prototype.createContainer = function createContainer () {
-  var container = document.createElement('ul');
-  container.className = [
-    CLASSNAME.container,
-    CLASSNAME.hidden,
-    CLASSNAME.OL_unselectable
-  ].join(' ');
+Html.prototype.createContainer = function createContainer (hidden) {
+  var container = document.createElement('div');
+  var ul = document.createElement('ul');
+  var klasses =[CLASSNAME.container, CLASSNAME.OL_unselectable];
+
+  hidden && klasses.push(CLASSNAME.hidden);
+  container.className = klasses.join(' ');
   container.style.width = parseInt(this.Base.options.width, 10) + 'px';
+  container.appendChild(ul);
   return container;
 };
 
 Html.prototype.createMenu = function createMenu () {
-  var options = this.Base.options, items = [];
+  var items = [];
 
-  if ('items' in options) {
-    items = (options.defaultItems) ?
-        options.items.concat(defaultItems) : options.items;
-  } else if (options.defaultItems) {
+  if ('items' in this.Base.options) {
+    items = (this.Base.options.defaultItems)
+      ? this.Base.options.items.concat(defaultItems)
+      : this.Base.options.items;
+  } else if (this.Base.options.defaultItems) {
     items = defaultItems;
   }
   // no item
@@ -636,50 +634,43 @@ Html.prototype.createMenu = function createMenu () {
 Html.prototype.addMenuEntry = function addMenuEntry (item) {
     var this$1 = this;
 
-  var $internal = this.Base.constructor.Internal;
-  var index = $internal.getNextItemIndex();
-
   if (item.items && Array.isArray(item.items)) {
     // submenu - only a second level
     item.classname = item.classname || '';
     if (!utils.contains(CLASSNAME.submenu, item.classname)) {
-      item.classname = item.classname.length > 0
+      item.classname = item.classname.length
         ? ' ' + CLASSNAME.submenu
         : CLASSNAME.submenu;
     }
 
-    var li = this.generateHtmlAndPublish(this.container, item, index);
-    var ul = document.createElement('ul');
-
-    ul.className = CLASSNAME.container;
-    ul.style.left = $internal.submenu.last_left || $internal.submenu.left;
-    ul.style.width = this.Base.options.width + 'px';
-    li.appendChild(ul);
+    var li = this.generateHtmlAndPublish(this.container, item);
+    var sub = this.createContainer();
+    sub.style.left = this.Base.Internal.submenu.lastLeft ||
+        this.Base.Internal.submenu.left;
+    li.appendChild(sub);
 
     item.items.forEach(function (each) {
-      this$1.generateHtmlAndPublish(
-          ul, each, $internal.getNextItemIndex(), true);
+      this$1.generateHtmlAndPublish(sub, each, true);
     });
   } else {
-    this.generateHtmlAndPublish(this.container, item, index);
+    this.generateHtmlAndPublish(this.container, item);
   }
 };
 
-Html.prototype.generateHtmlAndPublish = function generateHtmlAndPublish (parent, item, index, submenu) {
+Html.prototype.generateHtmlAndPublish = function generateHtmlAndPublish (parent, item, submenu) {
   var html, frag, element, separator = false;
-  var $internal = this.Base.constructor.Internal;
+  var index = utils.getUniqueId();
 
   // separator
   if (typeof item === 'string' && item.trim() === '-') {
     html = [
-      '<li id="index', index,
-      '" class="', CLASSNAME.separator,
-      '"><hr></li>'
+      '<li id="', index, '" class="', CLASSNAME.separator, '">',
+      '<hr></li>'
     ].join('');
     frag = utils.createFragment(html);
     // http://stackoverflow.com/a/13347298/4640499
     element = [].slice.call(frag.childNodes, 0)[0];
-    parent.appendChild(frag);
+    parent.firstChild.appendChild(frag);
     // to exclude from lineHeight calculation
     separator = true;
   } else {
@@ -698,31 +689,27 @@ Html.prototype.generateHtmlAndPublish = function generateHtmlAndPublish (parent,
           'style', 'background-image:url(' + item.icon + ')');
     }
 
-    element.id = 'index' + index;
+    element.id = index;
     element.className = item.classname;
     element.appendChild(frag);
-    parent.appendChild(element);
+    parent.firstChild.appendChild(element);
   }
 
-  $internal.items[index] = {
+  this.Base.Internal.items[index] = {
     id: index,
     submenu: submenu || 0,
     separator: separator,
     callback: item.callback,
     data: item.data || null
   };
-
-  $internal.setItemListener(element, index);
-
+  this.Base.Internal.setItemListener(element, index);
   return element;
 };
 
 Html.prototype.removeMenuEntry = function removeMenuEntry (index) {
-  var element = utils.find('#index' + index, this.container);
-  if (element) {
-    this.container.removeChild(element);
-  }
-  delete this.Base.constructor.Internal.items[index];
+  var element = utils.find('#' + index, this.container.firstChild);
+  element && this.container.firstChild.removeChild(element);
+  delete this.Base.Internal.items[index];
 };
 
 Html.prototype.cloneAndGetLineHeight = function cloneAndGetLineHeight () {
@@ -763,8 +750,8 @@ var Base = (function (superclass) {
     this.options = utils.mergeOptions(defaultOptions, opt_options);
     this.disabled = false;
 
-    Base.Internal = new Internal(this);
-    Base.Html = new Html(this);
+    this.Internal = new Internal(this);
+    this.Html = new Html(this);
 
     superclass.call(this, {
       element: this.container
@@ -779,8 +766,10 @@ var Base = (function (superclass) {
    * Remove all elements from the menu.
    */
   Base.prototype.clear = function clear () {
-    Object.keys(Base.Internal.items).forEach(function (k) {
-      Base.Html.removeMenuEntry(k);
+    var this$1 = this;
+
+    Object.keys(this.Internal.items).forEach(function (k) {
+      this$1.Html.removeMenuEntry(k);
     });
   };
 
@@ -788,7 +777,7 @@ var Base = (function (superclass) {
    * Close the menu programmatically.
    */
   Base.prototype.close = function close () {
-    Base.Internal.closeMenu();
+    this.Internal.closeMenu();
   };
 
   /**
@@ -826,15 +815,25 @@ var Base = (function (superclass) {
    * Am I opened?.
    */
   Base.prototype.isOpened = function isOpened () {
-    return Base.Internal.opened;
+    return this.Internal.opened;
+  };
+
+  /**
+   * Update the menu's position.
+   */
+  Base.prototype.updatePosition = function updatePosition (pixel) {
+    utils.assert(Array.isArray(pixel), '@param `pixel` should be an Array.');
+    if (this.isOpened()) {
+      this.Internal.positionContainer(pixel);
+    }
   };
 
   /**
    * Remove the last item of the menu.
    */
   Base.prototype.pop = function pop () {
-    var keys = Object.keys(Base.Internal.items);
-    Base.Html.removeMenuEntry(keys[keys.length - 1]);
+    var keys = Object.keys(this.Internal.items);
+    this.Html.removeMenuEntry(keys[keys.length - 1]);
   };
 
   /**
@@ -844,14 +843,14 @@ var Base = (function (superclass) {
   Base.prototype.push = function push (item) {
     utils.assert(
         utils.isDefAndNotNull(item), '@param `item` must be informed.');
-    Base.Html.addMenuEntry(item, Base.Internal.getNextItemIndex());
+    this.Html.addMenuEntry(item);
   };
 
   /**
    * Remove the first item of the menu.
    */
   Base.prototype.shift = function shift () {
-    Base.Html.removeMenuEntry(Object.keys(Base.Internal.items)[0]);
+    this.Html.removeMenuEntry(Object.keys(this.Internal.items)[0]);
   };
 
   /**
@@ -861,10 +860,10 @@ var Base = (function (superclass) {
     ol.control.Control.prototype.setMap.call(this, map);
     if (map) {
       // let's start since now we have the map
-      Base.Internal.init(map);
+      this.Internal.init(map, this);
     } else {
       // I'm removed from the map - remove listeners
-      Base.Internal.removeListeners();
+      this.Internal.removeListeners();
     }
   };
 
