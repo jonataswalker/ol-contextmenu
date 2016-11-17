@@ -1,4 +1,4 @@
-var require = patchRequire(require);
+var require = patchRequire(require); // eslint-disable-line no-use-before-define
 
 // path here is relative to where this will be injected
 var config      = require('../config');

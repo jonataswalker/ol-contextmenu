@@ -226,6 +226,10 @@ export default {
   contains(str_test, str) {
     return !!~str.indexOf(str_test);
   },
+  getUniqueId() {
+//     return (new Date().getTime()).toString(36);
+    return '_' + Math.random().toString(36).substr(2, 9);
+  },
   isDefAndNotNull(val) {
     // Note that undefined == null.
     return val != null; // eslint-disable-line no-eq-null

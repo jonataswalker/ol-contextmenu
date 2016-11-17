@@ -20,7 +20,11 @@ export const eventType = {
   /**
    * Internal.
    */
-  CONTEXTMENU: 'contextmenu'
+  CONTEXTMENU: 'contextmenu',
+  /**
+   * Internal.
+   */
+  HOVER: 'mouseover'
 };
 
 export const VARS = _VARS;
@@ -41,6 +45,7 @@ export const CLASSNAME = {
 
 export const defaultOptions = {
   width: 150,
+  scrollAt: 4,
   eventType: eventType.CONTEXTMENU,
   defaultItems: true
 };
