@@ -11,7 +11,6 @@ cache:
   directories:
     - travis-phantomjs
     - node_modules
-    - $HOME/.yarn-cache
 
 before_install:
   # PhantomJS
@@ -20,13 +19,6 @@ before_install:
   - "if [ $(phantomjs --version) != '2.1.1' ]; then tar -xf $PWD/travis-phantomjs/v2.1.1.tar.gz -C $PWD/travis-phantomjs; fi"
   - "if [ $(phantomjs --version) != '2.1.1' ]; then sudo ln -sf $PWD/travis-phantomjs/phantomjs-builds-2.1.1/bin/phantomjs $(which phantomjs); fi"
   - "phantomjs --version"
-  # Repo for Yarn
-  - sudo curl https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-  - echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-  - sudo apt-get update -qq
-  - sudo apt-get install -y -qq yarn
-  
-install: yarn
 
 before_script:
   
