@@ -8,7 +8,6 @@ node_js:
 
 cache:
   bundler: true
-  yarn: true
   directories:
     - travis-phantomjs
     - node_modules
