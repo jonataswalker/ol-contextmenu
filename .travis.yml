@@ -21,9 +21,9 @@ before_install:
   - "phantomjs --version"
 
 before_script:
-  
+
 script:
-  - xvfb-run -a make ci
+  - xvfb-run -a npm run test
 
 branches:
   only:
