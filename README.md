@@ -1,8 +1,25 @@
 # OpenLayers 3 Custom Context Menu
 
-[![Build Status](https://travis-ci.org/jonataswalker/ol3-contextmenu.svg?branch=master)](https://travis-ci.org/jonataswalker/ol3-contextmenu)
-
-[![NPM](https://nodei.co/npm/ol3-contextmenu.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/ol3-contextmenu/)
+<p align="center">
+  <a href="https://travis-ci.org/jonataswalker/ol3-contextmenu">
+    <img src="https://travis-ci.org/jonataswalker/ol3-contextmenu.svg?branch=master" alt="build status">
+  </a>
+  <a href="https://www.npmjs.com/package/ol3-contextmenu">
+    <img src="https://img.shields.io/npm/v/ol3-contextmenu.svg"
+      alt="npm version">
+  </a>
+  <a href="https://github.com/jonataswalker/ol3-contextmenu/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/ol3-contextmenu.svg"
+      alt="license">
+  </a>
+  <a href="https://david-dm.org/jonataswalker/ol3-contextmenu">
+    <img src="https://david-dm.org/jonataswalker/ol3-contextmenu/status.svg"
+      alt="dependency status">
+  </a>
+  <a href="https://david-dm.org/jonataswalker/ol3-contextmenu">
+    <img src="https://david-dm.org/jonataswalker/ol3-contextmenu/dev-status.svg" alt="devDependency status">
+  </a>
+</p>
 
 A `contextmenu` extension for [OpenLayers 3](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
 
