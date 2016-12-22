@@ -1,4 +1,5 @@
 import * as _VARS from '../../config/vars.json';
+import ol from 'openlayers';
 
 export const eventType = {
   /**
