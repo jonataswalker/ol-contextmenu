@@ -84,9 +84,14 @@ export default class Base extends ol.control.Control {
   }
 
   /**
-   * Am I opened?.
+   * bad english
+   * keep it (for a while) to not break changes
    */
   isOpened() {
+    return this.isOpen();
+  }
+
+  isOpen() {
     return this.Internal.opened;
   }
 
@@ -95,7 +100,7 @@ export default class Base extends ol.control.Control {
    */
   updatePosition(pixel) {
     utils.assert(Array.isArray(pixel), '@param `pixel` should be an Array.');
-    if (this.isOpened()) {
+    if (this.isOpen()) {
       this.Internal.positionContainer(pixel);
     }
   }

@@ -70,7 +70,7 @@ map.addControl(contextmenu);
 
 ##### You can add a (nested) submenu like this:
 
-If you provide `items {Array}` a submenu will be created as a child of the current item. 
+If you provide `items {Array}` a submenu will be created as a child of the current item.
 
 ```javascript
 var all_items = [
@@ -190,9 +190,9 @@ Remove the last item of the menu.
 
 Get an array of default items.
 
-#### contextmenu.isOpened()
+#### contextmenu.isOpen()
 
-Whether the menu is opened.
+Whether the menu is open.
 
 #### contextmenu.updatePosition(pixel)
 

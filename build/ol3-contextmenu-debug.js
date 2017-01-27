@@ -1,8 +1,8 @@
-/**
+/*!
+ * ol3-contextmenu - v2.4.1
  * Custom Context Menu for Openlayers 3
  * https://github.com/jonataswalker/ol3-contextmenu
- * Version: v2.4.0
- * Built: 2016-11-17T16:44:59-02:00
+ * Built: Fri Jan 27 2017 07:46:19 GMT-0200 (BRST)
  */
 
 (function (global, factory) {
@@ -812,9 +812,14 @@ var Base = (function (superclass) {
   };
 
   /**
-   * Am I opened?.
+   * bad english
+   * keep it (for a while) to not break changes
    */
   Base.prototype.isOpened = function isOpened () {
+    return this.isOpen();
+  };
+
+  Base.prototype.isOpen = function isOpen () {
     return this.Internal.opened;
   };
 
@@ -823,7 +828,7 @@ var Base = (function (superclass) {
    */
   Base.prototype.updatePosition = function updatePosition (pixel) {
     utils.assert(Array.isArray(pixel), '@param `pixel` should be an Array.');
-    if (this.isOpened()) {
+    if (this.isOpen()) {
       this.Internal.positionContainer(pixel);
     }
   };
