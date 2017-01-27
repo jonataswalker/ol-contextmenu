@@ -167,17 +167,17 @@ casper.test.begin('Assert API Methods', 9, function (test) {
         default_items.length + 1, 'Ok, push() method');
   });
 
-  // isOpened()
+  // isOpen()
   closeAndRightClick();
   casper.waitFor(function () {
     return this.evaluate(function () {
-      window.opened = window.contextmenu.isOpened();
+      window.opened = window.contextmenu.isOpen();
       return window.opened === true;
     });
   }, function then() {
-    test.pass('Ok, #isOpened method');
+    test.pass('Ok, #isOpen method');
   }, function timeout() {
-    test.fail('Failed #isOpened method');
+    test.fail('Failed #isOpen method');
   });
 
   casper.run(function () {
