@@ -55,37 +55,24 @@ export const defaultItems = [
     text: 'Zoom In',
     classname: [CLASSNAME.zoomIn, CLASSNAME.icon].join(' '),
     callback: (obj, map) => {
-      const view = map.getView(),
-          pan = ol.animation.pan({
-            duration: 1000,
-            source: view.getCenter()
-          }),
-          zoom = ol.animation.zoom({
-            duration: 1000,
-            resolution: view.getResolution()
-          });
-
-      map.beforeRender(pan, zoom);
-      view.setCenter(obj.coordinate);
-      view.setZoom(+view.getZoom() + 1);
+      const view = map.getView();
+      view.animate({
+        zoom: +view.getZoom() + 1,
+        duration: 700,
+        center: obj.coordinate
+      });
     }
   },
   {
     text: 'Zoom Out',
     classname: [CLASSNAME.zoomOut, CLASSNAME.icon].join(' '),
     callback: (obj, map) => {
-      const view = map.getView(),
-          pan = ol.animation.pan({
-            duration: 1000,
-            source: view.getCenter()
-          }),
-          zoom = ol.animation.zoom({
-            duration: 1000,
-            resolution: view.getResolution()
-          });
-      map.beforeRender(pan, zoom);
-      view.setCenter(obj.coordinate);
-      view.setZoom(+view.getZoom() - 1);
+      const view = map.getView();
+      view.animate({
+        zoom: +view.getZoom() - 1,
+        duration: 700,
+        center: obj.coordinate
+      });
     }
   }
 ];
