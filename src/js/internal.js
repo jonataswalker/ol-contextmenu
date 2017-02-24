@@ -21,7 +21,7 @@ export class Internal {
     /**
       * @type {Element}
       */
-    this.mapElement = undefined;
+    this.viewport = undefined;
     /**
       * @type {ol.Coordinate}
       */
@@ -58,7 +58,7 @@ export class Internal {
 
   init(map) {
     this.map = map;
-    this.mapElement = map.getTargetElement();
+    this.viewport = map.getViewport();
     this.setListeners();
     this.Base.Html.createMenu();
 
@@ -163,12 +163,12 @@ export class Internal {
   }
 
   setListeners() {
-    this.mapElement.addEventListener(
+    this.viewport.addEventListener(
         this.Base.options.eventType, this.eventHandler, false);
   }
 
   removeListeners() {
-    this.mapElement.removeEventListener(
+    this.viewport.removeEventListener(
         this.Base.options.eventType, this.eventHandler, false);
   }
 
