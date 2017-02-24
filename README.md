@@ -1,4 +1,4 @@
-# OpenLayers 3 Custom Context Menu
+# OpenLayers Custom Context Menu
 
 <p align="center">
   <a href="https://travis-ci.org/jonataswalker/ol3-contextmenu">
@@ -21,12 +21,12 @@
   </a>
 </p>
 
-A `contextmenu` extension for [OpenLayers 3](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
+A `contextmenu` extension for [OpenLayers](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
 
 ![contextmenu anim](https://raw.githubusercontent.com/jonataswalker/ol3-contextmenu/screenshot/images/anim.gif)
 
 ## Demo
-You can see [here a demo](http://rawgit.com/jonataswalker/ol3-contextmenu/master/examples/contextmenu.html) or [JSFiddle](http://jsfiddle.net/jonataswalker/ooxs1w5d/).
+You can see [here a demo](http://rawgit.com/jonataswalker/ol3-contextmenu/master/examples/contextmenu.html) or [JSFiddle](https://jsfiddle.net/jonataswalker/ooxs1w5d/).
 
 ## How to use it?
 ##### CDN Hosted - [jsDelivr](http://www.jsdelivr.com/projects/openlayers.contextmenu)
