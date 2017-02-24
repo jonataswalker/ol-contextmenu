@@ -1,8 +1,8 @@
 /*!
- * ol3-contextmenu - v2.4.1
- * Custom Context Menu for Openlayers 3
+ * ol3-contextmenu - v2.5.0
+ * Custom Context Menu for Openlayers
  * https://github.com/jonataswalker/ol3-contextmenu
- * Built: Fri Jan 27 2017 07:46:19 GMT-0200 (BRST)
+ * Built: Fri Feb 24 2017 15:11:20 GMT-0300 (BRT)
  */
 
 (function (global, factory) {
@@ -76,37 +76,24 @@ var defaultItems = [
     text: 'Zoom In',
     classname: [CLASSNAME.zoomIn, CLASSNAME.icon].join(' '),
     callback: function (obj, map) {
-      var view = map.getView(),
-          pan = ol.animation.pan({
-            duration: 1000,
-            source: view.getCenter()
-          }),
-          zoom = ol.animation.zoom({
-            duration: 1000,
-            resolution: view.getResolution()
-          });
-
-      map.beforeRender(pan, zoom);
-      view.setCenter(obj.coordinate);
-      view.setZoom(+view.getZoom() + 1);
+      var view = map.getView();
+      view.animate({
+        zoom: +view.getZoom() + 1,
+        duration: 700,
+        center: obj.coordinate
+      });
     }
   },
   {
     text: 'Zoom Out',
     classname: [CLASSNAME.zoomOut, CLASSNAME.icon].join(' '),
     callback: function (obj, map) {
-      var view = map.getView(),
-          pan = ol.animation.pan({
-            duration: 1000,
-            source: view.getCenter()
-          }),
-          zoom = ol.animation.zoom({
-            duration: 1000,
-            resolution: view.getResolution()
-          });
-      map.beforeRender(pan, zoom);
-      view.setCenter(obj.coordinate);
-      view.setZoom(+view.getZoom() - 1);
+      var view = map.getView();
+      view.animate({
+        zoom: +view.getZoom() - 1,
+        duration: 700,
+        center: obj.coordinate
+      });
     }
   }
 ];
@@ -391,7 +378,7 @@ var Internal = function Internal(base) {
   /**
     * @type {Element}
     */
-  this.mapElement = undefined;
+  this.viewport = undefined;
   /**
     * @type {ol.Coordinate}
     */
@@ -428,7 +415,7 @@ var Internal = function Internal(base) {
 
 Internal.prototype.init = function init (map) {
   this.map = map;
-  this.mapElement = map.getTargetElement();
+  this.viewport = map.getViewport();
   this.setListeners();
   this.Base.Html.createMenu();
 
@@ -537,12 +524,12 @@ Internal.prototype.closeMenu = function closeMenu () {
 };
 
 Internal.prototype.setListeners = function setListeners () {
-  this.mapElement.addEventListener(
+  this.viewport.addEventListener(
       this.Base.options.eventType, this.eventHandler, false);
 };
 
 Internal.prototype.removeListeners = function removeListeners () {
-  this.mapElement.removeEventListener(
+  this.viewport.removeEventListener(
       this.Base.options.eventType, this.eventHandler, false);
 };
 
