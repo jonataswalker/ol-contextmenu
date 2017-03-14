@@ -46,6 +46,13 @@ export default class Base extends ol.control.Control {
   }
 
   /**
+   * Open the menu programmatically.
+   */
+  open(pixel) {
+    this.Internal.openMenu(pixel);
+  }
+
+  /**
    * Close the menu programmatically.
    */
   close() {
