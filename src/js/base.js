@@ -44,7 +44,7 @@ export default class Base extends ol.control.Control {
       this.Html.removeMenuEntry(k);
     });
   }
-  
+
   /**
    * Open the menu programmatically.
    */
