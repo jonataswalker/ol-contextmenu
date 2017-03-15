@@ -6,6 +6,7 @@ import {
 import { Internal } from './internal';
 import { Html } from './html';
 import utils from './utils';
+import ol from 'openlayers';
 
 /**
  * @class Base
