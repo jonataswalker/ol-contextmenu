@@ -74,7 +74,7 @@ map.on('pointermove', function(e) {
   var pixel = map.getEventPixel(e.originalEvent);
   var hit = map.hasFeatureAtPixel(pixel);
 
-  map.getTarget().style.cursor = hit ? 'pointer' : '';
+  map.getTargetElement().style.cursor = hit ? 'pointer' : '';
 });
 
 // from https://github.com/DmitryBaranovskiy/raphael
