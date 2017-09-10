@@ -32,8 +32,8 @@ You can see [here a demo](http://rawgit.com/jonataswalker/ol3-contextmenu/master
 ##### CDN Hosted - [jsDelivr](http://www.jsdelivr.com/projects/openlayers.contextmenu)
 Load CSS and Javascript:
 ```HTML
-<link href="//cdn.jsdelivr.net/openlayers.contextmenu/latest/ol3-contextmenu.min.css" rel="stylesheet">
-<script src="//cdn.jsdelivr.net/openlayers.contextmenu/latest/ol3-contextmenu.js"></script>
+<link href="//cdn.jsdelivr.net/npm/ol3-contextmenu@latest/build/ol3-contextmenu.min.css" rel="stylesheet">
+<script src="//cdn.jsdelivr.net/npm/ol3-contextmenu@latest/build/ol3-contextmenu.js"></script>
 ```
 ##### CDN Hosted - UNPKG
 Load CSS and Javascript:
