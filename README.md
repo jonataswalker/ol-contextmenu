@@ -1,48 +1,45 @@
 # OpenLayers Custom Context Menu
 
 <p align="center">
-  <a href="https://travis-ci.org/jonataswalker/ol3-contextmenu">
-    <img src="https://travis-ci.org/jonataswalker/ol3-contextmenu.svg?branch=master" alt="build status">
+  <a href="https://travis-ci.org/jonataswalker/ol-contextmenu">
+    <img src="https://travis-ci.org/jonataswalker/ol-contextmenu.svg?branch=master" alt="build status">
   </a>
-  <a href="https://www.npmjs.com/package/ol3-contextmenu">
-    <img src="https://img.shields.io/npm/v/ol3-contextmenu.svg"
+  <a href="https://www.npmjs.com/package/ol-contextmenu">
+    <img src="https://img.shields.io/npm/v/ol-contextmenu.svg"
       alt="npm version">
   </a>
-  <a href="https://github.com/jonataswalker/ol3-contextmenu/blob/master/LICENSE">
-    <img src="https://img.shields.io/npm/l/ol3-contextmenu.svg"
+  <a href="https://github.com/jonataswalker/ol-contextmenu/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/ol-contextmenu.svg"
       alt="license">
   </a>
-  <a href="https://david-dm.org/jonataswalker/ol3-contextmenu">
-    <img src="https://david-dm.org/jonataswalker/ol3-contextmenu/status.svg"
+  <a href="https://david-dm.org/jonataswalker/ol-contextmenu">
+    <img src="https://david-dm.org/jonataswalker/ol-contextmenu/status.svg"
       alt="dependency status">
   </a>
-  <a href="https://david-dm.org/jonataswalker/ol3-contextmenu">
-    <img src="https://david-dm.org/jonataswalker/ol3-contextmenu/dev-status.svg" alt="devDependency status">
+  <a href="https://david-dm.org/jonataswalker/ol-contextmenu">
+    <img src="https://david-dm.org/jonataswalker/ol-contextmenu/dev-status.svg" alt="devDependency status">
   </a>
 </p>
 
 A `contextmenu` extension for [OpenLayers](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
 
-![contextmenu anim](https://raw.githubusercontent.com/jonataswalker/ol3-contextmenu/screenshot/images/anim.gif)
+![contextmenu anim](https://raw.githubusercontent.com/jonataswalker/ol-contextmenu/screenshot/images/anim.gif)
 
 ## Demo
-You can see [here a demo](http://rawgit.com/jonataswalker/ol3-contextmenu/master/examples/contextmenu.html) or [JSFiddle](https://jsfiddle.net/jonataswalker/ooxs1w5d/).
+You can see [here a demo](http://rawgit.com/jonataswalker/ol-contextmenu/master/examples/contextmenu.html) or [JSFiddle](https://jsfiddle.net/jonataswalker/ooxs1w5d/).
 
 ## How to use it?
-##### CDN Hosted - [jsDelivr](http://www.jsdelivr.com/projects/openlayers.contextmenu)
-Load CSS and Javascript:
-```HTML
-<link href="//cdn.jsdelivr.net/openlayers.contextmenu/latest/ol3-contextmenu.min.css" rel="stylesheet">
-<script src="//cdn.jsdelivr.net/openlayers.contextmenu/latest/ol3-contextmenu.js"></script>
-```
+##### NPM
+`npm install ol-contextmenu`
+
 ##### CDN Hosted - UNPKG
 Load CSS and Javascript:
 ```HTML
-<link href="https://unpkg.com/ol3-contextmenu/build/ol3-contextmenu.min.css" rel="stylesheet">
-<script src="https://unpkg.com/ol3-contextmenu/build/ol3-contextmenu.js"></script>
+<link href="https://unpkg.com/ol-contextmenu/dist/ol-contextmenu.min.css" rel="stylesheet">
+<script src="https://unpkg.com/ol-contextmenu"></script>
 ```
 ##### Self hosted
-Download [latest release](https://github.com/jonataswalker/ol3-contextmenu/releases/latest) and (obviously) load CSS and Javascript.
+Download [latest release](https://github.com/jonataswalker/ol-contextmenu/releases/latest) and (obviously) load CSS and Javascript.
 
 ##### Instantiate with some options and add the Control
 ```javascript
@@ -98,7 +95,7 @@ var all_items = [
 
 ##### Would you like to propagate custom data to the callback handler?
 ```javascript
-var removeMarker = function(obj){
+var removeMarker = function (obj) {
   vectorLayer.getSource().removeFeature(obj.data.marker);
 };
 var removeMarkerItem = {
@@ -108,15 +105,13 @@ var removeMarkerItem = {
 };
 
 var restore = false;
-contextmenu.on('open', function(evt){
-  var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
+contextmenu.on('open', function (evt) {
+  var feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
     return ft;
   });
   if (feature) {
     contextmenu.clear();
-    removeMarkerItem.data = {
-      marker: feature
-    };
+    removeMarkerItem.data = { marker: feature };
     contextmenu.push(removeMarkerItem);
     restore = true;
   } else if (restore) {
@@ -206,8 +201,8 @@ Update menu's position.
 #### If you want to disable this plugin under certain circumstances, listen to `beforeopen`
 
 ```javascript
-contextmenu.on('beforeopen', function(evt){
-  var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
+contextmenu.on('beforeopen', function (evt) {
+  var feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
     return ft;
   });
 
@@ -223,7 +218,7 @@ contextmenu.on('beforeopen', function(evt){
 
 ```javascript
 contextmenu.on('open', function(evt){
-  var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
+  var feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
     return ft;
   });
 
@@ -236,7 +231,7 @@ contextmenu.on('open', function(evt){
 #### Any action when context menu gets closed?
 
 ```javascript
-contextmenu.on('close', function(evt){
+contextmenu.on('close', function (evt) {
   // it's upon you
 });
 ```

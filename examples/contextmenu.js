@@ -38,6 +38,12 @@ var contextmenu_items = [
   '-' // this is a separator
 ];
 
+var removeMarkerItem = {
+  text: 'Remove this Marker',
+  classname: 'marker',
+  callback: removeMarker
+};
+
 var contextmenu = new ContextMenu({
   width: 180,
   items: contextmenu_items
@@ -45,17 +51,11 @@ var contextmenu = new ContextMenu({
 map.addControl(contextmenu);
 
 
-var removeMarkerItem = {
-  text: 'Remove this Marker',
-  classname: 'marker',
-  callback: removeMarker
-};
-
-contextmenu.on('open', function(evt){
-  var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l){
+contextmenu.on('open', function (evt) {
+  var feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
     return ft;
   });
-  if (feature && feature.get('type') == 'removable') {
+  if (feature && feature.get('type') === 'removable') {
     contextmenu.clear();
     removeMarkerItem.data = {
       marker: feature
@@ -68,13 +68,13 @@ contextmenu.on('open', function(evt){
   }
 });
 
-map.on('pointermove', function(e) {
+map.on('pointermove', function (e) {
   if (e.dragging) return;
 
   var pixel = map.getEventPixel(e.originalEvent);
   var hit = map.hasFeatureAtPixel(pixel);
 
-  map.getTarget().style.cursor = hit ? 'pointer' : '';
+  map.getTargetElement().style.cursor = hit ? 'pointer' : '';
 });
 
 // from https://github.com/DmitryBaranovskiy/raphael
