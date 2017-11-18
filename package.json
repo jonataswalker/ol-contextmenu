@@ -13,6 +13,9 @@
   "bugs": {
     "url": "https://github.com/jonataswalker/ol-contextmenu/issues"
   },
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "dev": "run-s lint build:css rollup:dev",
     "build": "run-s lint rollup build:css",

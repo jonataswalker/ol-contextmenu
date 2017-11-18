@@ -32,6 +32,13 @@ You can see [here a demo](http://rawgit.com/jonataswalker/ol-contextmenu/master/
 ##### NPM
 `npm install ol-contextmenu`
 
+##### CDN Hosted - [jsDelivr](https://www.jsdelivr.com/package/npm/ol-contextmenu)
+Load CSS and Javascript:
+```HTML
+<link href="https://cdn.jsdelivr.net/npm/ol-contextmenu@latest/dist/ol-contextmenu.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/ol-contextmenu"></script>
+```
+
 ##### CDN Hosted - UNPKG
 Load CSS and Javascript:
 ```HTML
