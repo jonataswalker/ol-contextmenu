@@ -1,6 +1,8 @@
-import * as _VARS from '../../config/vars.json';
+import * as _VARS_ from './vars.json';
 
-export const eventType = {
+export const VARS = _VARS_;
+
+export const EVENT_TYPE = {
   /**
    * Triggered before context menu is openned.
    */
@@ -27,33 +29,32 @@ export const eventType = {
   HOVER: 'mouseover'
 };
 
-export const VARS = _VARS;
-
 /**
  * DOM Elements classname
  */
 export const CLASSNAME = {
-  container       : _VARS.namespace + _VARS.container_class,
-  separator       : _VARS.namespace + _VARS.separator_class,
-  submenu         : _VARS.namespace + _VARS.submenu_class,
-  hidden          : _VARS.namespace + _VARS.hidden_class,
-  icon            : _VARS.namespace + _VARS.icon_class,
-  zoomIn          : _VARS.namespace + _VARS.zoom_in_class,
-  zoomOut         : _VARS.namespace + _VARS.zoom_out_class,
-  OL_unselectable : _VARS.ol_unselectable_class
+  container       : VARS.namespace + VARS.container_class,
+  separator       : VARS.namespace + VARS.separator_class,
+  submenu         : VARS.namespace + VARS.submenu_class,
+  hidden          : VARS.namespace + VARS.hidden_class,
+  icon            : VARS.namespace + VARS.icon_class,
+  zoomIn          : VARS.namespace + VARS.zoom_in_class,
+  zoomOut         : VARS.namespace + VARS.zoom_out_class,
+  OL_unselectable : VARS.ol_unselectable_class
 };
 
-export const defaultOptions = {
+
+export const DEFAULT_OPTIONS = {
   width: 150,
   scrollAt: 4,
-  eventType: eventType.CONTEXTMENU,
+  eventType: EVENT_TYPE.CONTEXTMENU,
   defaultItems: true
 };
 
-export const defaultItems = [
+export const DEFAULT_ITEMS = [
   {
     text: 'Zoom In',
-    classname: [CLASSNAME.zoomIn, CLASSNAME.icon].join(' '),
+    classname: `${CLASSNAME.zoomIn} ${CLASSNAME.icon}`,
     callback: (obj, map) => {
       const view = map.getView();
       view.animate({
@@ -65,7 +66,7 @@ export const defaultItems = [
   },
   {
     text: 'Zoom Out',
-    classname: [CLASSNAME.zoomOut, CLASSNAME.icon].join(' '),
+    classname: `${CLASSNAME.zoomOut} ${CLASSNAME.icon}`,
     callback: (obj, map) => {
       const view = map.getView();
       view.animate({
@@ -76,3 +77,4 @@ export const defaultItems = [
     }
   }
 ];
+

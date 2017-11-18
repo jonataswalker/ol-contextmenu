@@ -1,11 +1,8 @@
-import {
-  defaultOptions as DEFAULT_OPTIONS,
-  defaultItems as DEFAULT_ITEMS
-} from './constants';
-
+import ol from 'openlayers';
+import { DEFAULT_OPTIONS, DEFAULT_ITEMS } from 'konstants';
 import { Internal } from './internal';
 import { Html } from './html';
-import utils from './utils';
+import { assert, mergeOptions, isDefAndNotNull } from 'helpers/mix';
 
 /**
  * @class Base
@@ -17,32 +14,26 @@ export default class Base extends ol.control.Control {
    * @param {object|undefined} opt_options Options.
    */
   constructor(opt_options = {}) {
-    utils.assert(typeof opt_options == 'object',
+    assert(
+      typeof opt_options == 'object',
       '@param `opt_options` should be object type!'
     );
 
-    // keep old `default_items` compatibility
-    if ('default_items' in opt_options) {
-      DEFAULT_OPTIONS.defaultItems = opt_options.default_items;
-    }
-    this.options = utils.mergeOptions(DEFAULT_OPTIONS, opt_options);
+    this.options = mergeOptions(DEFAULT_OPTIONS, opt_options);
     this.disabled = false;
 
     this.Internal = new Internal(this);
     this.Html = new Html(this);
 
-    super({
-      element: this.container
-    });
+    super({ element: this.container });
   }
 
   /**
    * Remove all elements from the menu.
    */
   clear() {
-    Object.keys(this.Internal.items).forEach(k => {
-      this.Html.removeMenuEntry(k);
-    });
+    Object.keys(this.Internal.items)
+      .forEach(this.Html.removeMenuEntry, this.Html);
   }
 
   /**
@@ -79,16 +70,8 @@ export default class Base extends ol.control.Control {
    * @param {Array} arr Array.
    */
   extend(arr) {
-    utils.assert(Array.isArray(arr), '@param `arr` should be an Array.');
+    assert(Array.isArray(arr), '@param `arr` should be an Array.');
     arr.forEach(this.push, this);
-  }
-
-  /**
-   * bad english
-   * keep it (for a while) to not break changes
-   */
-  isOpened() {
-    return this.isOpen();
   }
 
   isOpen() {
@@ -99,7 +82,8 @@ export default class Base extends ol.control.Control {
    * Update the menu's position.
    */
   updatePosition(pixel) {
-    utils.assert(Array.isArray(pixel), '@param `pixel` should be an Array.');
+    assert(Array.isArray(pixel), '@param `pixel` should be an Array.');
+
     if (this.isOpen()) {
       this.Internal.positionContainer(pixel);
     }
@@ -118,8 +102,7 @@ export default class Base extends ol.control.Control {
    * @param {Object|String} item Item.
    */
   push(item) {
-    utils.assert(
-        utils.isDefAndNotNull(item), '@param `item` must be informed.');
+    assert(isDefAndNotNull(item), '@param `item` must be informed.');
     this.Html.addMenuEntry(item);
   }
 
@@ -134,7 +117,9 @@ export default class Base extends ol.control.Control {
    * Not supposed to be used on app.
    */
   setMap(map) {
+
     ol.control.Control.prototype.setMap.call(this, map);
+
     if (map) {
       // let's start since now we have the map
       this.Internal.init(map, this);

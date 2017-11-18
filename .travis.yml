@@ -2,30 +2,30 @@ sudo: required
 dist: trusty
 
 language: node_js
-
 node_js:
-  - "6"
+  - "8"
 
 cache:
   bundler: true
   directories:
-    - travis-phantomjs
     - node_modules
 
+addons:
+  chrome: stable
+
 before_install:
-  # PhantomJS
-  - "if [ $(phantomjs --version) != '2.1.1' ]; then rm -rf $PWD/travis-phantomjs; mkdir -p $PWD/travis-phantomjs; fi"
-  - "if [ $(phantomjs --version) != '2.1.1' ]; then wget https://github.com/BIGjuevos/phantomjs-builds/archive/v2.1.1.tar.gz -O $PWD/travis-phantomjs/v2.1.1.tar.gz; fi"
-  - "if [ $(phantomjs --version) != '2.1.1' ]; then tar -xf $PWD/travis-phantomjs/v2.1.1.tar.gz -C $PWD/travis-phantomjs; fi"
-  - "if [ $(phantomjs --version) != '2.1.1' ]; then sudo ln -sf $PWD/travis-phantomjs/phantomjs-builds-2.1.1/bin/phantomjs $(which phantomjs); fi"
-  - "phantomjs --version"
+  - stty cols 80
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+  - sudo apt-get install -y fluxbox
+  - npm i -g npm@5
 
 before_script:
-
-script:
-  - xvfb-run -a npm run test
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3
+  - fluxbox >/dev/null 2>&1 &
 
 branches:
   only:
     - "master"
-    - /^greenkeeper-.*$/

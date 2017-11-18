@@ -1,8 +1,6 @@
-import {
-  CLASSNAME,
-  defaultItems as DEFAULT_ITEMS
-} from './constants';
-import utils from './utils';
+import { CLASSNAME, DEFAULT_ITEMS } from 'konstants';
+import { createFragment, find } from 'helpers/dom';
+import { contains, getUniqueId } from 'helpers/mix';
 
 /**
  * @class Html
@@ -34,7 +32,7 @@ export class Html {
     let items = [];
 
     if ('items' in this.Base.options) {
-      items = (this.Base.options.defaultItems)
+      items = this.Base.options.defaultItems
         ? this.Base.options.items.concat(DEFAULT_ITEMS)
         : this.Base.options.items;
     } else if (this.Base.options.defaultItems) {
@@ -50,7 +48,7 @@ export class Html {
     if (item.items && Array.isArray(item.items)) {
       // submenu - only a second level
       item.classname = item.classname || '';
-      if (!utils.contains(CLASSNAME.submenu, item.classname)) {
+      if (!contains(CLASSNAME.submenu, item.classname)) {
         item.classname = item.classname.length
           ? ' ' + CLASSNAME.submenu
           : CLASSNAME.submenu;
@@ -72,7 +70,7 @@ export class Html {
 
   generateHtmlAndPublish(parent, item, submenu) {
     let html, frag, element, separator = false;
-    const index = utils.getUniqueId();
+    const index = getUniqueId();
 
     // separator
     if (typeof item === 'string' && item.trim() === '-') {
@@ -80,7 +78,7 @@ export class Html {
         '<li id="', index, '" class="', CLASSNAME.separator, '">',
         '<hr></li>'
       ].join('');
-      frag = utils.createFragment(html);
+      frag = createFragment(html);
       // http://stackoverflow.com/a/13347298/4640499
       element = [].slice.call(frag.childNodes, 0)[0];
       parent.firstChild.appendChild(frag);
@@ -89,7 +87,7 @@ export class Html {
     } else {
       item.classname = item.classname || '';
       html = '<span>' + item.text + '</span>';
-      frag = utils.createFragment(html);
+      frag = createFragment(html);
       element = document.createElement('li');
 
       if (item.icon) {
@@ -98,8 +96,7 @@ export class Html {
         } else if (item.classname.indexOf(CLASSNAME.icon) === -1) {
           item.classname += ' ' + CLASSNAME.icon;
         }
-        element.setAttribute(
-            'style', 'background-image:url(' + item.icon + ')');
+        element.setAttribute('style', `background-image:url(${item.icon})`);
       }
 
       element.id = index;
@@ -120,7 +117,7 @@ export class Html {
   }
 
   removeMenuEntry(index) {
-    const element = utils.find('#' + index, this.container.firstChild);
+    const element = find('#' + index, this.container.firstChild);
     element && this.container.firstChild.removeChild(element);
     delete this.Base.Internal.items[index];
   }
@@ -128,8 +125,8 @@ export class Html {
   cloneAndGetLineHeight() {
     // for some reason I have to calculate with 2 items
     const cloned = this.container.cloneNode();
-    const frag = utils.createFragment('<span>Foo</span>');
-    const frag2 = utils.createFragment('<span>Foo</span>');
+    const frag = createFragment('<span>Foo</span>');
+    const frag2 = createFragment('<span>Foo</span>');
     const element = document.createElement('li');
     const element2 = document.createElement('li');
 

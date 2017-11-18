@@ -1,81 +1,72 @@
 {
-  "name": "ol3-contextmenu",
-  "version": "2.5.0",
+  "name": "ol-contextmenu",
+  "version": "3.0.0",
   "description": "Custom Context Menu for Openlayers",
-  "main": "build/ol3-contextmenu.js",
+  "main": "dist/ol-contextmenu.js",
   "author": "Jonatas Walker",
-  "homepage": "https://github.com/jonataswalker/ol3-contextmenu",
+  "homepage": "https://github.com/jonataswalker/ol-contextmenu",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jonataswalker/ol3-contextmenu.git"
+    "url": "git://github.com/jonataswalker/ol-contextmenu.git"
   },
   "bugs": {
-    "url": "https://github.com/jonataswalker/ol3-contextmenu/issues"
-  },
-  "build": {
-    "entry": "src/js/base.js",
-    "entrySass": "src/sass/main.scss",
-    "dest": "build/ol3-contextmenu-debug.js",
-    "destMap": "build/ol3-contextmenu.js.map",
-    "destCSS": "build/ol3-contextmenu.css",
-    "destMinCSS": "build/ol3-contextmenu.min.css",
-    "moduleName": "ContextMenu"
+    "url": "https://github.com/jonataswalker/ol-contextmenu/issues"
   },
   "scripts": {
-    "build": "npm-run-all clean build:js build:css",
-    "watch": "npm-run-all --parallel watch:js watch:css",
-    "build:watch": "npm-run-all build watch",
-    "build:js": "npm-run-all lint rollup",
-    "watch:js": "nodemon --on-change-only --watch src --watch test --ext js --exec 'npm run build:js'",
-    "build:css": "node build-css",
-    "watch:css": "nodemon --on-change-only --watch src --ext scss --exec 'npm run build:css'",
-    "rollup": "node build-js",
-    "clean": "rimraf build && mkdir build",
-    "lint": "eslint ./*.js --ext .js *.js src test --cache",
-    "test": "npm run build && casperjs test test/spec --includes=test/include.js --ssl-protocol=any --ignore-ssl-errors=true"
+    "dev": "run-s lint build:css rollup:dev",
+    "build": "run-s lint rollup build:css",
+    "build:css": "node build/build-css",
+    "rollup": "rollup -c build/config.js",
+    "rollup:dev": "rollup -w -c build/config.js",
+    "lint": "eslint build test src examples --cache",
+    "test": "run-s build test:unit",
+    "test:unit": "jest",
+    "test:unit:watch": "jest --watch"
   },
-  "dependencies": {
-    "openlayers": "^4.0.1"
-  },
-  "devDependencies": {
-    "autoprefixer": "^6.7.5",
-    "boxen": "^1.0.0",
-    "bytes": "^2.4.0",
-    "casperjs": "^1.1.3",
-    "chalk": "^1.1.3",
-    "cssnano": "^3.10.0",
-    "eslint": "^3.16.1",
-    "eslint-config-jwalker": "^1.18.0",
-    "gzip-size": "^3.0.0",
-    "node-sass": "^4.5.0",
-    "node-sass-json-importer": "^3.0.1",
-    "nodemon": "^1.11.0",
-    "npm-run-all": "^4.0.2",
-    "postcss": "^5.2.15",
-    "postcss-import": "^9.1.0",
-    "postcss-reporter": "^3.0.0",
-    "rimraf": "^2.6.1",
-    "rollup": "^0.41.4",
-    "rollup-plugin-buble": "^0.15.0",
-    "rollup-plugin-json": "^2.1.0",
-    "stylelint": "^7.9.0",
-    "stylelint-config-standard": "^16.0.0",
-    "uglify-js": "^2.7.5"
-  },
-  "eslintConfig": {
-    "extends": "jwalker",
-    "rules": {
-      "no-use-before-define": 1
-    },
-    "globals": {
-      "ol": true,
-      "casper": true,
-      "patchRequire": true,
-      "phantom": true
+  "jest": {
+    "testRegex": "/test/unit/.*\\.test\\.js$",
+    "transform": {
+      "^.+\\.js?$": "babel-jest"
     }
   },
-  "stylelint": {
-    "extends": "stylelint-config-standard"
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  },
+  "dependencies": {
+    "openlayers": "^4.4.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^7.1.6",
+    "babel-jest": "^21.2.0",
+    "babel-preset-env": "^1.6.1",
+    "boxen": "^1.0.0",
+    "bytes": "^3.0.0",
+    "canvas": "^1.6.7",
+    "chalk": "^2.3.0",
+    "cssnano": "^3.10.0",
+    "eslint": "^4.11.0",
+    "eslint-config-jwalker": "^5.0.0",
+    "eslint-plugin-jest": "^21.3.2",
+    "gzip-size": "^4.0.0",
+    "jest": "^21.2.1",
+    "node-sass": "^4.6.1",
+    "node-sass-json-importer": "^3.0.1",
+    "npm-run-all": "^4.0.1",
+    "postcss": "^6.0.14",
+    "postcss-import": "^11.0.0",
+    "postcss-reporter": "^5.0.0",
+    "rollup": "^0.51.5",
+    "rollup-plugin-buble": "^0.17.0",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-eslint": "^4.0.0",
+    "rollup-plugin-filesize": "^1.4.2",
+    "rollup-plugin-includepaths": "^0.2.2",
+    "rollup-plugin-json": "^2.1.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^2.0.1",
+    "uglify-es": "^3.1.9"
   }
 }

@@ -1,0 +1,11 @@
+{
+  "namespace": "ol-ctx-menu",
+  "container_class": "-container",
+  "separator_class": "-separator",
+  "submenu_class": "-submenu",
+  "hidden_class": "-hidden",
+  "icon_class": "-icon",
+  "zoom_in_class": "-zoom-in",
+  "zoom_out_class": "-zoom-out",
+  "ol_unselectable_class": "ol-unselectable"
+}
