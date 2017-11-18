@@ -1,7 +1,7 @@
 const ol = require('openlayers');
 const ContextMenu = require('../../dist/ol-contextmenu');
 const { DEFAULT_OPTIONS, DEFAULT_ITEMS } = require('../../konstants');
-const { toJSON, countItems } = require('./helpers/functions');
+const { toJSON } = require('./helpers/functions');
 const {
   options,
   items,
@@ -42,17 +42,24 @@ describe('Instance methods', () => {
     expect(toJSON(menu.getDefaultItems())).toEqual(toJSON(DEFAULT_ITEMS));
   });
 
+  test('countItems()', () => {
+    menu.clear();
+    expect(menu.countItems()).toBe(0);
+    menu.push(items2[0]);
+    expect(menu.countItems()).toBe(1);
+  });
+
   test('push()', () => {
     menu.clear();
     menu.push(items2[0]);
-    expect(countItems(menu.Internal.items)).toBe(1);
+    expect(menu.countItems()).toBe(1);
   });
 
   test('pop()', () => {
     menu.clear();
     menu.extend(items);
     menu.pop();
-    expect(countItems(menu.Internal.items)).toBe(items.length - 1);
+    expect(menu.countItems()).toBe(items.length - 1);
 
     const keys = Object.keys(menu.Internal.items);
     const last = menu.Internal.items[keys[keys.length - 1]];
@@ -63,7 +70,7 @@ describe('Instance methods', () => {
     menu.clear();
     menu.extend(items);
     menu.shift();
-    expect(countItems(menu.Internal.items)).toBe(items.length - 1);
+    expect(menu.countItems()).toBe(items.length - 1);
 
     const keys = Object.keys(menu.Internal.items);
     const first = menu.Internal.items[keys[0]];
@@ -73,19 +80,17 @@ describe('Instance methods', () => {
   test('extend()', () => {
     menu.clear();
     menu.extend(items);
-    expect(countItems(menu.Internal.items)).toBe(items.length);
+    expect(menu.countItems()).toBe(items.length);
 
     menu.extend(items2);
-    expect(countItems(menu.Internal.items)).toBe(items.length + items2.length);
+    expect(menu.countItems()).toBe(items.length + items2.length);
   });
 
   test('clear()', () => {
     menu.extend(items);
     menu.clear();
-    expect(countItems(menu.Internal.items)).toBe(0);
+    expect(menu.countItems()).toBe(0);
   });
-
-
 });
 
 describe('Throw errors', () => {

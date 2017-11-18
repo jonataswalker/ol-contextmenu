@@ -65,6 +65,13 @@ export default class Base extends ol.control.Control {
   }
 
   /**
+   * @return {Number} Returns how many items
+   */
+  countItems() {
+    return Object.keys(this.Internal.items).length;
+  }
+
+  /**
    * Add items to the menu. This pushes each item in the provided array
    * to the end of the menu.
    * @param {Array} arr Array.
