@@ -1,8 +1,8 @@
 /*!
- * ol-contextmenu - v3.0.0
+ * ol-contextmenu - v3.1.0
  * Custom Context Menu for Openlayers
  * https://github.com/jonataswalker/ol-contextmenu
- * Built: Fri Nov 17 2017 18:31:36 GMT-0200 (-02)
+ * Built: Sat Nov 18 2017 09:49:39 GMT-0200 (-02)
  */
 
 (function (global, factory) {
@@ -772,6 +772,13 @@ var Base = (function (superclass) {
    */
   Base.prototype.getDefaultItems = function getDefaultItems () {
     return DEFAULT_ITEMS;
+  };
+
+  /**
+   * @return {Number} Returns how many items
+   */
+  Base.prototype.countItems = function countItems () {
+    return Object.keys(this.Internal.items).length;
   };
 
   /**
