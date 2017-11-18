@@ -6,7 +6,6 @@ const {
   options,
   items,
   items2,
-  dataMarker,
   dataCenter
 } = require('./helpers/data');
 
