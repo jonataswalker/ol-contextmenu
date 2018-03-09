@@ -39,7 +39,7 @@
     ]
   },
   "dependencies": {
-    "openlayers": "^4.4.2"
+    "ol": "^4.4.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.6",
