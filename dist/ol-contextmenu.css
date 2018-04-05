@@ -1,8 +1,8 @@
 /*!
- * ol-contextmenu - v3.1.0
+ * ol-contextmenu - v3.2.0
  * Custom Context Menu for Openlayers
  * https://github.com/jonataswalker/ol-contextmenu
- * Built: Sat Nov 18 2017 09:49:41 GMT-0200 (-02)
+ * Built: Thu Apr 05 2018 11:39:14 GMT-0300 (-03)
  */
 .ol-ctx-menu-container {
   position: absolute;
@@ -61,8 +61,7 @@
     height: 0.6em;
     border-right: 0.3em solid #222;
     border-top: 0.3em solid #222;
-    -webkit-transform: rotate(45deg);
-            transform: rotate(45deg); }
+    transform: rotate(45deg); }
   .ol-ctx-menu-container li.ol-ctx-menu-submenu:hover::after {
     border-color: #eee; }
   .ol-ctx-menu-container li.ol-ctx-menu-separator {
