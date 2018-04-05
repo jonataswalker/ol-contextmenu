@@ -29,7 +29,7 @@ sass.render({
     autoprefixer({ browsers: ['> 5%'] }),
     postcssReport({ clearMessages: true })
   ]);
-  prefixer.process(result.css).then(res => {
+  prefixer.process(result.css, { from: undefined }).then(res => {
     res.warnings().forEach((warn) => {
       console.warn(warn.toString());
     });
