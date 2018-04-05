@@ -11,9 +11,10 @@ import uglify from 'rollup-plugin-uglify';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 const external = Object.keys(pkg.dependencies);
+external.push('ol/control/control');
 
 const globals = {
-  openlayers: 'ol',
+  'ol/control/control': 'ol.control.Control',
 };
 
 const lintOpts = {
