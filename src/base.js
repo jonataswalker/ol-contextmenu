@@ -1,4 +1,4 @@
-import ol from 'openlayers';
+import Control from 'ol/control/control';
 import { DEFAULT_OPTIONS, DEFAULT_ITEMS } from 'konstants';
 import { Internal } from './internal';
 import { Html } from './html';
@@ -8,7 +8,7 @@ import { assert, mergeOptions, isDefAndNotNull } from 'helpers/mix';
  * @class Base
  * @extends {ol.control.Control}
  */
-export default class Base extends ol.control.Control {
+export default class Base extends Control {
   /**
    * @constructor
    * @param {object|undefined} opt_options Options.
@@ -125,7 +125,7 @@ export default class Base extends ol.control.Control {
    */
   setMap(map) {
 
-    ol.control.Control.prototype.setMap.call(this, map);
+    Control.prototype.setMap.call(this, map);
 
     if (map) {
       // let's start since now we have the map

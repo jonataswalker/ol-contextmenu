@@ -1,3 +1,4 @@
+/* global ol, ContextMenu */
 var view = new ol.View({ center: [0, 0], zoom: 4 }),
     vectorLayer = new ol.layer.Vector({ source: new ol.source.Vector() }),
     baseLayer = new ol.layer.Tile({ source: new ol.source.OSM() }),
@@ -69,10 +70,11 @@ contextmenu.on('open', function (evt) {
 });
 
 map.on('pointermove', function (e) {
-  if (e.dragging) return;
 
   var pixel = map.getEventPixel(e.originalEvent);
   var hit = map.hasFeatureAtPixel(pixel);
+
+  if (e.dragging) return;
 
   map.getTargetElement().style.cursor = hit ? 'pointer' : '';
 });
