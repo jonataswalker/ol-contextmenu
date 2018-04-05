@@ -37,10 +37,10 @@ const banner = readFileSync('./build/banner.js', 'utf-8')
 export default [
   {
     external,
-    banner,
-    globals,
     input: './src/base.js',
     output: {
+      banner,
+      globals,
       file: './dist/ol-contextmenu.js',
       format: 'umd',
       name: 'ContextMenu',
@@ -58,10 +58,10 @@ export default [
   },
   {
     external,
-    banner,
-    globals,
     input: './src/base.js',
     output: {
+      banner,
+      globals,
       file: './dist/ol-contextmenu-debug.js',
       format: 'umd',
       name: 'ContextMenu',
