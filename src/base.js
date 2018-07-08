@@ -1,4 +1,4 @@
-import Control from 'ol/control/control';
+import Control from 'ol/control/Control';
 import { DEFAULT_OPTIONS, DEFAULT_ITEMS } from 'konstants';
 import { Internal } from './internal';
 import { Html } from './html';
