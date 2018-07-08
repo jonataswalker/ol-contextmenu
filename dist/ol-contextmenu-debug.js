@@ -6,8 +6,8 @@
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('ol/control/control')) :
-  typeof define === 'function' && define.amd ? define(['ol/control/control'], factory) :
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('ol/control/Control')) :
+  typeof define === 'function' && define.amd ? define(['ol/control/Control'], factory) :
   (global.ContextMenu = factory(global.ol.control.Control));
 }(this, (function (Control) { 'use strict';
 
