@@ -19,7 +19,7 @@ export class Html {
   createContainer(hidden) {
     const container = document.createElement('div');
     const ul = document.createElement('ul');
-    const klasses =  [CLASSNAME.container, CLASSNAME.OL_unselectable];
+    const klasses = [CLASSNAME.container, CLASSNAME.OL_unselectable];
 
     hidden && klasses.push(CLASSNAME.hidden);
     container.className = klasses.join(' ');
@@ -56,8 +56,8 @@ export class Html {
 
       let li = this.generateHtmlAndPublish(this.container, item);
       let sub = this.createContainer();
-      sub.style.left = this.Base.Internal.submenu.lastLeft ||
-          this.Base.Internal.submenu.left;
+      sub.style.left =
+        this.Base.Internal.submenu.lastLeft || this.Base.Internal.submenu.left;
       li.appendChild(sub);
 
       item.items.forEach(each => {
@@ -69,14 +69,21 @@ export class Html {
   }
 
   generateHtmlAndPublish(parent, item, submenu) {
-    let html, frag, element, separator = false;
+    let html,
+        frag,
+        element,
+        separator = false;
     const index = getUniqueId();
 
     // separator
     if (typeof item === 'string' && item.trim() === '-') {
       html = [
-        '<li id="', index, '" class="', CLASSNAME.separator, '">',
-        '<hr></li>'
+        '<li id="',
+        index,
+        '" class="',
+        CLASSNAME.separator,
+        '">',
+        '<hr></li>',
       ].join('');
       frag = createFragment(html);
       // http://stackoverflow.com/a/13347298/4640499
@@ -110,7 +117,7 @@ export class Html {
       submenu: submenu || 0,
       separator: separator,
       callback: item.callback,
-      data: item.data || null
+      data: item.data || null,
     };
     this.Base.Internal.setItemListener(element, index);
     return element;

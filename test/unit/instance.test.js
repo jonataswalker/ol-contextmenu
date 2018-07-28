@@ -1,13 +1,6 @@
-// const ol = require('openlayers');
-// const ContextMenu = require('../../dist/ol-contextmenu');
 const { DEFAULT_OPTIONS, DEFAULT_ITEMS } = require('../../konstants');
 const { toJSON } = require('./helpers/functions');
-const {
-  options,
-  items,
-  items2,
-  dataCenter
-} = require('./helpers/data');
+const { options, items, items2, dataCenter } = require('./helpers/data');
 
 // import Control from 'ol/control/control';
 import ContextMenu from '../../';
@@ -105,6 +98,8 @@ describe('Instance methods', () => {
 
 describe('Throw errors', () => {
   test('wrong options type', () => {
-    expect(() => { new ContextMenu('foo') }).toThrowError();
+    expect(() => {
+      new ContextMenu('foo');
+    }).toThrowError();
   });
 });

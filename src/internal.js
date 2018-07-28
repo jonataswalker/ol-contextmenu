@@ -1,6 +1,11 @@
 import { CLASSNAME, EVENT_TYPE } from 'konstants';
 import {
-  find, addClass, removeClass, getViewportSize, offset } from 'helpers/dom';
+  find,
+  addClass,
+  removeClass,
+  getViewportSize,
+  offset,
+} from 'helpers/dom';
 
 /**
  * @class Internal
@@ -12,47 +17,47 @@ export class Internal {
    */
   constructor(base) {
     /**
-    * @type {ol.control.Control}
-    */
+     * @type {ol.control.Control}
+     */
     this.Base = base;
     /**
-      * @type {ol.Map}
-      */
+     * @type {ol.Map}
+     */
     this.map = undefined;
     /**
-      * @type {Element}
-      */
+     * @type {Element}
+     */
     this.viewport = undefined;
     /**
-      * @type {ol.Coordinate}
-      */
+     * @type {ol.Coordinate}
+     */
     this.coordinateClicked = undefined;
     /**
-      * @type {ol.Pixel}
-      */
+     * @type {ol.Pixel}
+     */
     this.pixelClicked = undefined;
     /**
-      * @type {Number}
-      */
+     * @type {Number}
+     */
     this.lineHeight = 0;
     /**
-      * @type {Object}
-      */
+     * @type {Object}
+     */
     this.items = {};
     /**
-      * @type {Boolean}
-      */
+     * @type {Boolean}
+     */
     this.opened = false;
     /**
-      * @type {Object}
-      */
+     * @type {Object}
+     */
     this.submenu = {
       left: base.options.width - 15 + 'px',
-      lastLeft: '' // string + px
+      lastLeft: '', // string + px
     };
     /**
-      * @type {Function}
-      */
+     * @type {Function}
+     */
     this.eventHandler = this.handleEvent.bind(this);
     return this;
   }
@@ -63,9 +68,10 @@ export class Internal {
     this.setListeners();
     this.Base.Html.createMenu();
 
-    this.lineHeight = this.getItemsLength() > 0
-      ? this.Base.container.offsetHeight / this.getItemsLength()
-      : this.Base.Html.cloneAndGetLineHeight();
+    this.lineHeight =
+      this.getItemsLength() > 0
+        ? this.Base.container.offsetHeight / this.getItemsLength()
+        : this.Base.Html.cloneAndGetLineHeight();
   }
 
   getItemsLength() {
@@ -97,9 +103,9 @@ export class Internal {
       w: container.offsetWidth,
       // a cheap way to recalculate container height
       // since offsetHeight is like cached
-      h: Math.round(this.lineHeight * this.getItemsLength())
+      h: Math.round(this.lineHeight * this.getItemsLength()),
     };
-        // submenus
+    // submenus
     const subs = find(`li.${CLASSNAME.submenu}>div`, container, true);
 
     if (space_left_w >= menuSize.w) {
@@ -121,7 +127,7 @@ export class Internal {
     removeClass(container, CLASSNAME.hidden);
 
     if (subs.length) {
-      if (space_left_w < (menuSize.w * 2)) {
+      if (space_left_w < menuSize.w * 2) {
         // no space (at right) for submenu
         // position them at left
         this.submenu.lastLeft = `-${menuSize.w}px`;
@@ -148,7 +154,7 @@ export class Internal {
     this.Base.dispatchEvent({
       type: EVENT_TYPE.OPEN,
       pixel: pixel,
-      coordinate: coordinate
+      coordinate: coordinate,
     });
     this.opened = true;
     this.positionContainer(pixel);
@@ -158,18 +164,24 @@ export class Internal {
     this.opened = false;
     addClass(this.Base.container, CLASSNAME.hidden);
     this.Base.dispatchEvent({
-      type: EVENT_TYPE.CLOSE
+      type: EVENT_TYPE.CLOSE,
     });
   }
 
   setListeners() {
     this.viewport.addEventListener(
-      this.Base.options.eventType, this.eventHandler, false);
+      this.Base.options.eventType,
+      this.eventHandler,
+      false,
+    );
   }
 
   removeListeners() {
     this.viewport.removeEventListener(
-      this.Base.options.eventType, this.eventHandler, false);
+      this.Base.options.eventType,
+      this.eventHandler,
+      false,
+    );
   }
 
   handleEvent(evt) {
@@ -181,7 +193,7 @@ export class Internal {
     this.Base.dispatchEvent({
       type: EVENT_TYPE.BEFOREOPEN,
       pixel: this.pixelClicked,
-      coordinate: this.coordinateClicked
+      coordinate: this.coordinateClicked,
     });
 
     if (this.Base.disabled) return;
@@ -195,27 +207,35 @@ export class Internal {
     this.openMenu(this.pixelClicked, this.coordinateClicked);
 
     //one-time fire
-    evt.target.addEventListener('mousedown', {
-      handleEvent: function (e) {
-        this_.closeMenu();
-        evt.target.removeEventListener(e.type, this, false);
-      }
-    }, false);
+    evt.target.addEventListener(
+      'mousedown',
+      {
+        handleEvent: function (e) {
+          this_.closeMenu();
+          evt.target.removeEventListener(e.type, this, false);
+        },
+      },
+      false,
+    );
   }
 
   setItemListener(li, index) {
     const this_ = this;
     if (li && typeof this.items[index].callback === 'function') {
       (function (callback) {
-        li.addEventListener('click', function (evt) {
-          evt.preventDefault();
-          const obj = {
-            coordinate: this_.getCoordinateClicked(),
-            data: this_.items[index].data || null
-          };
-          this_.closeMenu();
-          callback(obj, this_.map);
-        }, false);
+        li.addEventListener(
+          'click',
+          function (evt) {
+            evt.preventDefault();
+            const obj = {
+              coordinate: this_.getCoordinateClicked(),
+              data: this_.items[index].data || null,
+            };
+            this_.closeMenu();
+            callback(obj, this_.map);
+          },
+          false,
+        );
       })(this.items[index].callback);
     }
   }

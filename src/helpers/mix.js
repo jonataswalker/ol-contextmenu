@@ -1,10 +1,8 @@
-
-
 /**
-  * Overwrites obj1's values with obj2's and adds
-  * obj2's if non existent in obj1
-  * @returns obj3 a new object based on obj1 and obj2
-  */
+ * Overwrites obj1's values with obj2's and adds
+ * obj2's if non existent in obj1
+ * @returns obj3 a new object based on obj1 and obj2
+ */
 export function mergeOptions(obj1, obj2) {
   let obj3 = {};
   for (let attr1 in obj1) obj3[attr1] = obj1[attr1];
@@ -30,7 +28,12 @@ export function contains(str_test, str) {
 }
 
 export function getUniqueId() {
-  return '_' + Math.random().toString(36).substr(2, 9);
+  return (
+    '_' +
+    Math.random()
+      .toString(36)
+      .substr(2, 9)
+  );
 }
 
 export function isDefAndNotNull(val) {
@@ -53,12 +56,14 @@ export function now() {
     window.performance = {};
   }
 
-  Date.now = (Date.now || function () { // thanks IE8
-    return new Date().getTime();
-  });
+  Date.now =
+    Date.now ||
+    function () {
+      // thanks IE8
+      return new Date().getTime();
+    };
 
   if ('now' in window.performance === false) {
-
     let nowOffset = Date.now();
 
     if (performance.timing && performance.timing.navigationStart) {
@@ -81,7 +86,7 @@ export function isNumeric(str) {
 }
 
 export function isEmpty(str) {
-  return (!str || 0 === str.length);
+  return !str || 0 === str.length;
 }
 
 export function emptyArray(array) {
