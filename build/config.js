@@ -4,28 +4,28 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import json from 'rollup-plugin-json';
 import buble from 'rollup-plugin-buble';
 import commonjs from 'rollup-plugin-commonjs';
-import eslint from 'rollup-plugin-eslint';
+import { eslint } from 'rollup-plugin-eslint';
 import includePaths from 'rollup-plugin-includepaths';
 import bundleSize from 'rollup-plugin-filesize';
-import uglify from 'rollup-plugin-uglify';
+import { uglify } from 'rollup-plugin-uglify';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 const external = Object.keys(pkg.dependencies);
-external.push('ol/control/control');
+external.push('ol/control/Control');
 
 const globals = {
-  'ol/control/control': 'ol.control.Control',
+  'ol/control/Control': 'ol.control.Control',
 };
 
 const lintOpts = {
   // extensions: ['js'],
   exclude: ['**/*.json'],
   cache: true,
-  throwOnError: true
+  throwOnError: true,
 };
 
 const includePathOptions = {
-  paths: ['', './src']
+  paths: ['', './src'],
 };
 
 const banner = readFileSync('./build/banner.js', 'utf-8')
@@ -54,7 +54,7 @@ export default [
       commonjs(),
       json({ exclude: 'node_modules/**' }),
       buble({ target: { ie: 11 } }),
-      uglify({ output: { comments: /^!/ } }, minify)
+      uglify({ output: { comments: /^!/ } }, minify),
     ],
   },
   {
@@ -74,7 +74,7 @@ export default [
       nodeResolve(),
       commonjs(),
       json({ exclude: 'node_modules/**' }),
-      buble({ target: { ie: 11 } })
+      buble({ target: { ie: 11 } }),
     ],
-  }
+  },
 ];

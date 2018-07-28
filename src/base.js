@@ -1,4 +1,4 @@
-import Control from 'ol/control/control';
+import Control from 'ol/control/Control';
 import { DEFAULT_OPTIONS, DEFAULT_ITEMS } from 'konstants';
 import { Internal } from './internal';
 import { Html } from './html';
@@ -16,7 +16,7 @@ export default class Base extends Control {
   constructor(opt_options = {}) {
     assert(
       typeof opt_options == 'object',
-      '@param `opt_options` should be object type!'
+      '@param `opt_options` should be object type!',
     );
 
     this.options = mergeOptions(DEFAULT_OPTIONS, opt_options);
@@ -32,8 +32,10 @@ export default class Base extends Control {
    * Remove all elements from the menu.
    */
   clear() {
-    Object.keys(this.Internal.items)
-      .forEach(this.Html.removeMenuEntry, this.Html);
+    Object.keys(this.Internal.items).forEach(
+      this.Html.removeMenuEntry,
+      this.Html,
+    );
   }
 
   /**
@@ -124,7 +126,6 @@ export default class Base extends Control {
    * Not supposed to be used on app.
    */
   setMap(map) {
-
     Control.prototype.setMap.call(this, map);
 
     if (map) {
