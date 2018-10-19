@@ -208,7 +208,7 @@ export class Internal {
 
     //one-time fire
     evt.target.addEventListener(
-      'mousedown',
+      'click',
       {
         handleEvent: function (e) {
           this_.closeMenu();
