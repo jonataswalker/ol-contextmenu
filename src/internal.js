@@ -1,11 +1,11 @@
-import { CLASSNAME, EVENT_TYPE } from 'konstants';
+import { CSS_VARS, EVENT_TYPE } from './constants';
 import {
   find,
   addClass,
   removeClass,
   getViewportSize,
   offset,
-} from 'helpers/dom';
+} from './helpers/dom';
 
 /**
  * @class Internal
@@ -106,7 +106,7 @@ export class Internal {
       h: Math.round(this.lineHeight * this.getItemsLength()),
     };
     // submenus
-    const subs = find(`li.${CLASSNAME.submenu}>div`, container, true);
+    const subs = find(`li.${CSS_VARS.submenu}>div`, container, true);
 
     if (space_left_w >= menuSize.w) {
       container.style.right = 'auto';
@@ -124,7 +124,7 @@ export class Internal {
       container.style.bottom = 0;
     }
 
-    removeClass(container, CLASSNAME.hidden);
+    removeClass(container, CSS_VARS.hidden);
 
     if (subs.length) {
       if (space_left_w < menuSize.w * 2) {
@@ -162,7 +162,7 @@ export class Internal {
 
   closeMenu() {
     this.opened = false;
-    addClass(this.Base.container, CLASSNAME.hidden);
+    addClass(this.Base.container, CSS_VARS.hidden);
     this.Base.dispatchEvent({
       type: EVENT_TYPE.CLOSE,
     });
@@ -172,7 +172,7 @@ export class Internal {
     this.viewport.addEventListener(
       this.Base.options.eventType,
       this.eventHandler,
-      false,
+      false
     );
   }
 
@@ -180,7 +180,7 @@ export class Internal {
     this.viewport.removeEventListener(
       this.Base.options.eventType,
       this.eventHandler,
-      false,
+      false
     );
   }
 
@@ -215,7 +215,7 @@ export class Internal {
           evt.target.removeEventListener(e.type, this, false);
         },
       },
-      false,
+      false
     );
   }
 
@@ -238,7 +238,7 @@ export class Internal {
               callback(obj, this_.map);
             }
           },
-          false,
+          false
         );
       })(this.items[index].callback);
     }
