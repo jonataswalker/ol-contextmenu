@@ -1,4 +1,4 @@
-const { DEFAULT_OPTIONS, DEFAULT_ITEMS } = require('../../konstants');
+const { DEFAULT_OPTIONS, DEFAULT_ITEMS } = require('../../src/constants');
 const { toJSON } = require('./helpers/functions');
 const { options, items, items2, dataCenter } = require('./helpers/data');
 
@@ -100,6 +100,6 @@ describe('Throw errors', () => {
   test('wrong options type', () => {
     expect(() => {
       new ContextMenu('foo');
-    }).toThrowError();
+    }).toThrow();
   });
 });
