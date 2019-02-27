@@ -1,6 +1,6 @@
-import { CLASSNAME, DEFAULT_ITEMS } from 'konstants';
-import { createFragment, find } from 'helpers/dom';
-import { contains, getUniqueId } from 'helpers/mix';
+import { CSS_VARS, DEFAULT_ITEMS } from './constants';
+import { createFragment, find } from './helpers/dom';
+import { contains, getUniqueId } from './helpers/mix';
 
 /**
  * @class Html
@@ -19,9 +19,9 @@ export class Html {
   createContainer(hidden) {
     const container = document.createElement('div');
     const ul = document.createElement('ul');
-    const klasses = [CLASSNAME.container, CLASSNAME.OL_unselectable];
+    const klasses = [CSS_VARS.container, CSS_VARS.unselectable];
 
-    hidden && klasses.push(CLASSNAME.hidden);
+    hidden && klasses.push(CSS_VARS.hidden);
     container.className = klasses.join(' ');
     container.style.width = parseInt(this.Base.options.width, 10) + 'px';
     container.appendChild(ul);
@@ -48,10 +48,10 @@ export class Html {
     if (item.items && Array.isArray(item.items)) {
       // submenu - only a second level
       item.classname = item.classname || '';
-      if (!contains(CLASSNAME.submenu, item.classname)) {
+      if (!contains(CSS_VARS.submenu, item.classname)) {
         item.classname = item.classname.length
-          ? ' ' + CLASSNAME.submenu
-          : CLASSNAME.submenu;
+          ? ' ' + CSS_VARS.submenu
+          : CSS_VARS.submenu;
       }
 
       let li = this.generateHtmlAndPublish(this.container, item);
@@ -69,22 +69,15 @@ export class Html {
   }
 
   generateHtmlAndPublish(parent, item, submenu) {
+    const index = getUniqueId();
     let html,
         frag,
         element,
         separator = false;
-    const index = getUniqueId();
 
     // separator
     if (typeof item === 'string' && item.trim() === '-') {
-      html = [
-        '<li id="',
-        index,
-        '" class="',
-        CLASSNAME.separator,
-        '">',
-        '<hr></li>',
-      ].join('');
+      html = `<li id="${index}" class="${CSS_VARS.separator}"><hr></li>`;
       frag = createFragment(html);
       // http://stackoverflow.com/a/13347298/4640499
       element = [].slice.call(frag.childNodes, 0)[0];
@@ -93,15 +86,15 @@ export class Html {
       separator = true;
     } else {
       item.classname = item.classname || '';
-      html = '<span>' + item.text + '</span>';
+      html = `<span>${item.text}</span>`;
       frag = createFragment(html);
       element = document.createElement('li');
 
       if (item.icon) {
         if (item.classname === '') {
-          item.classname = CLASSNAME.icon;
-        } else if (item.classname.indexOf(CLASSNAME.icon) === -1) {
-          item.classname += ' ' + CLASSNAME.icon;
+          item.classname = CSS_VARS.icon;
+        } else if (item.classname.indexOf(CSS_VARS.icon) === -1) {
+          item.classname += ` ${CSS_VARS.icon}`;
         }
         element.setAttribute('style', `background-image:url(${item.icon})`);
       }
