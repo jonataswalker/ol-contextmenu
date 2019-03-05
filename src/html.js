@@ -12,7 +12,7 @@ export class Html {
    */
   constructor(base) {
     this.Base = base;
-    this.Base.container = this.container = this.createContainer();
+    this.Base.container = this.container = this.createContainer(true);
     return this;
   }
 
