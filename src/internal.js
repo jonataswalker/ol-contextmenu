@@ -221,22 +221,18 @@ export class Internal {
 
   setItemListener(li, index) {
     const this_ = this;
-    let statusClick = true;
     if (li && typeof this.items[index].callback === 'function') {
       (function (callback) {
         li.addEventListener(
           'click',
           function (evt) {
             evt.preventDefault();
-            if (statusClick) {
-              statusClick = false;
-              const obj = {
-                coordinate: this_.getCoordinateClicked(),
-                data: this_.items[index].data || null,
-              };
-              this_.closeMenu();
-              callback(obj, this_.map);
-            }
+            const obj = {
+              coordinate: this_.getCoordinateClicked(),
+              data: this_.items[index].data || null,
+            };
+            this_.closeMenu();
+            callback(obj, this_.map);
           },
           false
         );
