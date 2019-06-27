@@ -86,9 +86,9 @@ export function toggleClass(element, classname) {
  */
 export function find(selector, context = window.document, find_all) {
   let simpleRe = /^(#?[\w-]+|\.[\w-.]+)$/,
-      periodRe = /\./g,
-      slice = Array.prototype.slice,
-      matches = [];
+    periodRe = /\./g,
+    slice = Array.prototype.slice,
+    matches = [];
 
   // Redirect call to the more performant function
   // if it's a simple selector and return an array
@@ -101,8 +101,8 @@ export function find(selector, context = window.document, find_all) {
       case '.':
         matches = slice.call(
           context.getElementsByClassName(
-            selector.substr(1).replace(periodRe, ' '),
-          ),
+            selector.substr(1).replace(periodRe, ' ')
+          )
         );
         break;
       default:
@@ -165,18 +165,16 @@ export function removeAll(collection) {
 }
 
 export function getChildren(node, tag) {
-  return [].filter.call(
-    node.childNodes,
-    el =>
-      tag
-        ? el.nodeType === 1 && el.tagName.toLowerCase() === tag
-        : el.nodeType === 1,
+  return [].filter.call(node.childNodes, el =>
+    tag
+      ? el.nodeType === 1 && el.tagName.toLowerCase() === tag
+      : el.nodeType === 1
   );
 }
 
 export function createFragment(html) {
   let frag = document.createDocumentFragment(),
-      temp = document.createElement('div');
+    temp = document.createElement('div');
   temp.innerHTML = html;
   while (temp.firstChild) {
     frag.appendChild(temp.firstChild);

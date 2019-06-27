@@ -210,7 +210,7 @@ export class Internal {
     evt.target.addEventListener(
       'click',
       {
-        handleEvent: function (e) {
+        handleEvent: function(e) {
           this_.closeMenu();
           evt.target.removeEventListener(e.type, this, false);
         },
@@ -222,10 +222,10 @@ export class Internal {
   setItemListener(li, index) {
     const this_ = this;
     if (li && typeof this.items[index].callback === 'function') {
-      (function (callback) {
+      (function(callback) {
         li.addEventListener(
           'click',
-          function (evt) {
+          function(evt) {
             evt.preventDefault();
             const obj = {
               coordinate: this_.getCoordinateClicked(),
