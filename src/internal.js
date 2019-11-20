@@ -210,7 +210,7 @@ export class Internal {
     evt.target.addEventListener(
       'click',
       {
-        handleEvent: function (e) {
+        handleEvent: function(e) {
           this_.closeMenu();
           evt.target.removeEventListener(e.type, this, false);
         },
@@ -221,22 +221,18 @@ export class Internal {
 
   setItemListener(li, index) {
     const this_ = this;
-    let statusClick = true;
     if (li && typeof this.items[index].callback === 'function') {
-      (function (callback) {
+      (function(callback) {
         li.addEventListener(
           'click',
-          function (evt) {
+          function(evt) {
             evt.preventDefault();
-            if (statusClick) {
-              statusClick = false;
-              const obj = {
-                coordinate: this_.getCoordinateClicked(),
-                data: this_.items[index].data || null,
-              };
-              this_.closeMenu();
-              callback(obj, this_.map);
-            }
+            const obj = {
+              coordinate: this_.getCoordinateClicked(),
+              data: this_.items[index].data || null,
+            };
+            this_.closeMenu();
+            callback(obj, this_.map);
           },
           false
         );

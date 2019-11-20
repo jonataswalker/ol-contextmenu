@@ -71,9 +71,9 @@ export class Html {
   generateHtmlAndPublish(parent, item, submenu) {
     const index = getUniqueId();
     let html,
-        frag,
-        element,
-        separator = false;
+      frag,
+      element,
+      separator = false;
 
     // separator
     if (typeof item === 'string' && item.trim() === '-') {

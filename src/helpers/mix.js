@@ -58,7 +58,7 @@ export function now() {
 
   Date.now =
     Date.now ||
-    function () {
+    function() {
       // thanks IE8
       return new Date().getTime();
     };
