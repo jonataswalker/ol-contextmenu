@@ -217,6 +217,17 @@ export class Internal {
       },
       false
     );
+
+    evt.target.addEventListener(
+      'pointerup',
+      {
+        handleEvent: function(e) {
+          e.stopPropagation(); //Stop pointerup event propogating to map (openlayers simulates a map click on pointer up)
+          evt.target.removeEventListener(e.type, this, false);
+        },
+      },
+      false
+    );
   }
 
   setItemListener(li, index) {
