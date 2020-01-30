@@ -208,21 +208,11 @@ export class Internal {
 
     //one-time fire
     evt.target.addEventListener(
-      'click',
+      'pointerdown',
       {
         handleEvent: function(e) {
           this_.closeMenu();
-          evt.target.removeEventListener(e.type, this, false);
-        },
-      },
-      false
-    );
-
-    evt.target.addEventListener(
-      'pointerup',
-      {
-        handleEvent: function(e) {
-          e.stopPropagation(); //Stop pointerup event propogating to map (openlayers simulates a map click on pointer up)
+          e.stopPropagation();
           evt.target.removeEventListener(e.type, this, false);
         },
       },
