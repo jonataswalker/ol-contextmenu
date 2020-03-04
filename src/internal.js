@@ -211,7 +211,7 @@ export class Internal {
       'pointerdown',
       {
         handleEvent: function(e) {
-          if (this.opened) {
+          if (this_.opened) {
             this_.closeMenu();
             e.stopPropagation();
             evt.target.removeEventListener(e.type, this, false);
