@@ -211,9 +211,11 @@ export class Internal {
       'pointerdown',
       {
         handleEvent: function(e) {
-          this_.closeMenu();
-          e.stopPropagation();
-          evt.target.removeEventListener(e.type, this, false);
+          if (this.opened) {
+            this_.closeMenu();
+            e.stopPropagation();
+            evt.target.removeEventListener(e.type, this, false);
+          }
         },
       },
       false
