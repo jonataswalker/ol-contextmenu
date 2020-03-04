@@ -208,11 +208,14 @@ export class Internal {
 
     //one-time fire
     evt.target.addEventListener(
-      'click',
+      'pointerdown',
       {
         handleEvent: function(e) {
-          this_.closeMenu();
-          evt.target.removeEventListener(e.type, this, false);
+          if (this.opened) {
+            this_.closeMenu();
+            e.stopPropagation();
+            evt.target.removeEventListener(e.type, this, false);
+          }
         },
       },
       false
