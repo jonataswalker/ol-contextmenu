@@ -60,7 +60,7 @@ export class Html {
         this.Base.Internal.submenu.lastLeft || this.Base.Internal.submenu.left;
       li.appendChild(sub);
 
-      item.items.forEach(each => {
+      item.items.forEach((each) => {
         this.generateHtmlAndPublish(sub, each, true);
       });
     } else {

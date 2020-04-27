@@ -43,10 +43,10 @@ const scssVars = Object.keys(cssVars).reduce(
   ''
 );
 
-const processor = css =>
+const processor = (css) =>
   postcss([autoprefixer])
     .process(css, { from: undefined })
-    .then(result => banner + result.css);
+    .then((result) => banner + result.css);
 
 const sassOpts = { data: scssVars, sourceMap: false };
 
