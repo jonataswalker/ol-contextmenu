@@ -1,11 +1,11 @@
-exports.callback1 = obj => {
+exports.callback1 = (obj) => {
   console.log(obj);
 };
 
-exports.callback2 = obj => {
+exports.callback2 = (obj) => {
   console.log(obj);
 };
 
-exports.toJSON = obj => JSON.stringify(obj);
+exports.toJSON = (obj) => JSON.stringify(obj);
 
-exports.countItems = obj => Object.keys(obj).length;
+exports.countItems = (obj) => Object.keys(obj).length;

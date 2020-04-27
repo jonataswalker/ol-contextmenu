@@ -28,12 +28,7 @@ export function contains(str_test, str) {
 }
 
 export function getUniqueId() {
-  return (
-    '_' +
-    Math.random()
-      .toString(36)
-      .substr(2, 9)
-  );
+  return '_' + Math.random().toString(36).substr(2, 9);
 }
 
 export function isDefAndNotNull(val) {
@@ -58,7 +53,7 @@ export function now() {
 
   Date.now =
     Date.now ||
-    function() {
+    function () {
       // thanks IE8
       return new Date().getTime();
     };
@@ -94,16 +89,16 @@ export function emptyArray(array) {
 }
 
 export function anyMatchInArray(source, target) {
-  return source.some(each => target.indexOf(each) >= 0);
+  return source.some((each) => target.indexOf(each) >= 0);
 }
 
 export function everyMatchInArray(arr1, arr2) {
-  return arr2.every(each => arr1.indexOf(each) >= 0);
+  return arr2.every((each) => arr1.indexOf(each) >= 0);
 }
 
 export function anyItemHasValue(obj, has = false) {
   const keys = Object.keys(obj);
-  keys.forEach(key => {
+  keys.forEach((key) => {
     if (!isEmpty(obj[key])) has = true;
   });
   return has;

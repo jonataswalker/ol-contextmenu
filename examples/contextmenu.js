@@ -51,8 +51,8 @@ var contextmenu = new ContextMenu({
 });
 map.addControl(contextmenu);
 
-contextmenu.on('open', function(evt) {
-  var feature = map.forEachFeatureAtPixel(evt.pixel, function(ft, l) {
+contextmenu.on('open', function (evt) {
+  var feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
     return ft;
   });
   if (feature && feature.get('type') === 'removable') {
@@ -68,7 +68,7 @@ contextmenu.on('open', function(evt) {
   }
 });
 
-map.on('pointermove', function(e) {
+map.on('pointermove', function (e) {
   var pixel = map.getEventPixel(e.originalEvent);
   var hit = map.hasFeatureAtPixel(pixel);
 

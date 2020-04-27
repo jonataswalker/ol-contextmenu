@@ -11,4 +11,7 @@
     "editor.formatOnPaste": true,
   },
   "search.showLineNumbers": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
 }
