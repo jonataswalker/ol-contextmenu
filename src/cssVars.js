@@ -5,6 +5,7 @@ export default {
   container: `${namespace}-container`,
   separator: `${namespace}-separator`,
   submenu: `${namespace}-submenu`,
+  disabled: `${namespace}-disabled`,
   hidden: `${namespace}-hidden`,
   icon: `${namespace}-icon`,
   zoomIn: `${namespace}-zoom-in`,

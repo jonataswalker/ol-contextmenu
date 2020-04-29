@@ -75,6 +75,7 @@ map.addControl(contextmenu);
 ##### You can add a (nested) submenu like this:
 
 If you provide `items {Array}` a submenu will be created as a child of the current item.
+You can also add disabled items
 
 ```javascript
 var all_items = [
@@ -94,7 +95,8 @@ var all_items = [
   {
     text: 'Add a Marker',
     icon: 'img/marker.png',
-    callback: marker
+    callback: marker,
+    disabled: true //Can add disabled marker
   },
   '-' // this is a separator
 ];

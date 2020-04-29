@@ -84,6 +84,10 @@
       );
     }
   }
+  li.#{$disabled} {
+    color: #ccc
+  }
+
 }
 
 .#{$icon} {

@@ -61,9 +61,23 @@ export class Html {
       li.appendChild(sub);
 
       item.items.forEach(each => {
+        if (each.disabled) {
+          if (!contains(CSS_VARS.disabled, each.classname)) {
+            each.classname = each.classname.length
+              ? ' ' + CSS_VARS.disabled
+              : CSS_VARS.disabled;
+          }
+        }
         this.generateHtmlAndPublish(sub, each, true);
       });
     } else {
+      if (item.disabled) {
+        if (!contains(CSS_VARS.disabled, item.classname)) {
+          item.classname = item.classname.length
+            ? ' ' + CSS_VARS.disabled
+            : CSS_VARS.disabled;
+        }
+      }
       this.generateHtmlAndPublish(this.container, item);
     }
   }
@@ -112,7 +126,7 @@ export class Html {
       callback: item.callback,
       data: item.data || null,
     };
-    this.Base.Internal.setItemListener(element, index);
+    if (!item.disabled) this.Base.Internal.setItemListener(element, index);
     return element;
   }
 
