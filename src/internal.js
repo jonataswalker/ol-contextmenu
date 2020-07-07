@@ -174,6 +174,10 @@ export class Internal {
       this.eventHandler,
       false
     );
+
+    this.map.on('movestart', (event) => {
+      this.closeMenu();
+    });
   }
 
   removeListeners() {
