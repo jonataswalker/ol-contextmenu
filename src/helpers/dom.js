@@ -8,7 +8,7 @@ import { isNumeric } from './mix';
  */
 export function addClass(element, classname, timeout) {
   if (Array.isArray(element)) {
-    element.forEach(each => addClass(each, classname));
+    element.forEach((each) => addClass(each, classname));
     return;
   }
 
@@ -30,7 +30,7 @@ export function addClass(element, classname, timeout) {
  */
 export function removeClass(element, classname, timeout) {
   if (Array.isArray(element)) {
-    element.forEach(each => removeClass(each, classname, timeout));
+    element.forEach((each) => removeClass(each, classname, timeout));
     return;
   }
 
@@ -62,7 +62,7 @@ export function hasClass(element, c) {
  */
 export function toggleClass(element, classname) {
   if (Array.isArray(element)) {
-    element.forEach(each => toggleClass(each, classname));
+    element.forEach((each) => toggleClass(each, classname));
     return;
   }
 
@@ -165,7 +165,7 @@ export function removeAll(collection) {
 }
 
 export function getChildren(node, tag) {
-  return [].filter.call(node.childNodes, el =>
+  return [].filter.call(node.childNodes, (el) =>
     tag
       ? el.nodeType === 1 && el.tagName.toLowerCase() === tag
       : el.nodeType === 1

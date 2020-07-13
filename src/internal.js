@@ -76,7 +76,7 @@ export class Internal {
 
   getItemsLength() {
     let count = 0;
-    Object.keys(this.items).forEach(k => {
+    Object.keys(this.items).forEach((k) => {
       if (this.items[k].submenu || this.items[k].separator) return;
       count++;
     });
@@ -134,7 +134,7 @@ export class Internal {
       } else {
         this.submenu.lastLeft = this.submenu.left;
       }
-      subs.forEach(sub => {
+      subs.forEach((sub) => {
         // is there enough space for submenu height?
         const viewport = getViewportSize();
         const sub_offset = offset(sub);
@@ -210,7 +210,7 @@ export class Internal {
     evt.target.addEventListener(
       'pointerdown',
       {
-        handleEvent: function(e) {
+        handleEvent: function (e) {
           if (this_.opened) {
             this_.closeMenu();
             e.stopPropagation();
@@ -225,10 +225,10 @@ export class Internal {
   setItemListener(li, index) {
     const this_ = this;
     if (li && typeof this.items[index].callback === 'function') {
-      (function(callback) {
+      (function (callback) {
         li.addEventListener(
           'click',
-          function(evt) {
+          function (evt) {
             evt.preventDefault();
             const obj = {
               coordinate: this_.getCoordinateClicked(),
