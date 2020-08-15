@@ -59,6 +59,10 @@ export class Internal {
      * @type {Function}
      */
     this.eventHandler = this.handleEvent.bind(this);
+    /**
+     * @type {Function}
+     */
+    this.eventMapMoveHandler = this.handleMapMoveEvent.bind(this);
     return this;
   }
 
@@ -174,6 +178,8 @@ export class Internal {
       this.eventHandler,
       false
     );
+
+    this.map.on('movestart', this.eventMapMoveHandler);
   }
 
   removeListeners() {
@@ -182,6 +188,8 @@ export class Internal {
       this.eventHandler,
       false
     );
+
+    this.map.un('movestart', this.eventMapMoveHandler);
   }
 
   handleEvent(evt) {
@@ -220,6 +228,10 @@ export class Internal {
       },
       false
     );
+  }
+
+  handleMapMoveEvent(evt) {
+    this.closeMenu();
   }
 
   setItemListener(li, index) {
