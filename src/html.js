@@ -49,7 +49,7 @@ export class Html {
       // submenu - only a second level
       item.classname = item.classname || '';
       if (!contains(CSS_VARS.submenu, item.classname)) {
-        item.classname = item.classname.length
+        item.classname += item.classname.length
           ? ' ' + CSS_VARS.submenu
           : CSS_VARS.submenu;
       }
