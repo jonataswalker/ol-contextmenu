@@ -1,17 +1,10 @@
 {
-  "eslint.validate": [
-    {
-      "language": "javascript",
-      "autoFix": true
-    },
-  ],
-  "eslint.autoFixOnSave": true,
-  "editor.formatOnSave": false,
-  "[javascript]": {
-    "editor.formatOnPaste": true,
-  },
-  "search.showLineNumbers": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+    "eslint.validate": ["javascript", "javascriptreact", "typescript"],
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "svg.preview.background": "editor"
 }

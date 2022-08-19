@@ -1,11 +1,15 @@
-import { EventTypes } from './types';
-export const DEFAULT_OPTIONS = {
+import { EventTypes, SingleItem, Options } from './types';
+
+export const DEFAULT_OPTIONS: Options = {
     width: 150,
     scrollAt: 4,
     eventType: EventTypes.CONTEXTMENU,
     defaultItems: true,
+    items: [],
 };
+
 const NAMESPACE = 'ol-ctx-menu';
+
 export const CSS_CLASSES = {
     namespace: NAMESPACE,
     container: `${NAMESPACE}-container`,
@@ -17,12 +21,14 @@ export const CSS_CLASSES = {
     zoomOut: `${NAMESPACE}-zoom-out`,
     unselectable: 'ol-unselectable',
 };
-export const DEFAULT_ITEMS = [
+
+export const DEFAULT_ITEMS: SingleItem[] = [
     {
         text: 'Zoom In',
         classname: `${CSS_CLASSES.zoomIn} ${CSS_CLASSES.icon}`,
         callback: (object, map) => {
             const view = map.getView();
+
             view.animate({
                 zoom: Number(view.getZoom()) + 1,
                 duration: 700,
@@ -35,6 +41,7 @@ export const DEFAULT_ITEMS = [
         classname: `${CSS_CLASSES.zoomOut} ${CSS_CLASSES.icon}`,
         callback: (object, map) => {
             const view = map.getView();
+
             view.animate({
                 zoom: Number(view.getZoom()) - 1,
                 duration: 700,
@@ -43,4 +50,3 @@ export const DEFAULT_ITEMS = [
         },
     },
 ];
-//# sourceMappingURL=constants.js.map

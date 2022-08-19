@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@main/dist/en/v7.0.0/legacy/ol.css"
+        />
+        <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@main/dist/en/v7.0.0/legacy/ol.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Custom Context Menu for Openlayers</title>
+        <style>
+            html,
+            body,
+            #map {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            body {
+                font: 1em/1.5 BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen',
+                    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Helvetica',
+                    'Arial', sans-serif;
+                color: #222;
+                font-weight: 400;
+            }
+
+            #map {
+                position: absolute;
+                z-index: 1;
+                top: 0;
+                bottom: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="map"></div>
+        <script type="module">
+            import ContextMenu from './src/main.ts';
+
+            const view = new ol.View({ center: [0, 0], zoom: 4 });
+            const vectorLayer = new ol.layer.Vector({ source: new ol.source.Vector() });
+            const baseLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
+            const map = new ol.Map({
+                target: 'map',
+                view,
+                layers: [baseLayer, vectorLayer],
+            });
+
+            const pinIcon =
+                'https://cdn.jsdelivr.net/gh/jonataswalker/ol-contextmenu@604befc46d737d814505b5d90fc171932f747043/examples/img/pin_drop.png';
+            const centerIcon =
+                'https://cdn.jsdelivr.net/gh/jonataswalker/ol-contextmenu@604befc46d737d814505b5d90fc171932f747043/examples/img/center.png';
+            const listIcon =
+                'https://cdn.jsdelivr.net/gh/jonataswalker/ol-contextmenu@604befc46d737d814505b5d90fc171932f747043/examples/img/view_list.png';
+
+            const items = [
+                {
+                    text: 'Center map here',
+                    classname: 'bold',
+                    icon: centerIcon,
+                    callback: center,
+                },
+                {
+                    text: 'Some Actions',
+                    icon: listIcon,
+                    items: [
+                        {
+                            text: 'Center map here',
+                            icon: centerIcon,
+                            callback: center,
+                        },
+                        {
+                            text: 'Add a Marker',
+                            icon: pinIcon,
+                            callback: marker,
+                        },
+                    ],
+                },
+                {
+                    text: 'Add a Marker',
+                    icon: pinIcon,
+                    callback: marker,
+                },
+                '-', // this is a separator
+            ];
+
+            const contextmenu = new ContextMenu({
+                width: 170,
+                defaultItems: true,
+                items,
+            });
+            map.addControl(contextmenu);
+
+            console.log({ contextmenu });
+
+            contextmenu.on('beforeopen', function (evt) {
+                console.log({ evt });
+            });
+
+            map.on('moveend', () => {
+                console.log('moveend', contextmenu.isOpen());
+            });
+
+            function elastic(t) {
+                return Math.pow(2, -10 * t) * Math.sin(((t - 0.075) * (2 * Math.PI)) / 0.3) + 1;
+            }
+
+            function center(obj) {
+                view.animate({
+                    duration: 700,
+                    easing: elastic,
+                    center: obj.coordinate,
+                });
+            }
+
+            function removeMarker(obj) {
+                vectorLayer.getSource().removeFeature(obj.data.marker);
+            }
+
+            function marker(obj) {
+                var coord4326 = ol.proj.transform(obj.coordinate, 'EPSG:3857', 'EPSG:4326'),
+                    template = 'Coordinate is ({x} | {y})',
+                    iconStyle = new ol.style.Style({
+                        image: new ol.style.Icon({ scale: 0.6, src: pinIcon }),
+                        text: new ol.style.Text({
+                            offsetY: 25,
+                            text: ol.coordinate.format(coord4326, template, 2),
+                            font: '15px Open Sans,sans-serif',
+                            fill: new ol.style.Fill({ color: '#111' }),
+                            stroke: new ol.style.Stroke({ color: '#eee', width: 2 }),
+                        }),
+                    }),
+                    feature = new ol.Feature({
+                        type: 'removable',
+                        geometry: new ol.geom.Point(obj.coordinate),
+                    });
+
+                feature.setStyle(iconStyle);
+                vectorLayer.getSource().addFeature(feature);
+            }
+        </script>
+    </body>
+</html>
