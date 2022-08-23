@@ -8,20 +8,14 @@ module.exports = {
         browser: true,
         node: true,
     },
-    settings: {
-        'import/resolver': {
-            alias: {
-                map: [['@', './src']],
-                extensions: ['.ts'],
-            },
-        },
-    },
-    extends: ['jwalker/ts', 'jwalker', 'prettier'],
+    extends: ['jwalker', 'jwalker/ts', 'prettier'],
     rules: {
         'no-shadow': 'off',
         'no-magic-numbers': 'off',
         'no-unused-vars': 'off',
         'no-this-before-super': 'off',
+        'class-methods-use-this': 'off',
+        'import/no-unused-modules': 'off',
         'unicorn/prevent-abbreviations': 'off',
         'unicorn/prefer-dom-node-append': 'off',
         'security/detect-object-injection': 'off',

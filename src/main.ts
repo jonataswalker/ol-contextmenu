@@ -3,7 +3,6 @@ import type { Coordinate } from 'ol/coordinate';
 import Control from 'ol/control/Control';
 import OlMap from 'ol/Map';
 import BaseEvent from 'ol/events/Event';
-import { el, setAttr } from 'redom';
 
 import { CSS_CLASSES, DEFAULT_ITEMS, DEFAULT_OPTIONS } from './constants';
 import { CallbackObject, CustomEventTypes, EventTypes, Item, MenuEntry, Options } from './types';
@@ -27,6 +26,8 @@ export default class ContextMenu extends Control {
 
     protected contextMenuEventListener: (evt: MouseEvent) => void;
 
+    protected entryCallbackEventListener: (evt: MouseEvent) => void;
+
     protected mapMoveListener: () => void;
 
     protected lineHeight = 0;
@@ -37,29 +38,34 @@ export default class ContextMenu extends Control {
 
     protected items: Item[] = [];
 
-    protected menuEntries: Record<string, MenuEntry> = {};
+    protected menuEntries: Map<string, MenuEntry> = new Map();
 
     options: Options;
 
     constructor(opts: Partial<Options> = {}) {
         assert(typeof opts === 'object', '@param `opts` should be object type!');
 
-        const container = el('div', el('ul'));
+        const container = document.createElement('div');
 
         super({ element: container });
 
         this.options = { ...DEFAULT_OPTIONS, ...opts };
+        const menu = document.createElement('ul');
 
-        setAttr(container, {
-            style: { width: `${this.options.width}px` },
-            className: [CSS_CLASSES.container, CSS_CLASSES.unselectable, CSS_CLASSES.hidden].join(
-                ' '
-            ),
-        });
+        container.append(menu);
+        container.style.width = `${this.options.width}px`;
+        container.classList.add(
+            CSS_CLASSES.container,
+            CSS_CLASSES.unselectable,
+            CSS_CLASSES.hidden
+        );
 
         this.container = container;
         this.contextMenuEventListener = (evt: MouseEvent) => {
             this.handleContextMenu(evt);
+        };
+        this.entryCallbackEventListener = (evt: MouseEvent) => {
+            this.handleEntryCallback(evt);
         };
         this.mapMoveListener = () => {
             this.handleMapMove();
@@ -70,8 +76,6 @@ export default class ContextMenu extends Control {
         emitter.on(
             CustomEventTypes.ADD_MENU_ENTRY,
             (item: MenuEntry, element: HTMLLIElement) => {
-                console.log('emitter.on', { item });
-
                 this.handleAddMenuEntry(item, element);
             },
             this
@@ -79,7 +83,11 @@ export default class ContextMenu extends Control {
     }
 
     clear() {
-        console.log('hey');
+        for (const id of this.menuEntries.keys()) {
+            this.removeMenuEntry(id);
+        }
+
+        this.container.replaceChildren();
     }
 
     enable() {
@@ -88,6 +96,23 @@ export default class ContextMenu extends Control {
 
     disable() {
         this.disabled = true;
+    }
+
+    getDefaultItems() {
+        return DEFAULT_ITEMS;
+    }
+
+    countItems() {
+        return this.menuEntries.size;
+    }
+
+    extend(items: Item[]) {
+        assert(Array.isArray(items), '@param `items` should be an Array.');
+        addMenuEntries(
+            this.container.firstElementChild as HTMLUListElement,
+            items,
+            this.options.width
+        );
     }
 
     closeMenu() {
@@ -100,15 +125,36 @@ export default class ContextMenu extends Control {
         return this.opened;
     }
 
+    updatePosition(pixel: Pixel) {
+        assert(Array.isArray(pixel), '@param `pixel` should be an Array.');
+
+        if (this.isOpen()) {
+            this.pixel = pixel;
+            this.positionContainer();
+        }
+    }
+
+    pop() {
+        const last = Array.from(this.menuEntries.keys()).pop();
+
+        last && this.removeMenuEntry(last);
+    }
+
+    shift() {
+        const first = Array.from(this.menuEntries.keys()).shift();
+
+        first && this.removeMenuEntry(first);
+    }
+
+    push(item: Item) {
+        item && this.extend([item]);
+    }
+
     setMap(map: OlMap): void {
         super.setMap(map);
 
         if (map) {
             this.map = map;
-            const mapSize = map.getSize();
-
-            console.log('setMap', { mapSize, map });
-
             this.map
                 .getViewport()
                 .addEventListener(this.options.eventType, this.contextMenuEventListener, false);
@@ -121,7 +167,11 @@ export default class ContextMenu extends Control {
                 ? this.options.items.concat(DEFAULT_ITEMS)
                 : this.options.items;
 
-            addMenuEntries(this.container.firstChild as HTMLUListElement, this.items);
+            addMenuEntries(
+                this.container.firstElementChild as HTMLUListElement,
+                this.items,
+                this.options.width
+            );
 
             const entriesLength = this.getMenuEntriesLength();
 
@@ -131,6 +181,7 @@ export default class ContextMenu extends Control {
                     : getLineHeight(this.container);
         } else {
             this.removeListeners();
+            this.clear()
         }
     }
 
@@ -138,6 +189,14 @@ export default class ContextMenu extends Control {
         this.map
             .getViewport()
             .removeEventListener(this.options.eventType, this.contextMenuEventListener, false);
+    }
+
+    protected removeMenuEntry(id: string) {
+        const element = document.getElementById(id);
+
+        element?.remove();
+        element?.removeEventListener('click', this.entryCallbackEventListener);
+        this.menuEntries.delete(id);
     }
 
     protected handleContextMenu(evt: MouseEvent) {
@@ -171,24 +230,24 @@ export default class ContextMenu extends Control {
     }
 
     protected openMenu() {
+        if (this.menuEntries.size === 0) return;
+
         this.opened = true;
         this.positionContainer();
         this.container.classList.remove(CSS_CLASSES.hidden);
-
-        console.log('openMenu', this.pixel, this.container);
     }
 
     protected getMenuEntriesLength(): number {
-        return Object.keys(this.menuEntries).filter(
-            (key) => !this.menuEntries[key].isSeparator || !this.menuEntries[key].isSubmenu
+        return Array.from(this.menuEntries).filter(
+            ([, v]) => v.isSeparator === false || v.isSubmenu === false
         ).length;
     }
 
     protected positionContainer() {
         const mapSize = this.map.getSize() || [0, 0];
         const spaceLeft = {
-            w: mapSize[1] - this.pixel[1],
-            h: mapSize[0] - this.pixel[0],
+            w: mapSize[0] - this.pixel[0],
+            h: mapSize[1] - this.pixel[1],
         };
         const menuSize = {
             w: this.container.offsetWidth,
@@ -197,55 +256,94 @@ export default class ContextMenu extends Control {
             h: Math.round(this.lineHeight * this.getMenuEntriesLength()),
         };
 
-        console.log({ spaceLeft, menuSize, mapSize });
+        const left = spaceLeft.w >= menuSize.w ? this.pixel[0] + 5 : this.pixel[0] - menuSize.w;
 
-        if (spaceLeft.w >= menuSize.w) {
-            this.container.style.right = 'auto';
-            this.container.style.left = `${this.pixel[0] + 5}px`;
-        } else {
-            this.container.style.left = 'auto';
-            this.container.style.right = '15px';
-        }
+        this.container.style.left = `${left}px`;
+        this.container.style.top =
+            spaceLeft.h >= menuSize.h
+                ? `${this.pixel[1] - 10}px`
+                : `${this.pixel[1] - menuSize.h}px`;
+        this.container.style.right = 'auto';
+        this.container.style.bottom = 'auto';
+        spaceLeft.w -= menuSize.w;
 
-        if (spaceLeft.h >= menuSize.h) {
-            this.container.style.bottom = 'auto';
-            this.container.style.top = `${this.pixel[1] - 10}px`;
-        } else {
-            this.container.style.top = 'auto';
-            this.container.style.bottom = '0';
-        }
+        const containerSubmenuChildren = (container: HTMLUListElement): HTMLLIElement[] =>
+            Array.from(container.children).filter(
+                (el) => el.tagName === 'LI' && el.classList.contains(CSS_CLASSES.submenu)
+            ) as HTMLLIElement[];
+
+        let countSubMenu = 0;
+        const positionSubmenu = (container: HTMLUListElement, spaceLeftWidth: number) => {
+            countSubMenu += 1;
+            const elements = containerSubmenuChildren(container);
+
+            elements.forEach((element) => {
+                const lastLeft =
+                    spaceLeftWidth >= menuSize.w ? menuSize.w - 8 : (menuSize.w + 8) * -1;
+
+                const submenu = element.querySelector(
+                    `ul.${CSS_CLASSES.container}`
+                ) as HTMLUListElement;
+
+                const submenuHeight = Math.round(
+                    this.lineHeight *
+                        Array.from(submenu.children).filter((el) => el.tagName === 'LI').length
+                );
+
+                submenu.style.left = `${lastLeft}px`;
+                submenu.style.right = 'auto';
+                submenu.style.top =
+                    spaceLeft.h >= submenuHeight + menuSize.h
+                        ? '0'
+                        : `-${submenu.offsetHeight - 25}px`;
+                submenu.style.bottom = 'auto';
+                submenu.style.zIndex = String(countSubMenu);
+
+                if (containerSubmenuChildren(submenu).length > 0) {
+                    positionSubmenu(submenu, spaceLeftWidth - menuSize.w);
+                }
+            });
+        };
+
+        positionSubmenu(this.container.firstElementChild as HTMLUListElement, spaceLeft.w);
     }
 
     protected handleMapMove() {
         this.closeMenu();
     }
 
-    protected handleAddMenuEntry(item: MenuEntry, element: HTMLLIElement) {
-        console.log('handleAddMenuEntry', { item });
+    protected handleEntryCallback(evt: MouseEvent) {
+        evt.preventDefault();
+        evt.stopPropagation();
 
-        this.menuEntries[item.id] = item;
+        const target = evt.currentTarget as HTMLLIElement;
+        const item = this.menuEntries.get(target.id);
+
+        if (!item) return;
+
+        const object: CallbackObject = {
+            coordinate: this.coordinate,
+            data: item.data,
+        };
+
+        this.closeMenu();
+        item.callback?.(object, this.map);
+    }
+
+    protected handleAddMenuEntry(item: MenuEntry, element: HTMLLIElement) {
+        this.menuEntries.set(item.id, item);
 
         if ('callback' in item && typeof item.callback === 'function') {
-            element.addEventListener(
-                'click',
-                (evt) => {
-                    evt.preventDefault();
-                    const object: CallbackObject = {
-                        coordinate: this.coordinate,
-                        data: item.data,
-                    };
-
-                    this.closeMenu();
-                    item.callback?.(object, this.map);
-                },
-                false
-            );
+            element.addEventListener('click', this.entryCallbackEventListener, false);
         }
     }
 }
 
-// Expose LayerSwitcher as ol.control.LayerSwitcher if using a full build of
-// OpenLayers
-if (window.ol && window.ol.control) {
-    window.ol.control.LayerSwitcher = ContextMenu;
+// Expose ContextMenu as ol.control.ContextMenu if using a full build of OpenLayers
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+if (window.ol?.control) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    window.ol.control.ContextMenu = ContextMenu;
 }

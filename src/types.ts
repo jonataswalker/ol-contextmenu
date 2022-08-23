@@ -33,7 +33,7 @@ export type SingleItem = {
     classname: string;
     icon?: string;
     callback: (object: CallbackObject, map: OlMap) => void;
-    data: unknown;
+    data?: unknown;
 };
 
 export type MenuEntry = {

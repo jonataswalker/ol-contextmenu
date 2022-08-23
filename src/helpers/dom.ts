@@ -1,5 +1,5 @@
 import { CSS_CLASSES } from '../constants';
-import { CustomEventTypes, Item, ItemSeparator, MenuEntry, Options, SingleItem } from '../types';
+import { CustomEventTypes, Item } from '../types';
 import emitter from '../emitter';
 
 export function createFragment(html: string): DocumentFragment {
@@ -106,23 +106,20 @@ export function addMenuEntry(
     return element;
 }
 
-export function addMenuEntries(container: HTMLUListElement, items: Item[]) {
+export function addMenuEntries(container: HTMLUListElement, items: Item[], menuWidth: number) {
     items.forEach((item) => {
         if (typeof item !== 'string' && 'items' in item && Array.isArray(item.items)) {
-
-            console.log({ items });
-
             const li = addMenuEntry(container, item, true);
 
             li.classList.add(CSS_CLASSES.submenu);
             const ul = document.createElement('ul');
 
             ul.classList.add(CSS_CLASSES.container);
-            ul.style.width = container.style.width;
+            ul.style.width = `${menuWidth}px`;
 
             li.append(ul);
 
-            addMenuEntries(ul, item.items);
+            addMenuEntries(ul, item.items, menuWidth);
         } else {
             addMenuEntry(container, item);
         }

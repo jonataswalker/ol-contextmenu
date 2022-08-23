@@ -68,6 +68,51 @@
                     icon: listIcon,
                     items: [
                         {
+                            text: 'Some more Actions',
+                            items: [
+                                {
+                                    text: 'Add a Marker',
+                                    icon: pinIcon,
+                                    callback: marker,
+                                },
+                            ],
+                        },
+                        {
+                            text: 'Add a Marker',
+                            icon: pinIcon,
+                            callback: marker,
+                        },
+                        {
+                            text: 'Center map here',
+                            icon: centerIcon,
+                            callback: center,
+                        },
+                        {
+                            text: 'Add a Marker',
+                            icon: pinIcon,
+                            callback: marker,
+                        },
+                        {
+                            text: 'Center map here',
+                            icon: centerIcon,
+                            callback: center,
+                        },
+                        {
+                            text: 'Add a Marker',
+                            icon: pinIcon,
+                            callback: marker,
+                        },
+                        {
+                            text: 'Center map here',
+                            icon: centerIcon,
+                            callback: center,
+                        },
+                        {
+                            text: 'Add a Marker',
+                            icon: pinIcon,
+                            callback: marker,
+                        },
+                        {
                             text: 'Center map here',
                             icon: centerIcon,
                             callback: center,
@@ -85,10 +130,21 @@
                     callback: marker,
                 },
                 '-', // this is a separator
+                {
+                    text: 'Some more Actions, loooong',
+                    items: [
+                        {
+                            text: 'Add a Marker',
+                            icon: pinIcon,
+                            callback: marker,
+                        },
+                    ],
+                },
+                '-', // this is a separator
             ];
 
             const contextmenu = new ContextMenu({
-                width: 170,
+                width: 200,
                 defaultItems: true,
                 items,
             });

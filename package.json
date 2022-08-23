@@ -1,6 +1,6 @@
 {
     "name": "ol-contextmenu",
-    "version": "4.1.0",
+    "version": "5.0.0-alpha",
     "description": "Custom Context Menu for Openlayers",
     "type": "module",
     "main": "./dist/ol-contextmenu.umd.cjs",
@@ -31,7 +31,7 @@
     ],
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build",
+        "build": "npm run generate-types && tsc && vite build",
         "preview": "vite preview",
         "lint": "eslint --cache --cache-location .eslintcache/ --ext .js .",
         "lint:fix": "npm run lint -- --fix",
@@ -58,7 +58,6 @@
         "ol": "^6.15.1"
     },
     "dependencies": {
-        "redom": "^3.29.0",
         "tiny-emitter": "^2.1.0"
     }
 }
