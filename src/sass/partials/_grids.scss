@@ -47,12 +47,6 @@
       transition: visibility 0s linear 300ms, opacity 300ms;
     }
 
-    &:hover .#{$container} {
-      opacity: 1;
-      visibility: visible;
-      transition-delay: 0s;
-    }
-
     &::after {
       position: absolute;
       top: 7px;
@@ -70,6 +64,17 @@
       border-color: #eee;
     }
   }
+
+  &:not(.#{$hidden}) {
+    li.#{$submenu} {
+      &:hover .#{$container} {
+        opacity: 1;
+        visibility: visible;
+        transition-delay: 0s;
+      }
+    }
+  }
+
   li.#{$separator} {
     padding: 0;
 
