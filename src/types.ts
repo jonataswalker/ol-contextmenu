@@ -30,7 +30,7 @@ export type ItemSeparator = '-';
 
 export type SingleItem = {
     text: string;
-    classname: string;
+    classname?: string;
     icon?: string;
     callback: (object: CallbackObject, map: OlMap) => void;
     data?: unknown;

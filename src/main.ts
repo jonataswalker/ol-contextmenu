@@ -88,6 +88,7 @@ export default class ContextMenu extends Control {
         }
 
         this.container.replaceChildren();
+        this.container.append(document.createElement('ul'));
     }
 
     enable() {
@@ -181,7 +182,7 @@ export default class ContextMenu extends Control {
                     : getLineHeight(this.container);
         } else {
             this.removeListeners();
-            this.clear()
+            this.clear();
         }
     }
 
