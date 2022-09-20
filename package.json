@@ -1,55 +1,71 @@
 {
-  "name": "ol-contextmenu",
-  "version": "4.1.0",
-  "description": "Custom Context Menu for Openlayers",
-  "main": "dist/ol-contextmenu.js",
-  "author": "Jonatas Walker",
-  "homepage": "https://github.com/jonataswalker/ol-contextmenu",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jonataswalker/ol-contextmenu.git"
-  },
-  "bugs": {
-    "url": "https://github.com/jonataswalker/ol-contextmenu/issues"
-  },
-  "files": [
-    "dist/"
-  ],
-  "scripts": {
-    "dev": "rollup -w -c",
-    "build": "rollup -c",
-    "lint": "eslint --cache --cache-location .eslintcache/ --ext .js .",
-    "lint:fix": "npm run lint -- --fix",
-    "test": "npm run build && npm run test:unit",
-    "test:unit": "jest",
-    "test:unit:watch": "jest --watch"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "@babel/core": "^7.11.1",
-    "@babel/preset-env": "^7.11.0",
-    "autoprefixer": "^9.8.6",
-    "babel-jest": "^26.3.0",
-    "canvas": "^2.6.1",
-    "eslint": "^7.7.0",
-    "eslint-config-jwalker": "^5.2.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-jest": "^23.20.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "jest": "^26.4.0",
-    "ol": "^6.4.3",
-    "postcss": "^7.0.27",
-    "prettier": "^2.0.5",
-    "rollup": "^2.26.0",
-    "rollup-plugin-buble": "^0.19.8",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-eslint": "^7.0.0",
-    "rollup-plugin-filesize": "^9.0.2",
-    "rollup-plugin-includepaths": "^0.2.3",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-sass": "^1.2.2",
-    "rollup-plugin-terser": "^7.0.0",
-    "should": "^13.2.3"
-  }
+    "name": "ol-contextmenu",
+    "version": "5.0.0",
+    "description": "Custom Context Menu for Openlayers",
+    "type": "module",
+    "main": "./dist/ol-contextmenu.umd.cjs",
+    "module": "./dist/ol-contextmenu.js",
+    "exports": {
+        ".": {
+            "import": "./dist/ol-contextmenu.js",
+            "require": "./dist/ol-contextmenu.umd.cjs",
+            "types": "./dist/ol-contextmenu.d.ts"
+        },
+        "./ol-contextmenu.css": {
+            "import": "./dist/ol-contextmenu.css",
+            "require": "./dist/ol-contextmenu.css"
+        }
+    },
+    "files": [
+        "./dist"
+    ],
+    "types": "./dist/ol-contextmenu.d.ts",
+    "author": "Jonatas Walker",
+    "homepage": "https://github.com/jonataswalker/ol-contextmenu",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/jonataswalker/ol-contextmenu.git"
+    },
+    "bugs": {
+        "url": "https://github.com/jonataswalker/ol-contextmenu/issues"
+    },
+    "engines": {
+        "node": "^16 || ^18",
+        "npm": ">=8"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "rimraf ./dist && vite build",
+        "preview": "vite preview",
+        "lint": "eslint --cache --ext .js .",
+        "lint:fix": "npm run lint -- --fix",
+        "test": "jest",
+        "prepublishOnly": "npm run lint && npm test && npm run build"
+    },
+    "devDependencies": {
+        "@swc/core": "^1.3.2",
+        "@swc/jest": "^0.2.22",
+        "@types/jest": "^29.0.3",
+        "eslint": "^8.23.1",
+        "eslint-config-jwalker": "^7.9.2",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-jest": "^27.0.4",
+        "eslint-plugin-prettier": "^4.2.1",
+        "identity-obj-proxy": "^3.0.0",
+        "jest": "^29.0.3",
+        "jest-environment-jsdom": "^29.0.3",
+        "ol": "^7.1.0",
+        "prettier": "^2.7.1",
+        "rimraf": "^3.0.2",
+        "typescript": "^4.8.3",
+        "vite": "^3.1.3",
+        "vite-plugin-dts": "^1.5.0"
+    },
+    "peerDependencies": {
+        "ol": "^7.1.0"
+    },
+    "dependencies": {
+        "tiny-emitter": "^2.1.0"
+    }
 }
