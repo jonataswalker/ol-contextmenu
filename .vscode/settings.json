@@ -6,5 +6,8 @@
     "editor.codeActionsOnSave": ["source.fixAll.eslint"],
     "eslint.validate": ["javascript", "javascriptreact", "typescript"],
     "typescript.tsdk": "./node_modules/typescript/lib",
-    "svg.preview.background": "editor"
+    "svg.preview.background": "editor",
+    "[ignore]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    }
 }

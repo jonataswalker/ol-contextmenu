@@ -1,7 +1,7 @@
+import type { Coordinate } from 'ol/coordinate';
+import type { Pixel } from 'ol/pixel';
 import { Map as OlMap } from 'ol';
-import { Coordinate } from 'ol/coordinate';
 import BaseEvent from 'ol/events/Event';
-import { Pixel } from 'ol/pixel';
 
 export enum EventTypes {
     CONTEXTMENU = 'contextmenu',
@@ -44,8 +44,11 @@ export type MenuEntry = {
     data: unknown;
 };
 
-export type ItemWithNested = Pick<SingleItem, 'text' | 'classname' | 'icon'> & {
-    items: SingleItem[];
+export type ItemWithNested = {
+    text: string;
+    classname?: string;
+    icon?: string;
+    items: Item[];
 };
 
 export type Item = SingleItem | ItemSeparator | ItemWithNested;

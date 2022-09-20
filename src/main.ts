@@ -1,7 +1,7 @@
 import type { Pixel } from 'ol/pixel';
 import type { Coordinate } from 'ol/coordinate';
-import Control from 'ol/control/Control';
 import OlMap from 'ol/Map';
+import Control from 'ol/control/Control';
 import BaseEvent from 'ol/events/Event';
 
 import { CSS_CLASSES, DEFAULT_ITEMS, DEFAULT_OPTIONS } from './constants';

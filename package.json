@@ -1,6 +1,6 @@
 {
     "name": "ol-contextmenu",
-    "version": "5.0.1-alpha",
+    "version": "5.0.0",
     "description": "Custom Context Menu for Openlayers",
     "type": "module",
     "main": "./dist/ol-contextmenu.umd.cjs",
@@ -8,9 +8,17 @@
     "exports": {
         ".": {
             "import": "./dist/ol-contextmenu.js",
-            "require": "./dist/ol-contextmenu.umd.cjs"
+            "require": "./dist/ol-contextmenu.umd.cjs",
+            "types": "./dist/ol-contextmenu.d.ts"
+        },
+        "./ol-contextmenu.css": {
+            "import": "./dist/ol-contextmenu.css",
+            "require": "./dist/ol-contextmenu.css"
         }
     },
+    "files": [
+        "./dist"
+    ],
     "types": "./dist/ol-contextmenu.d.ts",
     "author": "Jonatas Walker",
     "homepage": "https://github.com/jonataswalker/ol-contextmenu",
@@ -26,24 +34,19 @@
         "node": "^16 || ^18",
         "npm": ">=8"
     },
-    "files": [
-        "dist/"
-    ],
     "scripts": {
         "dev": "vite",
-        "build": "npm run generate-types && tsc && vite build",
+        "build": "rimraf ./dist && vite build",
         "preview": "vite preview",
         "lint": "eslint --cache --ext .js .",
         "lint:fix": "npm run lint -- --fix",
-        "generate-types": "tsc src/**/*.ts --declaration --declarationMap --emitDeclarationOnly --outdir dist",
-        "test": "jest"
+        "test": "jest",
+        "prepublishOnly": "npm run lint && npm test && npm run build"
     },
     "devDependencies": {
-        "@swc/core": "^1.3.0",
+        "@swc/core": "^1.3.2",
         "@swc/jest": "^0.2.22",
-        "@types/jest": "^29.0.2",
-        "@vitejs/plugin-legacy": "^2.1.0",
-        "canvas": "^2.10.1",
+        "@types/jest": "^29.0.3",
         "eslint": "^8.23.1",
         "eslint-config-jwalker": "^7.9.2",
         "eslint-config-prettier": "^8.5.0",
@@ -54,8 +57,10 @@
         "jest-environment-jsdom": "^29.0.3",
         "ol": "^7.1.0",
         "prettier": "^2.7.1",
+        "rimraf": "^3.0.2",
         "typescript": "^4.8.3",
-        "vite": "^3.1.0"
+        "vite": "^3.1.3",
+        "vite-plugin-dts": "^1.5.0"
     },
     "peerDependencies": {
         "ol": "^7.1.0"
