@@ -339,12 +339,3 @@ export default class ContextMenu extends Control {
         }
     }
 }
-
-// Expose ContextMenu as ol.control.ContextMenu if using a full build of OpenLayers
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-if (window.ol?.control) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    window.ol.control.ContextMenu = ContextMenu;
-}

@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import bannerPlugin from 'vite-plugin-banner';
 
 import { CSS_CLASSES } from './src/constants';
 
@@ -13,6 +14,14 @@ const globals = {
     'ol/control/Control': 'ol.control.Control',
     ol: 'ol',
 };
+
+const banner = `
+  /*!
+  * ${pkg.name} - v${pkg.version}
+  * ${pkg.homepage}
+  * Built: ${new Date()}
+  */
+`;
 
 const additionalData = Object.keys(CSS_CLASSES).reduce(
     (accumulator, current) => `${accumulator}$${current}:${CSS_CLASSES[String(current)]};`,
@@ -35,13 +44,17 @@ export default defineConfig(({ command }) =>
                       entry: './src/main.ts',
                       name: 'ContextMenu',
                       fileName: 'ol-contextmenu',
+                      formats: ['es', 'umd', 'iife'],
                   },
                   rollupOptions: {
                       external,
-                      output: { globals, assetFileNames: () => 'ol-contextmenu.css' },
+                      output: {
+                          globals,
+                          assetFileNames: () => 'ol-contextmenu.css',
+                      },
                   },
               },
-              plugins: [dts({ insertTypesEntry: true })],
+              plugins: [dts({ insertTypesEntry: true }), bannerPlugin(banner)],
               define: {
                   __APP_VERSION__: JSON.stringify(pkg.version),
               },

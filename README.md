@@ -21,7 +21,7 @@ A `contextmenu` extension for [OpenLayers](http://openlayers.org/). **Requires**
 
 ## Demo
 
-You can see [here a demo](http://rawgit.com/jonataswalker/ol-contextmenu/master/examples/contextmenu.html) or [JSFiddle](https://jsfiddle.net/jonataswalker/ooxs1w5d/).
+[JSFiddle](https://jsfiddle.net/jonataswalker/ooxs1w5d/).
 
 ## How to use it?
 
