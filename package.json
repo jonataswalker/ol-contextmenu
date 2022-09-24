@@ -45,10 +45,10 @@
         "prepublishOnly": "npm run lint && npm test && npm run build"
     },
     "devDependencies": {
-        "@swc/core": "^1.3.2",
+        "@swc/core": "^1.3.3",
         "@swc/jest": "^0.2.22",
         "@types/jest": "^29.0.3",
-        "eslint": "^8.23.1",
+        "eslint": "^8.24.0",
         "eslint-config-jwalker": "^7.9.2",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-jest": "^27.0.4",
