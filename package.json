@@ -1,6 +1,6 @@
 {
     "name": "ol-contextmenu",
-    "version": "5.0.3",
+    "version": "5.1.0",
     "description": "Custom Context Menu for Openlayers",
     "type": "module",
     "main": "./dist/ol-contextmenu.umd.cjs",
