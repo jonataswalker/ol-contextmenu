@@ -118,7 +118,7 @@ var removeMarkerItem = {
 };
 
 var restore = false;
-contextmenu.on('open', function (evt) {
+contextmenu.on('beforeopen', function (evt) {
     var feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
         return ft;
     });
@@ -225,20 +225,6 @@ contextmenu.on('beforeopen', function (evt) {
         contextmenu.enable();
     } else {
         contextmenu.disable();
-    }
-});
-```
-
-#### Listen and make some changes when context menu opens
-
-```javascript
-contextmenu.on('open', function (evt) {
-    var feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
-        return ft;
-    });
-
-    if (feature) {
-        // add some other items to the menu
     }
 });
 ```
