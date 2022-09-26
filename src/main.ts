@@ -216,7 +216,9 @@ export default class ContextMenu extends Control {
             evt.preventDefault();
         }
 
-        this.openMenu();
+        setTimeout(() => { 
+            this.openMenu(); 
+        });
 
         evt.target?.addEventListener(
             'pointerdown',
