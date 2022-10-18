@@ -9,9 +9,10 @@ import { CSS_CLASSES } from './src/constants';
 const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
-const external = ['ol/control/Control', 'ol/PluggableMap', 'ol'];
+const external = ['ol/control/Control', 'ol/events/Event', 'ol/PluggableMap', 'ol'];
 const globals = {
     'ol/control/Control': 'ol.control.Control',
+    'ol/events/Event': 'ol.events.Event',
     ol: 'ol',
 };
 

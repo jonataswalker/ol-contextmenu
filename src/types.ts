@@ -1,7 +1,7 @@
 import type { Coordinate } from 'ol/coordinate';
 import type { Pixel } from 'ol/pixel';
 import { Map as OlMap } from 'ol';
-import BaseEvent from 'ol/events/Event';
+import BaseEvent from 'ol/events/Event.js';
 
 export enum EventTypes {
     CONTEXTMENU = 'contextmenu',
@@ -16,9 +16,19 @@ export enum CustomEventTypes {
     ADD_MENU_ENTRY = 'add-menu-entry',
 }
 
-export interface ContextMenuEvent extends BaseEvent {
-    coordinate: Coordinate;
-    pixel: Pixel;
+export class ContextMenuEvent extends BaseEvent {
+    public coordinate: Coordinate;
+    public pixel: Pixel;
+
+    constructor(options: {
+        type: `${CustomEventTypes.BEFOREOPEN}` | `${CustomEventTypes.OPEN}`;
+        coordinate: Coordinate;
+        pixel: Pixel;
+    }) {
+        super(options.type);
+        this.pixel = options.pixel;
+        this.coordinate = options.coordinate;
+    }
 }
 
 export type CallbackObject = {

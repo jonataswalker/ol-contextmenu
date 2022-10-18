@@ -156,6 +156,10 @@
                 console.log({ evt });
             });
 
+            contextmenu.on('open', function (evt) {
+                console.log({ evt });
+            });
+
             map.on('moveend', () => {
                 console.log('moveend', contextmenu.isOpen());
             });

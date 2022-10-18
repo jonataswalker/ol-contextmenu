@@ -3,9 +3,21 @@ import type { Coordinate } from 'ol/coordinate';
 import OlMap from 'ol/Map';
 import Control from 'ol/control/Control';
 import BaseEvent from 'ol/events/Event';
+import { EventsKey } from 'ol/events';
+import { Types as ObjectEventTypes } from 'ol/ObjectEventType';
+import { CombinedOnSignature, EventTypes as OlEventTypes, OnSignature } from 'ol/Observable';
+import { ObjectEvent } from 'ol/Object';
 
 import { CSS_CLASSES, DEFAULT_ITEMS, DEFAULT_OPTIONS } from './constants';
-import { CallbackObject, CustomEventTypes, EventTypes, Item, MenuEntry, Options } from './types';
+import {
+    CallbackObject,
+    ContextMenuEvent,
+    CustomEventTypes,
+    EventTypes,
+    Item,
+    MenuEntry,
+    Options,
+} from './types';
 import emitter from './emitter';
 import { addMenuEntries, getLineHeight } from './helpers/dom';
 
@@ -40,6 +52,54 @@ export default class ContextMenu extends Control {
 
     protected menuEntries: Map<string, MenuEntry> = new Map();
 
+    declare on: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, EventsKey> &
+        OnSignature<
+            `${CustomEventTypes.BEFOREOPEN}` | `${CustomEventTypes.OPEN}`,
+            ContextMenuEvent,
+            EventsKey
+        > &
+        OnSignature<ObjectEventTypes, ObjectEvent, EventsKey> &
+        CombinedOnSignature<
+            | `${CustomEventTypes.BEFOREOPEN}`
+            | `${CustomEventTypes.OPEN}`
+            | ObjectEventTypes
+            | `${CustomEventTypes.CLOSE}`
+            | OlEventTypes,
+            EventsKey
+        >;
+
+    declare once: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, EventsKey> &
+        OnSignature<
+            `${CustomEventTypes.BEFOREOPEN}` | `${CustomEventTypes.OPEN}`,
+            ContextMenuEvent,
+            EventsKey
+        > &
+        OnSignature<ObjectEventTypes, ObjectEvent, EventsKey> &
+        CombinedOnSignature<
+            | `${CustomEventTypes.BEFOREOPEN}`
+            | `${CustomEventTypes.OPEN}`
+            | ObjectEventTypes
+            | `${CustomEventTypes.CLOSE}`
+            | OlEventTypes,
+            EventsKey
+        >;
+
+    declare un: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, void> &
+        OnSignature<
+            `${CustomEventTypes.BEFOREOPEN}` | `${CustomEventTypes.OPEN}`,
+            ContextMenuEvent,
+            EventsKey
+        > &
+        OnSignature<ObjectEventTypes, ObjectEvent, void> &
+        CombinedOnSignature<
+            | `${CustomEventTypes.BEFOREOPEN}`
+            | `${CustomEventTypes.OPEN}`
+            | ObjectEventTypes
+            | `${CustomEventTypes.CLOSE}`
+            | OlEventTypes,
+            void
+        >;
+
     options: Options;
 
     constructor(opts: Partial<Options> = {}) {
@@ -72,14 +132,6 @@ export default class ContextMenu extends Control {
         };
         this.disabled = false;
         this.opened = false;
-
-        emitter.on(
-            CustomEventTypes.ADD_MENU_ENTRY,
-            (item: MenuEntry, element: HTMLLIElement) => {
-                this.handleAddMenuEntry(item, element);
-            },
-            this
-        );
     }
 
     clear() {
@@ -164,6 +216,14 @@ export default class ContextMenu extends Control {
                 this.handleMapMove();
             });
 
+            emitter.on(
+                CustomEventTypes.ADD_MENU_ENTRY,
+                (item: MenuEntry, element: HTMLLIElement) => {
+                    this.handleAddMenuEntry(item, element);
+                },
+                this
+            );
+
             this.items = this.options.defaultItems
                 ? this.options.items.concat(DEFAULT_ITEMS)
                 : this.options.items;
@@ -190,6 +250,8 @@ export default class ContextMenu extends Control {
         this.map
             .getViewport()
             .removeEventListener(this.options.eventType, this.contextMenuEventListener, false);
+
+        emitter.off(CustomEventTypes.ADD_MENU_ENTRY);
     }
 
     protected removeMenuEntry(id: string) {
@@ -203,11 +265,13 @@ export default class ContextMenu extends Control {
     protected handleContextMenu(evt: MouseEvent) {
         this.coordinate = this.map.getEventCoordinate(evt);
         this.pixel = this.map.getEventPixel(evt);
-        this.dispatchEvent({
-            type: CustomEventTypes.BEFOREOPEN,
-            pixel: this.pixel,
-            coordinate: this.coordinate,
-        } as unknown as BaseEvent);
+        this.dispatchEvent(
+            new ContextMenuEvent({
+                type: CustomEventTypes.BEFOREOPEN,
+                pixel: this.pixel,
+                coordinate: this.coordinate,
+            })
+        );
 
         if (this.disabled) return;
 
@@ -238,6 +302,14 @@ export default class ContextMenu extends Control {
         this.opened = true;
         this.positionContainer();
         this.container.classList.remove(CSS_CLASSES.hidden);
+
+        this.dispatchEvent(
+            new ContextMenuEvent({
+                type: CustomEventTypes.OPEN,
+                pixel: this.pixel,
+                coordinate: this.coordinate,
+            })
+        );
     }
 
     protected getMenuEntriesLength(): number {
