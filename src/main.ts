@@ -268,8 +268,8 @@ export default class ContextMenu extends Control {
         this.dispatchEvent(
             new ContextMenuEvent({
                 type: CustomEventTypes.BEFOREOPEN,
-                pixel: this.pixel,
-                coordinate: this.coordinate,
+                map: this.map,
+                originalEvent: evt
             })
         );
 
@@ -281,7 +281,7 @@ export default class ContextMenu extends Control {
         }
 
         setTimeout(() => { 
-            this.openMenu(); 
+            this.openMenu(evt); 
         });
 
         evt.target?.addEventListener(
@@ -296,7 +296,7 @@ export default class ContextMenu extends Control {
         );
     }
 
-    protected openMenu() {
+    protected openMenu(evt: MouseEvent) {
         if (this.menuEntries.size === 0) return;
 
         this.opened = true;
@@ -306,8 +306,8 @@ export default class ContextMenu extends Control {
         this.dispatchEvent(
             new ContextMenuEvent({
                 type: CustomEventTypes.OPEN,
-                pixel: this.pixel,
-                coordinate: this.coordinate,
+                map: this.map,
+                originalEvent: evt
             })
         );
     }
