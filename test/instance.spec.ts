@@ -1,6 +1,9 @@
+import OlMap from 'ol/Map';
+import BaseEvent from 'ol/events/Event';
+
 import { DEFAULT_ITEMS, DEFAULT_OPTIONS } from '../src/constants';
 import ContextMenu from '../src/main';
-import { Item } from '../src/types';
+import { ContextMenuEvent, Item } from '../src/types';
 
 const items: Item[] = [
     '-',
@@ -45,6 +48,11 @@ describe('Instance options', () => {
 
 describe('Instance methods', () => {
     const menu = new ContextMenu();
+
+    // Add map to initialize the emitter
+    new OlMap({
+        controls: [menu],
+    });
 
     test('getDefaultItems()', () => {
         expect(toJSON(menu.getDefaultItems())).toEqual(toJSON(DEFAULT_ITEMS));
@@ -102,4 +110,22 @@ describe('Throw errors', () => {
             new ContextMenu('foo');
         }).toThrow();
     });
+});
+
+// EVENTS
+// The lines below are not a test per se, but as an ESLint indicator if the events are not correctly declared
+const context = new ContextMenu();
+
+context.on('beforeopen', (evt: ContextMenuEvent) => {
+    evt.pixel;
+    evt.coordinate;
+});
+
+context.on('open', (evt: ContextMenuEvent) => {
+    evt.pixel;
+    evt.coordinate;
+});
+
+context.on('close', (evt: BaseEvent) => {
+    evt.target;
 });
