@@ -328,7 +328,7 @@ export default class ContextMenu extends Control {
             w: this.container.offsetWidth,
             // a cheap way to recalculate container height
             // since offsetHeight is like cached
-            h: Math.round(this.lineHeight * this.getMenuEntriesLength()),
+            h: this.container.offsetHeight,
         };
 
         const left = spaceLeft.w >= menuSize.w ? this.pixel[0] + 5 : this.pixel[0] - menuSize.w;
