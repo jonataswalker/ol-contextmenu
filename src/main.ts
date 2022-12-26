@@ -269,7 +269,7 @@ export default class ContextMenu extends Control {
             new ContextMenuEvent({
                 type: CustomEventTypes.BEFOREOPEN,
                 map: this.map,
-                originalEvent: evt
+                originalEvent: evt,
             })
         );
 
@@ -280,8 +280,8 @@ export default class ContextMenu extends Control {
             evt.preventDefault();
         }
 
-        setTimeout(() => { 
-            this.openMenu(evt); 
+        setTimeout(() => {
+            this.openMenu(evt);
         });
 
         evt.target?.addEventListener(
@@ -307,7 +307,7 @@ export default class ContextMenu extends Control {
             new ContextMenuEvent({
                 type: CustomEventTypes.OPEN,
                 map: this.map,
-                originalEvent: evt
+                originalEvent: evt,
             })
         );
     }
@@ -407,6 +407,7 @@ export default class ContextMenu extends Control {
 
     protected handleAddMenuEntry(item: MenuEntry, element: HTMLLIElement) {
         this.menuEntries.set(item.id, item);
+        this.positionContainer();
 
         if ('callback' in item && typeof item.callback === 'function') {
             element.addEventListener('click', this.entryCallbackEventListener, false);

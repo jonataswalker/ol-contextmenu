@@ -150,18 +150,37 @@
             });
             map.addControl(contextmenu);
 
-            console.log({ contextmenu });
+            const removeMarkerItem = {
+                text: 'Remove this Marker',
+                classname: 'marker',
+                callback: removeMarker,
+            };
 
             contextmenu.on('beforeopen', function (evt) {
                 console.log({ evt });
             });
 
             contextmenu.on('open', function (evt) {
-                console.log({ evt });
+                const feature = map.forEachFeatureAtPixel(evt.pixel, (ft) => ft);
+
+                if (feature && feature.get('type') === 'removable') {
+                    contextmenu.clear();
+                    removeMarkerItem.data = { marker: feature };
+                    contextmenu.push(removeMarkerItem);
+                } else {
+                    contextmenu.clear();
+                    contextmenu.extend(items);
+                    contextmenu.extend(contextmenu.getDefaultItems());
+                }
             });
 
-            map.on('moveend', () => {
-                console.log('moveend', contextmenu.isOpen());
+            map.on('pointermove', function (e) {
+                if (e.dragging) return;
+
+                const pixel = map.getEventPixel(e.originalEvent);
+                const hit = map.hasFeatureAtPixel(pixel);
+
+                map.getTargetElement().style.cursor = hit ? 'pointer' : '';
             });
 
             function elastic(t) {
@@ -181,7 +200,7 @@
             }
 
             function marker(obj) {
-                var coord4326 = ol.proj.transform(obj.coordinate, 'EPSG:3857', 'EPSG:4326'),
+                const coord4326 = ol.proj.transform(obj.coordinate, 'EPSG:3857', 'EPSG:4326'),
                     template = 'Coordinate is ({x} | {y})',
                     iconStyle = new ol.style.Style({
                         image: new ol.style.Icon({ scale: 0.6, src: pinIcon }),
