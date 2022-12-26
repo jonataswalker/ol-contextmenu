@@ -65,10 +65,10 @@
             border-color: #eee;
         }
     }
-    
+
     &:not(.#{$hidden}) {
         li.#{$submenu} {
-            &:hover .#{$container} {
+            &:hover > .#{$container} {
                 opacity: 1;
                 visibility: visible;
                 transition-delay: 0s;

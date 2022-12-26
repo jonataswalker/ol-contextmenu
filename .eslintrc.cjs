@@ -11,6 +11,7 @@ module.exports = {
     extends: ['jwalker', 'jwalker/ts', 'prettier'],
     rules: {
         'no-shadow': 'off',
+        'no-new': 'off',
         'no-magic-numbers': 'off',
         'no-unused-vars': 'off',
         'no-this-before-super': 'off',
