@@ -38,15 +38,23 @@
     <body>
         <div id="map"></div>
         <script type="module">
+            import Map from 'ol/Map.js';
+            import View from 'ol/View.js';
+            import Feature from 'ol/Feature.js';
+            import Point from 'ol/geom/Point.js';
+            import { transform } from 'ol/proj';
+            import { format } from 'ol/coordinate';
+            import { Icon, Text, Fill, Stroke, Style } from 'ol/style.js';
+            import { OSM, Vector as VectorSource } from 'ol/source.js';
+            import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
             import ContextMenu from './src/main.ts';
 
-            const view = new ol.View({ center: [0, 0], zoom: 4 });
-            const vectorLayer = new ol.layer.Vector({ source: new ol.source.Vector() });
-            const baseLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
-            const map = new ol.Map({
-                target: 'map',
+            const view = new View({ center: [0, 0], zoom: 2 });
+            const vectorLayer = new VectorLayer({ source: new VectorSource() });
+            const map = new Map({
                 view,
-                layers: [baseLayer, vectorLayer],
+                target: 'map',
+                layers: [new TileLayer({ source: new OSM() }), vectorLayer],
             });
 
             const pinIcon =
@@ -200,21 +208,21 @@
             }
 
             function marker(obj) {
-                const coord4326 = ol.proj.transform(obj.coordinate, 'EPSG:3857', 'EPSG:4326'),
+                const coord4326 = transform(obj.coordinate, 'EPSG:3857', 'EPSG:4326'),
                     template = 'Coordinate is ({x} | {y})',
-                    iconStyle = new ol.style.Style({
-                        image: new ol.style.Icon({ scale: 0.6, src: pinIcon }),
-                        text: new ol.style.Text({
+                    iconStyle = new Style({
+                        image: new Icon({ scale: 0.6, src: pinIcon }),
+                        text: new Text({
                             offsetY: 25,
-                            text: ol.coordinate.format(coord4326, template, 2),
+                            text: format(coord4326, template, 2),
                             font: '15px Open Sans,sans-serif',
-                            fill: new ol.style.Fill({ color: '#111' }),
-                            stroke: new ol.style.Stroke({ color: '#eee', width: 2 }),
+                            fill: new Fill({ color: '#111' }),
+                            stroke: new Stroke({ color: '#eee', width: 2 }),
                         }),
                     }),
-                    feature = new ol.Feature({
+                    feature = new Feature({
                         type: 'removable',
-                        geometry: new ol.geom.Point(obj.coordinate),
+                        geometry: new Point(obj.coordinate),
                     });
 
                 feature.setStyle(iconStyle);

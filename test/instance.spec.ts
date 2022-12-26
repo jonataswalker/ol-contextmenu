@@ -1,9 +1,16 @@
 import OlMap from 'ol/Map';
-import BaseEvent from 'ol/events/Event';
 
 import { DEFAULT_ITEMS, DEFAULT_OPTIONS } from '../src/constants';
 import ContextMenu from '../src/main';
-import { ContextMenuEvent, Item } from '../src/types';
+import { Item } from '../src/types';
+
+window.ResizeObserver =
+    window.ResizeObserver ||
+    jest.fn().mockImplementation(() => ({
+        disconnect: jest.fn(),
+        observe: jest.fn(),
+        unobserve: jest.fn(),
+    }));
 
 const items: Item[] = [
     '-',
@@ -49,10 +56,7 @@ describe('Instance options', () => {
 describe('Instance methods', () => {
     const menu = new ContextMenu();
 
-    // Add map to initialize the emitter
-    new OlMap({
-        controls: [menu],
-    });
+    new OlMap({ controls: [menu] });
 
     test('getDefaultItems()', () => {
         expect(toJSON(menu.getDefaultItems())).toEqual(toJSON(DEFAULT_ITEMS));
@@ -106,26 +110,7 @@ describe('Throw errors', () => {
         expect(() => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
-            // eslint-disable-next-line no-new
             new ContextMenu('foo');
         }).toThrow();
     });
-});
-
-// EVENTS
-// The lines below are not a test per se, but as an ESLint indicator if the events are not correctly declared
-const context = new ContextMenu();
-
-context.on('beforeopen', (evt: ContextMenuEvent) => {
-    evt.pixel;
-    evt.coordinate;
-});
-
-context.on('open', (evt: ContextMenuEvent) => {
-    evt.pixel;
-    evt.coordinate;
-});
-
-context.on('close', (evt: BaseEvent) => {
-    evt.target;
 });
