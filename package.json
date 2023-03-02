@@ -14,7 +14,8 @@
         },
         "./ol-contextmenu.css": {
             "import": "./dist/ol-contextmenu.css",
-            "require": "./dist/ol-contextmenu.css"
+            "require": "./dist/ol-contextmenu.css",
+            "style": "./dist/ol-contextmenu.css"
         }
     },
     "files": [
