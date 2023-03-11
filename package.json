@@ -40,7 +40,7 @@
         "dev": "vite",
         "build": "rimraf ./dist && vite build",
         "preview": "vite preview",
-        "lint": "eslint --cache --ext .js .",
+        "lint": "eslint .",
         "lint:fix": "npm run lint -- --fix",
         "test": "jest",
         "prepublishOnly": "npm run lint && npm test && npm run build",
