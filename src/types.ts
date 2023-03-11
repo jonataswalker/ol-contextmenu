@@ -42,6 +42,7 @@ export type SingleItem = {
 export type MenuEntry = {
     id: string;
     isSubmenu: boolean;
+    isInsideSubmenu: boolean;
     isSeparator: boolean;
     callback: SingleItem['callback'] | null;
     data: unknown;

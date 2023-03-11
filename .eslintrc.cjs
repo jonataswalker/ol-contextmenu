@@ -12,6 +12,7 @@ module.exports = {
     rules: {
         'no-shadow': 'off',
         'no-new': 'off',
+        'max-params': 'off',
         'no-magic-numbers': 'off',
         'no-unused-vars': 'off',
         'no-this-before-super': 'off',

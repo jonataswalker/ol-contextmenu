@@ -320,7 +320,8 @@ export default class ContextMenu extends Control {
 
     protected getMenuEntriesLength(): number {
         return Array.from(this.menuEntries).filter(
-            ([, v]) => v.isSeparator === false || v.isSubmenu === false
+            ([, v]) =>
+                v.isSeparator === false && v.isSubmenu === false && v.isInsideSubmenu === false
         ).length;
     }
 
@@ -330,13 +331,13 @@ export default class ContextMenu extends Control {
             w: mapSize[0] - this.pixel[0],
             h: mapSize[1] - this.pixel[1],
         };
+        const entriesLength = this.getMenuEntriesLength();
         const menuSize = {
             w: this.container.offsetWidth,
             // a cheap way to recalculate container height
             // since offsetHeight is like cached
-            h: Math.round(this.lineHeight * this.getMenuEntriesLength()),
+            h: Math.round(this.lineHeight * entriesLength),
         };
-
         const left = spaceLeft.w >= menuSize.w ? this.pixel[0] + 5 : this.pixel[0] - menuSize.w;
 
         this.container.style.left = `${left}px`;
