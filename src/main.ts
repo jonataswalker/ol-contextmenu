@@ -297,8 +297,6 @@ export default class ContextMenu extends Control {
     }
 
     protected openMenu(evt: MouseEvent) {
-        if (this.menuEntries.size === 0) return;
-
         this.opened = true;
         this.positionContainer();
         this.container.classList.remove(CSS_CLASSES.hidden);

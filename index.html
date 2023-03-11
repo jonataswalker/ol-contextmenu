@@ -164,10 +164,6 @@
                 callback: removeMarker,
             };
 
-            contextmenu.on('beforeopen', function (evt) {
-                console.log({ evt });
-            });
-
             contextmenu.on('open', function (evt) {
                 const feature = map.forEachFeatureAtPixel(evt.pixel, (ft) => ft);
 
