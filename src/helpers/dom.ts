@@ -1,5 +1,5 @@
 import { CSS_CLASSES } from '../constants';
-import { CustomEventTypes, Item } from '../types';
+import { CustomEventTypes, Item, MenuEntry } from '../types';
 import emitter from '../emitter';
 
 export function createFragment(html: string): DocumentFragment {
@@ -43,7 +43,8 @@ export function getLineHeight(container: HTMLDivElement): number {
 export function addMenuEntry(
     parentNode: HTMLUListElement,
     item: Item,
-    isSubmenu = false
+    isSubmenu = false,
+    isInsideSubmenu = false
 ): HTMLLIElement {
     const id = `_${Math.random().toString(36).slice(2, 11)}`;
 
@@ -69,17 +70,16 @@ export function addMenuEntry(
         element.append(frag);
         parentNode.append(element);
 
-        emitter.emit(
-            CustomEventTypes.ADD_MENU_ENTRY,
-            {
-                id,
-                isSubmenu,
-                isSeparator: false,
-                callback: 'callback' in item ? item.callback : null,
-                data: 'data' in item ? item.data : null,
-            },
-            element
-        );
+        const entry: MenuEntry = {
+            id,
+            isSubmenu,
+            isInsideSubmenu,
+            isSeparator: false,
+            callback: 'callback' in item ? item.callback : null,
+            data: 'data' in item ? item.data : null,
+        };
+
+        emitter.emit(CustomEventTypes.ADD_MENU_ENTRY, entry, element);
 
         return element;
     }
@@ -90,23 +90,26 @@ export function addMenuEntry(
     parentNode.append(frag);
 
     const element = parentNode.lastChild as HTMLLIElement;
+    const entry: MenuEntry = {
+        id,
+        isSubmenu: false,
+        isInsideSubmenu: false,
+        isSeparator: true,
+        callback: null,
+        data: null,
+    };
 
-    emitter.emit(
-        CustomEventTypes.ADD_MENU_ENTRY,
-        {
-            id,
-            isSubmenu,
-            isSeparator: true,
-            callback: null,
-            data: null,
-        },
-        element
-    );
+    emitter.emit(CustomEventTypes.ADD_MENU_ENTRY, entry, element);
 
     return element;
 }
 
-export function addMenuEntries(container: HTMLUListElement, items: Item[], menuWidth: number) {
+export function addMenuEntries(
+    container: HTMLUListElement,
+    items: Item[],
+    menuWidth: number,
+    isInsideSubmenu?: boolean
+) {
     items.forEach((item) => {
         if (typeof item !== 'string' && 'items' in item && Array.isArray(item.items)) {
             const li = addMenuEntry(container, item, true);
@@ -119,9 +122,9 @@ export function addMenuEntries(container: HTMLUListElement, items: Item[], menuW
 
             li.append(ul);
 
-            addMenuEntries(ul, item.items, menuWidth);
+            addMenuEntries(ul, item.items, menuWidth, true);
         } else {
-            addMenuEntry(container, item);
+            addMenuEntry(container, item, false, isInsideSubmenu);
         }
     });
 }
