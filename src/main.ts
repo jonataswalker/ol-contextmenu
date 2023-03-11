@@ -132,6 +132,14 @@ export default class ContextMenu extends Control {
         };
         this.disabled = false;
         this.opened = false;
+
+        window.addEventListener(
+            'beforeunload',
+            () => {
+                this.removeListeners();
+            },
+            { once: true }
+        );
     }
 
     clear() {
