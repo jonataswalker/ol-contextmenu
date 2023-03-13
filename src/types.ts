@@ -1,5 +1,6 @@
 import type { Coordinate } from 'ol/coordinate';
-import { Map as OlMap, MapBrowserEvent } from 'ol';
+import OlMap from 'ol/Map';
+import MapBrowserEvent from 'ol/MapBrowserEvent';
 
 export enum EventTypes {
     CONTEXTMENU = 'contextmenu',

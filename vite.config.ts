@@ -7,15 +7,6 @@ import bannerPlugin from 'vite-plugin-banner';
 import { CSS_CLASSES } from './src/constants';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
-
-// eslint-disable-next-line @typescript-eslint/no-shadow
-const external = ['ol/control/Control', 'ol/events/Event', 'ol/PluggableMap', 'ol'];
-const globals = {
-    'ol/control/Control': 'ol.control.Control',
-    'ol/events/Event': 'ol.events.Event',
-    ol: 'ol',
-};
-
 const banner = `
   /*!
   * ${pkg.name} - v${pkg.version}
@@ -48,9 +39,7 @@ export default defineConfig(({ command }) =>
                       formats: ['es', 'umd', 'iife'],
                   },
                   rollupOptions: {
-                      external,
                       output: {
-                          globals,
                           assetFileNames: () => 'ol-contextmenu.css',
                       },
                   },
