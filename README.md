@@ -21,7 +21,8 @@ A `contextmenu` extension for [OpenLayers](http://openlayers.org/). **Requires**
 
 ## Demo
 
-[JSFiddle](https://jsfiddle.net/jonataswalker/ooxs1w5d/).
+[JSFiddle](https://jsfiddle.net/jonataswalker/ooxs1w5d/)
+[CodeSandbox](https://codesandbox.io/s/openlayers-custom-context-menu-5s99kb?file=/src/index.js)
 
 ## How to use it?
 
@@ -54,7 +55,7 @@ Download [latest release](https://github.com/jonataswalker/ol-contextmenu/releas
 ##### Instantiate with some options and add the Control
 
 ```javascript
-var contextmenu = new ContextMenu({
+const contextmenu = new ContextMenu({
     width: 170,
     defaultItems: true, // defaultItems are (for now) Zoom In/Zoom Out
     items: [
@@ -81,7 +82,7 @@ map.addControl(contextmenu);
 If you provide `items {Array}` a submenu will be created as a child of the current item.
 
 ```javascript
-var all_items = [
+const all_items = [
     {
         text: 'Some Actions',
         items: [
@@ -108,18 +109,18 @@ var all_items = [
 ##### Would you like to propagate custom data to the callback handler?
 
 ```javascript
-var removeMarker = function (obj) {
+const removeMarker = function (obj) {
     vectorLayer.getSource().removeFeature(obj.data.marker);
 };
-var removeMarkerItem = {
+const removeMarkerItem = {
     text: 'Remove this Marker',
     icon: 'img/marker.png',
     callback: removeMarker,
 };
 
-var restore = false;
+let restore = false;
 contextmenu.on('open', function (evt) {
-    var feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
+    const feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
         return ft;
     });
     if (feature) {
@@ -168,10 +169,10 @@ Add items to the menu. This pushes each item in the provided array to the end of
 Example:
 
 ```js
-var contextmenu = new ContextMenu();
+const contextmenu = new ContextMenu();
 map.addControl(contextmenu);
 
-var add_later = [
+const add_later = [
     '-', // this is a separator
     {
         text: 'Add a Marker',
@@ -216,7 +217,7 @@ Update menu's position.
 
 ```javascript
 contextmenu.on('beforeopen', function (evt) {
-    var feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
+    const feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
         return ft;
     });
 
@@ -233,7 +234,7 @@ contextmenu.on('beforeopen', function (evt) {
 
 ```javascript
 contextmenu.on('open', function (evt) {
-    var feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
+    const feature = map.forEachFeatureAtPixel(evt.pixel, function (ft, l) {
         return ft;
     });
 
