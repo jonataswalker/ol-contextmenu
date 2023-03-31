@@ -11,32 +11,48 @@
         <title>Custom Context Menu for Openlayers</title>
         <style>
             html,
-            body,
-            #map {
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-            }
-
             body {
+                margin: 0;
+                height: 100%;
                 font: 1em/1.5 BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen',
                     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Helvetica',
                     'Arial', sans-serif;
                 color: #222;
                 font-weight: 400;
             }
+            .main-container {
+                height: 100%;
+                display: flex;
+            }
 
-            #map {
-                position: absolute;
-                z-index: 1;
-                top: 0;
-                bottom: 0;
+            .left-container {
+                flex: 1 1 0;
+                padding: 5px;
+            }
+
+            .right-container {
+                flex: 1 1 0;
+                display: flex;
+                flex-direction: column;
+                padding: 5px;
+            }
+            #map1,
+            #map2 {
+                width: 100%;
+                height: 100%;
             }
         </style>
     </head>
 
     <body>
-        <div id="map"></div>
+        <div class="main-container">
+            <div class="left-container">
+                <div id="map1"></div>
+            </div>
+            <div class="right-container">
+                <div id="map2"></div>
+            </div>
+        </div>
         <script type="module">
             import Map from 'ol/Map.js';
             import View from 'ol/View.js';
@@ -49,12 +65,20 @@
             import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
             import ContextMenu from './src/main.ts';
 
-            const view = new View({ center: [0, 0], zoom: 2 });
             const vectorLayer = new VectorLayer({ source: new VectorSource() });
+
             const map = new Map({
-                view,
-                target: 'map',
+                view: new View({ center: [0, 0], zoom: 2 }),
+                target: 'map1',
                 layers: [new TileLayer({ source: new OSM() }), vectorLayer],
+            });
+            const map2 = new Map({
+                view: new View({ center: [0, 0], zoom: 2 }),
+                target: 'map2',
+                layers: [
+                    new TileLayer({ source: new OSM() }),
+                    new VectorLayer({ source: new VectorSource() }),
+                ],
             });
 
             const pinIcon =
@@ -154,9 +178,14 @@
             const contextmenu = new ContextMenu({
                 width: 200,
                 defaultItems: true,
-                items,
             });
+            const contextmenu2 = new ContextMenu({
+                width: 200,
+                defaultItems: true,
+            });
+
             map.addControl(contextmenu);
+            map2.addControl(contextmenu2);
 
             const removeMarkerItem = {
                 text: 'Remove this Marker',

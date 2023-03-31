@@ -1,5 +1,5 @@
-import type { Coordinate } from 'ol/coordinate';
 import OlMap from 'ol/Map';
+import type { Coordinate } from 'ol/coordinate';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 
 export enum EventTypes {

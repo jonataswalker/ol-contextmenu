@@ -1,6 +1,7 @@
+import { TinyEmitter } from 'tiny-emitter';
+
 import { CSS_CLASSES } from '../constants';
 import { CustomEventTypes, Item, MenuEntry } from '../types';
-import emitter from '../emitter';
 
 export function createFragment(html: string): DocumentFragment {
     const fragment = document.createDocumentFragment();
@@ -40,12 +41,19 @@ export function getLineHeight(container: HTMLDivElement): number {
     return height;
 }
 
-export function addMenuEntry(
-    parentNode: HTMLUListElement,
-    item: Item,
+export function addMenuEntry({
+    parentNode,
+    item,
     isSubmenu = false,
-    isInsideSubmenu = false
-): HTMLLIElement {
+    isInsideSubmenu = false,
+    emitter,
+}: {
+    parentNode: HTMLUListElement;
+    item: Item;
+    isSubmenu: boolean;
+    isInsideSubmenu?: boolean;
+    emitter: TinyEmitter;
+}): HTMLLIElement {
     const id = `_${Math.random().toString(36).slice(2, 11)}`;
 
     if (typeof item !== 'string' && 'text' in item) {
@@ -104,15 +112,22 @@ export function addMenuEntry(
     return element;
 }
 
-export function addMenuEntries(
-    container: HTMLUListElement,
-    items: Item[],
-    menuWidth: number,
-    isInsideSubmenu?: boolean
-) {
+export function addMenuEntries({
+    container,
+    items,
+    menuWidth,
+    isInsideSubmenu,
+    emitter,
+}: {
+    container: HTMLUListElement;
+    items: Item[];
+    menuWidth: number;
+    isInsideSubmenu?: boolean;
+    emitter: TinyEmitter;
+}) {
     items.forEach((item) => {
         if (typeof item !== 'string' && 'items' in item && Array.isArray(item.items)) {
-            const li = addMenuEntry(container, item, true);
+            const li = addMenuEntry({ parentNode: container, item, isSubmenu: true, emitter });
 
             li.classList.add(CSS_CLASSES.submenu);
             const ul = document.createElement('ul');
@@ -122,9 +137,21 @@ export function addMenuEntries(
 
             li.append(ul);
 
-            addMenuEntries(ul, item.items, menuWidth, true);
+            addMenuEntries({
+                emitter,
+                menuWidth,
+                container: ul,
+                items: item.items,
+                isInsideSubmenu: true,
+            });
         } else {
-            addMenuEntry(container, item, false, isInsideSubmenu);
+            addMenuEntry({
+                parentNode: container,
+                item,
+                isSubmenu: false,
+                isInsideSubmenu,
+                emitter,
+            });
         }
     });
 }
