@@ -1,13 +1,15 @@
-import type { Pixel } from 'ol/pixel';
-import type { Coordinate } from 'ol/coordinate';
 import OlMap from 'ol/Map';
-import Control from 'ol/control/Control';
-import BaseEvent from 'ol/events/Event';
+import type { Pixel } from 'ol/pixel';
 import { EventsKey } from 'ol/events';
+import BaseEvent from 'ol/events/Event';
+import { ObjectEvent } from 'ol/Object';
+import Control from 'ol/control/Control';
+import { TinyEmitter } from 'tiny-emitter';
+import type { Coordinate } from 'ol/coordinate';
 import { Types as ObjectEventTypes } from 'ol/ObjectEventType';
 import { CombinedOnSignature, EventTypes as OlEventTypes, OnSignature } from 'ol/Observable';
-import { ObjectEvent } from 'ol/Object';
 
+import { addMenuEntries, getLineHeight } from './helpers/dom';
 import { CSS_CLASSES, DEFAULT_ITEMS, DEFAULT_OPTIONS } from './constants';
 import {
     CallbackObject,
@@ -18,8 +20,6 @@ import {
     MenuEntry,
     Options,
 } from './types';
-import emitter from './emitter';
-import { addMenuEntries, getLineHeight } from './helpers/dom';
 
 import './sass/main.scss';
 
@@ -29,6 +29,8 @@ function assert(condition: unknown, message: string): asserts condition {
 
 export default class ContextMenu extends Control {
     protected map!: OlMap;
+
+    protected emitter: TinyEmitter = new TinyEmitter();
 
     protected container: HTMLDivElement;
 
@@ -169,11 +171,12 @@ export default class ContextMenu extends Control {
 
     extend(items: Item[]) {
         assert(Array.isArray(items), '@param `items` should be an Array.');
-        addMenuEntries(
-            this.container.firstElementChild as HTMLUListElement,
+        addMenuEntries({
             items,
-            this.options.width
-        );
+            emitter: this.emitter,
+            menuWidth: this.options.width,
+            container: this.container.firstElementChild as HTMLUListElement,
+        });
     }
 
     closeMenu() {
@@ -216,15 +219,18 @@ export default class ContextMenu extends Control {
 
         if (map) {
             this.map = map;
-            this.map
-                .getViewport()
-                .addEventListener(this.options.eventType, this.contextMenuEventListener, false);
 
-            this.map.on('movestart', () => {
+            map.getViewport().addEventListener(
+                this.options.eventType,
+                this.contextMenuEventListener,
+                false
+            );
+
+            map.on('movestart', () => {
                 this.handleMapMove();
             });
 
-            emitter.on(
+            this.emitter.on(
                 CustomEventTypes.ADD_MENU_ENTRY,
                 (item: MenuEntry, element: HTMLLIElement) => {
                     this.handleAddMenuEntry(item, element);
@@ -236,11 +242,12 @@ export default class ContextMenu extends Control {
                 ? this.options.items.concat(DEFAULT_ITEMS)
                 : this.options.items;
 
-            addMenuEntries(
-                this.container.firstElementChild as HTMLUListElement,
-                this.items,
-                this.options.width
-            );
+            addMenuEntries({
+                items: this.items,
+                emitter: this.emitter,
+                menuWidth: this.options.width,
+                container: this.container.firstElementChild as HTMLUListElement,
+            });
 
             const entriesLength = this.getMenuEntriesLength();
 
@@ -259,25 +266,26 @@ export default class ContextMenu extends Control {
             .getViewport()
             .removeEventListener(this.options.eventType, this.contextMenuEventListener, false);
 
-        emitter.off(CustomEventTypes.ADD_MENU_ENTRY);
+        this.emitter.off(CustomEventTypes.ADD_MENU_ENTRY);
     }
 
     protected removeMenuEntry(id: string) {
-        const element = document.getElementById(id);
+        let element = document.getElementById(id);
 
         element?.remove();
-        element?.removeEventListener('click', this.entryCallbackEventListener);
+        element = null;
         this.menuEntries.delete(id);
     }
 
     protected handleContextMenu(evt: MouseEvent) {
         this.coordinate = this.map.getEventCoordinate(evt);
         this.pixel = this.map.getEventPixel(evt);
+
         this.dispatchEvent(
             new ContextMenuEvent({
-                type: CustomEventTypes.BEFOREOPEN,
                 map: this.map,
                 originalEvent: evt,
+                type: CustomEventTypes.BEFOREOPEN,
             })
         );
 
@@ -311,9 +319,9 @@ export default class ContextMenu extends Control {
 
         this.dispatchEvent(
             new ContextMenuEvent({
-                type: CustomEventTypes.OPEN,
                 map: this.map,
                 originalEvent: evt,
+                type: CustomEventTypes.OPEN,
             })
         );
     }
@@ -404,8 +412,8 @@ export default class ContextMenu extends Control {
         if (!item) return;
 
         const object: CallbackObject = {
-            coordinate: this.coordinate,
             data: item.data,
+            coordinate: this.coordinate,
         };
 
         this.closeMenu();
