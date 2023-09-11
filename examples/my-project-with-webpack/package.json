@@ -16,7 +16,7 @@
         "webpack-cli": "^4.10.0"
     },
     "dependencies": {
-        "ol": "^7.1.0",
+        "ol": "^8.1.0",
         "ol-contextmenu": "latest"
     }
 }
