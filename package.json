@@ -38,7 +38,7 @@
         "url": "https://github.com/jonataswalker/ol-contextmenu/issues"
     },
     "engines": {
-        "node": "^16 || ^18",
+        "node": ">=16",
         "npm": ">=8"
     },
     "scripts": {
