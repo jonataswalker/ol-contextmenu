@@ -39,11 +39,11 @@ export default defineConfig(({ command }) =>
                       formats: ['es', 'umd', 'iife'],
                   },
                   rollupOptions: {
-                      external: ['vue', /^ol.*/],
+                      external: [/^ol.*/],
                       output: {
                           globals: {
-                              'ol/MapBrowserEvent': 'MapBrowserEvent',
-                              'ol/control/Control': 'Control',
+                              'ol/MapBrowserEvent': 'ol.MapBrowserEvent',
+                              'ol/control/Control': 'ol.control.Control',
                           },
                           assetFileNames: () => 'ol-contextmenu.css',
                       },
