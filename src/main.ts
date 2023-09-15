@@ -3,11 +3,11 @@ import type { Pixel } from 'ol/pixel';
 import type { EventsKey } from 'ol/events';
 import type BaseEvent from 'ol/events/Event';
 import type { ObjectEvent } from 'ol/Object';
-import Control from 'ol/control/Control';
-import { TinyEmitter } from 'tiny-emitter';
 import type { Coordinate } from 'ol/coordinate';
 import type { Types as ObjectEventTypes } from 'ol/ObjectEventType';
 import type { CombinedOnSignature, EventTypes as OlEventTypes, OnSignature } from 'ol/Observable';
+import Control from 'ol/control/Control';
+import { TinyEmitter } from 'tiny-emitter';
 
 import { addMenuEntries, getLineHeight } from './helpers/dom';
 import { CSS_CLASSES, DEFAULT_ITEMS, DEFAULT_OPTIONS } from './constants';
