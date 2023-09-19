@@ -39,7 +39,12 @@ export default defineConfig(({ command }) =>
                       formats: ['es', 'umd', 'iife'],
                   },
                   rollupOptions: {
+                      external: [/^ol.*/],
                       output: {
+                          globals: {
+                              'ol/MapBrowserEvent': 'ol.MapBrowserEvent',
+                              'ol/control/Control': 'ol.control.Control',
+                          },
                           assetFileNames: () => 'ol-contextmenu.css',
                       },
                   },

@@ -1,7 +1,7 @@
 import { TinyEmitter } from 'tiny-emitter';
 
 import { CSS_CLASSES } from '../constants';
-import { CustomEventTypes, Item, MenuEntry } from '../types';
+import { CustomEventTypes, type Item, type MenuEntry } from '../types';
 
 export function createFragment(html: string): DocumentFragment {
     const fragment = document.createDocumentFragment();

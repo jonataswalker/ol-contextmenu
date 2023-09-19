@@ -1,4 +1,4 @@
-import { EventTypes, SingleItem, Options } from './types';
+import { EventTypes, type SingleItem, type Options } from './types';
 
 export const DEFAULT_OPTIONS: Options = {
     width: 150,
