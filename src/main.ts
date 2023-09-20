@@ -12,13 +12,13 @@ import { TinyEmitter } from 'tiny-emitter';
 import { addMenuEntries, getLineHeight } from './helpers/dom';
 import { CSS_CLASSES, DEFAULT_ITEMS, DEFAULT_OPTIONS } from './constants';
 import {
+    Item,
+    Options,
+    MenuEntry,
+    EventTypes,
     CallbackObject,
     ContextMenuEvent,
     CustomEventTypes,
-    EventTypes,
-    Item,
-    MenuEntry,
-    Options,
 } from './types';
 
 import './sass/main.scss';
@@ -119,7 +119,7 @@ export default class ContextMenu extends Control {
         container.classList.add(
             CSS_CLASSES.container,
             CSS_CLASSES.unselectable,
-            CSS_CLASSES.hidden
+            CSS_CLASSES.hidden,
         );
 
         this.container = container;
@@ -140,7 +140,7 @@ export default class ContextMenu extends Control {
             () => {
                 this.removeListeners();
             },
-            { once: true }
+            { once: true },
         );
     }
 
@@ -223,7 +223,7 @@ export default class ContextMenu extends Control {
             map.getViewport().addEventListener(
                 this.options.eventType,
                 this.contextMenuEventListener,
-                false
+                false,
             );
 
             map.on('movestart', () => {
@@ -235,7 +235,7 @@ export default class ContextMenu extends Control {
                 (item: MenuEntry, element: HTMLLIElement) => {
                     this.handleAddMenuEntry(item, element);
                 },
-                this
+                this,
             );
 
             this.items = this.options.defaultItems
@@ -286,7 +286,7 @@ export default class ContextMenu extends Control {
                 map: this.map,
                 originalEvent: evt,
                 type: CustomEventTypes.BEFOREOPEN,
-            })
+            }),
         );
 
         if (this.disabled) return;
@@ -308,7 +308,7 @@ export default class ContextMenu extends Control {
                     this.closeMenu();
                 }
             },
-            { once: true }
+            { once: true },
         );
     }
 
@@ -322,14 +322,14 @@ export default class ContextMenu extends Control {
                 map: this.map,
                 originalEvent: evt,
                 type: CustomEventTypes.OPEN,
-            })
+            }),
         );
     }
 
     protected getMenuEntriesLength(): number {
         return Array.from(this.menuEntries).filter(
             ([, v]) =>
-                v.isSeparator === false && v.isSubmenu === false && v.isInsideSubmenu === false
+                v.isSeparator === false && v.isSubmenu === false && v.isInsideSubmenu === false,
         ).length;
     }
 
@@ -359,7 +359,7 @@ export default class ContextMenu extends Control {
 
         const containerSubmenuChildren = (container: HTMLUListElement): HTMLLIElement[] =>
             Array.from(container.children).filter(
-                (el) => el.tagName === 'LI' && el.classList.contains(CSS_CLASSES.submenu)
+                (el) => el.tagName === 'LI' && el.classList.contains(CSS_CLASSES.submenu),
             ) as HTMLLIElement[];
 
         let countSubMenu = 0;
@@ -372,12 +372,12 @@ export default class ContextMenu extends Control {
                     spaceLeftWidth >= menuSize.w ? menuSize.w - 8 : (menuSize.w + 8) * -1;
 
                 const submenu = element.querySelector(
-                    `ul.${CSS_CLASSES.container}`
+                    `ul.${CSS_CLASSES.container}`,
                 ) as HTMLUListElement;
 
                 const submenuHeight = Math.round(
                     this.lineHeight *
-                        Array.from(submenu.children).filter((el) => el.tagName === 'LI').length
+                        Array.from(submenu.children).filter((el) => el.tagName === 'LI').length,
                 );
 
                 submenu.style.left = `${lastLeft}px`;
@@ -429,3 +429,16 @@ export default class ContextMenu extends Control {
         }
     }
 }
+
+export {
+    type ItemSeparator,
+    type ItemWithNested,
+    type SingleItem,
+    type Item,
+    type Options,
+    type MenuEntry,
+    type EventTypes,
+    type CallbackObject,
+    type ContextMenuEvent,
+    type CustomEventTypes,
+} from './types';

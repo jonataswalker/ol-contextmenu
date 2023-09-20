@@ -14,6 +14,6 @@
     },
     "dependencies": {
         "ol": "^8.1.0",
-        "ol-contextmenu": "latest"
+        "ol-contextmenu": "file:../.."
     }
 }
