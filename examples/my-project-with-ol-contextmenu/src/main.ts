@@ -1,17 +1,16 @@
-import { Map as OlMap, View, Feature } from 'ol';
+import OSM from 'ol/source/OSM';
+import Fill from 'ol/style/Fill';
+import Point from 'ol/geom/Point';
+import { transform } from 'ol/proj';
+import Stroke from 'ol/style/Stroke';
 import TileLayer from 'ol/layer/Tile';
+import { format } from 'ol/coordinate';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import OSM from 'ol/source/OSM';
-import { transform } from 'ol/proj';
 import { Style, Icon, Text } from 'ol/style';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
-import { format } from 'ol/coordinate';
-import Point from 'ol/geom/Point';
+import { Map as OlMap, View, Feature } from 'ol';
 
-import ContextMenu from 'ol-contextmenu';
-import { Item, ItemWithNested, SingleItem } from 'ol-contextmenu/dist/types';
+import ContextMenu, { CallbackObject, Item, ItemWithNested, SingleItem } from 'ol-contextmenu';
 
 import './style.css';
 
@@ -112,11 +111,11 @@ map.on('moveend', () => {
     console.log('moveend', contextmenu.isOpen());
 });
 
-function elastic(t) {
+function elastic(t: number) {
     return 2 ** (-10 * t) * Math.sin(((t - 0.075) * (2 * Math.PI)) / 0.3) + 1;
 }
 
-function center(obj) {
+function center(obj: CallbackObject) {
     view.animate({
         duration: 700,
         easing: elastic,
@@ -124,7 +123,7 @@ function center(obj) {
     });
 }
 
-function marker(obj) {
+function marker(obj: CallbackObject) {
     const coord4326 = transform(obj.coordinate, 'EPSG:3857', 'EPSG:4326');
     const template = 'Coordinate is ({x} | {y})';
     const iconStyle = new Style({

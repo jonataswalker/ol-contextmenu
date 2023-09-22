@@ -1,14 +1,14 @@
-import { Map as OlMap, View, Feature } from 'ol';
+import OSM from 'ol/source/OSM';
+import Fill from 'ol/style/Fill';
+import Point from 'ol/geom/Point';
+import { transform } from 'ol/proj';
+import Stroke from 'ol/style/Stroke';
 import TileLayer from 'ol/layer/Tile';
+import { format } from 'ol/coordinate';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import OSM from 'ol/source/OSM';
-import { transform } from 'ol/proj';
 import { Style, Icon, Text } from 'ol/style';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
-import { format } from 'ol/coordinate';
-import Point from 'ol/geom/Point';
+import { Map as OlMap, View, Feature } from 'ol';
 
 import ContextMenu from 'ol-contextmenu';
 
