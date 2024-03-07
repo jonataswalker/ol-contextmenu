@@ -61,7 +61,7 @@
         "identity-obj-proxy": "^3.0.0",
         "jest": "^29.7.0",
         "jest-environment-jsdom": "^29.7.0",
-        "ol": "^8.1.0",
+        "ol": "^9.0.0",
         "prettier": "^3.0.3",
         "rimraf": "^5.0.1",
         "sass": "^1.68.0",
@@ -71,7 +71,7 @@
         "vite-plugin-dts": "^3.5.4"
     },
     "peerDependencies": {
-        "ol": "> 7.x <= 8.x"
+        "ol": "> 7.x <= 9.x"
     },
     "dependencies": {
         "tiny-emitter": "^2.1.0"
