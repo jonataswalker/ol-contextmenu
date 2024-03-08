@@ -45,11 +45,11 @@
         "lint": "eslint .",
         "lint:fix": "npm run lint -- --fix",
         "test": "jest",
-        "prepublishOnly": "npm run lint && npm test && npm run build",
-        "prepare": "husky"
+        "prepare": "husky",
+        "release": "release-it --no-npm.publish"
     },
     "devDependencies": {
-        "@swc/core": "^1.4.5",
+        "@swc/core": "^1.4.6",
         "@swc/jest": "^0.2.36",
         "@types/jest": "^29.5.12",
         "eslint": "^8.57.0",
@@ -63,6 +63,7 @@
         "jest-environment-jsdom": "^29.7.0",
         "ol": "^9.0.0",
         "prettier": "^3.2.5",
+        "release-it": "^17.1.1",
         "rimraf": "^5.0.5",
         "sass": "^1.71.1",
         "typescript": "^5.4.2",
