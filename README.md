@@ -15,7 +15,7 @@
     </a>
 </p>
 
-A `contextmenu` extension for [OpenLayers](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
+A `contextmenu` extension for [OpenLayers](http://openlayers.org/). **Requires** OpenLayers **v7.0.0** or higher.
 
 ![contextmenu anim](https://raw.githubusercontent.com/jonataswalker/ol-contextmenu/screenshot/images/anim.gif)
 
