@@ -64,4 +64,5 @@ export type Options = {
     eventType: `${EventTypes}`;
     defaultItems: boolean;
     items: Item[];
+    hideOnMove?: boolean;
 };
