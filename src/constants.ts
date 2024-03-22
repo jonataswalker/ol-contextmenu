@@ -6,6 +6,7 @@ export const DEFAULT_OPTIONS: Options = {
     eventType: EventTypes.CONTEXTMENU,
     defaultItems: true,
     items: [],
+    hideOnMove: true,
 };
 
 const NAMESPACE = 'ol-ctx-menu';
