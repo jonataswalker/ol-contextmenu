@@ -34,7 +34,11 @@ export function getLineHeight(container: HTMLDivElement): number {
     cloned.append(element2);
     container.parentNode?.append(cloned);
 
-    const height = cloned.offsetHeight / 2;
+    const clonedStyle = window.getComputedStyle(cloned);
+    const paddingTop = Number.parseInt(clonedStyle.paddingTop, 10);
+    const paddingBottom = Number.parseInt(clonedStyle.paddingBottom, 10);
+
+    const height = (cloned.offsetHeight - (paddingTop + paddingBottom)) / 2;
 
     container.parentNode?.removeChild(cloned);
 
