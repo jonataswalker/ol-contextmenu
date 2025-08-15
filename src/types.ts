@@ -15,7 +15,7 @@ export enum CustomEventTypes {
     ADD_MENU_ENTRY = 'add-menu-entry',
 }
 
-export class ContextMenuEvent extends MapBrowserEvent<MouseEvent> {
+export class ContextMenuEvent extends MapBrowserEvent<PointerEvent> {
     constructor(options: {
         type: `${CustomEventTypes.BEFOREOPEN}` | `${CustomEventTypes.OPEN}`;
         map: OlMap;
