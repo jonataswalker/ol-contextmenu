@@ -399,7 +399,9 @@ export default class ContextMenu extends Control {
     }
 
     protected handleMapMove() {
-        this.closeMenu();
+        if (this.options.hideOnMove) {
+            this.closeMenu();
+        }
     }
 
     protected handleEntryCallback(evt: MouseEvent) {

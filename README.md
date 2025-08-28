@@ -149,6 +149,7 @@ contextmenu.on('open', function (evt) {
 -   `defaultItems`: `true`; Whether the default items (which are: Zoom In/Out) are enabled
 -   `width`: `150`; The menu's width
 -   `items`: `[]`; An array of object|string
+-   `hideOnMove`: `true`; Whether the context menu should hide when the map moves as a result of user iteraction or programmatically.
 
 ## Methods
 
