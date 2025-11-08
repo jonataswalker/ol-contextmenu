@@ -2,7 +2,7 @@
 // ES6 MODULE IMPORTS
 // ============================================================================
 // Import OpenLayers components using ES6 module syntax.
-// Webpack will bundle these imports into a single file.
+// Vite will handle these imports and bundle them efficiently.
 
 import OSM from 'ol/source/OSM'
 import Fill from 'ol/style/Fill'
@@ -17,10 +17,20 @@ import VectorSource from 'ol/source/Vector'
 import { Icon, Text, Style } from 'ol/style'
 import { View, Feature, Map as OlMap } from 'ol'
 
-// Import the CSS file - Webpack's css-loader and style-loader will handle this
-import 'ol-contextmenu/ol-contextmenu.css'
+// ============================================================================
+// TYPESCRIPT TYPE IMPORTS
+// ============================================================================
+// Import TypeScript types from ol-contextmenu for type safety.
+// These types help ensure your menu items and callbacks are correctly structured.
+//   - Item: Union type for all menu item types (SingleItem | ItemWithNested | '-')
+//   - SingleItem: A menu item with a callback (not a submenu)
+//   - CallbackObject: The object passed to callback functions
+//   - ItemWithNested: A menu item that contains nested items (submenu)
 
-// Import custom styles
+import type { Item, SingleItem, CallbackObject, ItemWithNested } from 'ol-contextmenu'
+
+// Import styles - Vite will process CSS imports automatically
+// The ol-contextmenu CSS is imported in style.css
 import './style.css'
 
 // ============================================================================
@@ -51,13 +61,14 @@ const listIcon
     = 'https://cdn.jsdelivr.net/gh/jonataswalker/ol-contextmenu@604befc46d737d814505b5d90fc171932f747043/examples/img/view_list.png'
 
 // ============================================================================
-// MULTI-LEVEL NESTED SUBMENUS
+// MULTI-LEVEL NESTED SUBMENUS (WITH TYPESCRIPT TYPES)
 // ============================================================================
-// This example demonstrates creating submenus with multiple levels of nesting.
-// You can nest submenus as deeply as needed.
+// This example demonstrates creating submenus with multiple levels of nesting,
+// using TypeScript types to ensure type safety.
 
 // Third level: Individual items in a submenu
-const actionsSubmenuItems = [
+// Using SingleItem[] type ensures all items have callbacks (not submenus)
+const actionsSubmenuItems: SingleItem[] = [
     {
         callback: marker,
         icon: pinIcon,
@@ -66,14 +77,15 @@ const actionsSubmenuItems = [
 ]
 
 // Second level: A submenu containing the third level items
-const actionsSubmenu = {
+// Using ItemWithNested type ensures this item has nested items
+const actionsSubmenu: ItemWithNested = {
     icon: listIcon,
     items: actionsSubmenuItems,
     text: 'Some more Actions',
 }
 
 // Second level: Items that will be in the first level submenu
-const actionsItems = [
+const actionsItems: SingleItem[] = [
     {
         callback: marker,
         icon: pinIcon,
@@ -88,7 +100,7 @@ const actionsItems = [
 
 // First level: A submenu that contains both another submenu and regular items
 // This shows how you can mix submenus and regular items at the same level
-const firstLevelSubmenu = {
+const firstLevelSubmenu: ItemWithNested = {
     icon: listIcon,
     items: [actionsSubmenu, ...actionsItems], // Spread operator to include items
     text: 'Some Actions',
@@ -97,8 +109,9 @@ const firstLevelSubmenu = {
 // ============================================================================
 // MENU ITEMS CONFIGURATION
 // ============================================================================
+// Using Item[] type allows mixing of SingleItem, ItemWithNested, and separators
 
-const items = [
+const items: Item[] = [
     {
         callback: center,
         classname: 'bold', // Custom CSS class for styling
@@ -110,7 +123,7 @@ const items = [
         icon: pinIcon,
         text: 'Add a Marker',
     },
-    '-', // Separator line
+    '-', // Separator: TypeScript knows this is a valid Item type
     {
         // Simple submenu example
         items: [
@@ -133,7 +146,7 @@ items.push(firstLevelSubmenu)
 // ============================================================================
 // Create the context menu with configuration options:
 //   - defaultItems: true - Includes built-in Zoom In/Out items
-//   - items: Array of custom menu items
+//   - items: Array of custom menu items (typed as Item[])
 //   - width: Menu width in pixels
 
 const contextmenu = new ContextMenu({
@@ -154,6 +167,7 @@ console.log({ contextmenu })
 // The 'beforeopen' event fires before the menu opens.
 // Use this to conditionally enable/disable the menu or perform checks.
 // The event object contains: coordinate, pixel, and originalEvent
+// Note: Type definitions for events may need to be added to the library
 contextmenu.on('beforeopen', (evt) => {
     console.log({ evt })
     // Example: You could check conditions here and call
@@ -166,29 +180,30 @@ map.on('moveend', () => {
 })
 
 // ============================================================================
-// CALLBACK FUNCTIONS
+// CALLBACK FUNCTIONS (TYPE-SAFE)
 // ============================================================================
-// Callback functions receive an object with:
-//   - coordinate: [x, y] in map projection (EPSG:3857)
-//   - pixel: [x, y] in screen pixels
-//   - data: Custom data (if attached to menu item)
+// Callback functions receive a CallbackObject with typed properties:
+//   - coordinate: [number, number] in map projection (EPSG:3857)
+//   - pixel: [number, number] in screen pixels
+//   - data: any (or your custom type if you attach data to menu items)
 
 // Easing function for smooth animations
-function elastic(t) {
+function elastic(t: number): number {
     return 2 ** (-10 * t) * Math.sin(((t - 0.075) * (2 * Math.PI)) / 0.3) + 1
 }
 
 // Center the map at the clicked location
-function center(obj) {
+// Using CallbackObject type ensures type safety for the parameter
+function center(obj: CallbackObject): void {
     view.animate({
-        center: obj.coordinate,
+        center: obj.coordinate, // TypeScript knows this is [number, number]
         duration: 700,
         easing: elastic,
     })
 }
 
 // Add a marker at the clicked location
-function marker(obj) {
+function marker(obj: CallbackObject): void {
     // Transform coordinates for display
     const coord4326 = transform(obj.coordinate, 'EPSG:3857', 'EPSG:4326')
     const template = 'Coordinate is ({x} | {y})'

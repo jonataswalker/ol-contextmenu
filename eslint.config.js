@@ -1,47 +1,53 @@
-import { common, jsonc, typescript, GLOB_TESTS } from 'eslint-config-jwalker'
+import { node, jsonc, common, GLOB_TS, disabled, typescript, formatters, GLOB_TESTS } from 'eslint-config-jwalker'
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
     ...common,
-    ...jsonc,
+    ...node,
     ...typescript,
-    { ignores: ['tsconfig.json'] },
+    ...jsonc,
+    ...formatters,
+    ...disabled,
     {
+        rules: {},
+    },
+    {
+        files: [GLOB_TS],
         rules: {
-            'no-undefined': 'off',
-            'sort-imports': 'off',
-            'max-statements': 'off',
+            '@typescript-eslint/consistent-type-imports': 'error',
 
-            'import/extensions': 'off',
+            'no-duplicate-imports': 'off',
+            'no-restricted-globals': 'off',
+            'no-unused-vars': 'off',
 
-            '@typescript-eslint/no-non-null-assertion': 'off',
-            "@typescript-eslint/consistent-type-imports": "error",
-
-            'sonarjs/cognitive-complexity': 'off',
+            'unicorn/prefer-single-call': 'off',
         },
     },
     {
-        files: [...GLOB_TESTS, 'tests/*.ts', 'lib-testing/*.ts'],
+        files: Array.from(GLOB_TESTS),
         rules: {
-            'no-undef': 'off',
-            'no-console': 'off',
-
-            '@typescript-eslint/no-unsafe-call': 'off',
-            '@typescript-eslint/no-unsafe-return': 'off',
             '@typescript-eslint/ban-ts-comment': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-unsafe-argument': 'off',
             '@typescript-eslint/no-unsafe-assignment': 'off',
-            '@typescript-eslint/prefer-ts-expect-error': 'off',
+            '@typescript-eslint/no-unsafe-call': 'off',
             '@typescript-eslint/no-unsafe-member-access': 'off',
+            '@typescript-eslint/no-unsafe-return': 'off',
+            '@typescript-eslint/prefer-ts-expect-error': 'off',
             '@typescript-eslint/restrict-template-expressions': 'off',
+
+            'max-statements': 'off',
+            'max-statements-per-line': 'off',
+            'no-console': 'off',
+            'no-empty-function': 'off',
+            'no-undef': 'off',
         },
     },
-    {
-        files: ['**/*.d.ts'],
-        rules: {
-            '@typescript-eslint/no-unused-vars': 'off',
-            '@typescript-eslint/consistent-type-definitions': 'off',
-        },
-    },
+    // {
+    //     files: ['**/*.d.ts'],
+    //     rules: {
+    //         '@typescript-eslint/no-unused-vars': 'off',
+    //         '@typescript-eslint/consistent-type-definitions': 'off',
+    //     },
+    // },
 ]

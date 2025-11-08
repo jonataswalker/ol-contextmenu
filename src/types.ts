@@ -1,6 +1,7 @@
+import MapBrowserEvent from 'ol/MapBrowserEvent'
+
 import type OlMap from 'ol/Map'
 import type { Coordinate } from 'ol/coordinate'
-import MapBrowserEvent from 'ol/MapBrowserEvent'
 
 export enum EventTypes {
     CONTEXTMENU = 'contextmenu',
@@ -15,13 +16,13 @@ export enum CustomEventTypes {
     ADD_MENU_ENTRY = 'add-menu-entry',
 }
 
-export class ContextMenuEvent extends MapBrowserEvent<MouseEvent> {
+export class ContextMenuEvent extends MapBrowserEvent<any> {
     constructor(options: {
-        type: `${CustomEventTypes.BEFOREOPEN}` | `${CustomEventTypes.OPEN}`
         map: OlMap
-        originalEvent: MouseEvent
+        originalEvent: MouseEvent | PointerEvent
+        type: `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`
     }) {
-        super(options.type, options.map, options.originalEvent)
+        super(options.type, options.map, options.originalEvent as any)
     }
 }
 
@@ -33,35 +34,35 @@ export type CallbackObject = {
 export type ItemSeparator = '-'
 
 export type SingleItem = {
-    text: string
-    classname?: string
-    icon?: string
     callback: (object: CallbackObject, map: OlMap) => void
+    classname?: string
     data?: unknown
+    icon?: string
+    text: string
 }
 
 export type MenuEntry = {
+    callback: null | SingleItem['callback']
+    data: unknown
     id: string
-    isSubmenu: boolean
     isInsideSubmenu: boolean
     isSeparator: boolean
-    callback: SingleItem['callback'] | null
-    data: unknown
+    isSubmenu: boolean
 }
 
 export type ItemWithNested = {
-    text: string
     classname?: string
     icon?: string
     items: Item[]
+    text: string
 }
 
 export type Item = SingleItem | ItemSeparator | ItemWithNested
 
 export type Options = {
-    width: number
-    scrollAt: number
-    eventType: `${EventTypes}`
     defaultItems: boolean
+    eventType: `${EventTypes}`
     items: Item[]
+    scrollAt: number
+    width: number
 }

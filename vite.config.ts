@@ -2,8 +2,8 @@ import dts from 'vite-plugin-dts'
 import { defineConfig } from 'vite'
 import bannerPlugin from 'vite-plugin-banner'
 
+import { CSS_CLASSES } from './src/constants.ts'
 import { name, version, homepage } from './package.json'
-import { CSS_CLASSES } from './src/constants'
 
 const banner = `
   /*!
@@ -23,33 +23,33 @@ const css = { preprocessorOptions: { scss: { additionalData } } }
 export default defineConfig(({ command }) =>
     command === 'serve'
         ? {
-                css,
                 build: { target: 'es2020' },
+                css,
             }
         : {
-                css,
                 build: {
-                    target: 'es2020',
                     lib: {
                         entry: './src/main.ts',
-                        name: 'ContextMenu',
                         fileName: 'ol-contextmenu',
                         formats: ['es', 'umd', 'iife'],
+                        name: 'ContextMenu',
                     },
                     rollupOptions: {
                         external: [/^ol.*/],
                         output: {
-                            globals: {
-                                'ol/MapBrowserEvent': 'ol.MapBrowserEvent',
-                                'ol/control/Control': 'ol.control.Control',
-                            },
                             assetFileNames: () => 'ol-contextmenu.css',
+                            globals: {
+                                'ol/control/Control': 'ol.control.Control',
+                                'ol/MapBrowserEvent': 'ol.MapBrowserEvent',
+                            },
                         },
                     },
+                    target: 'es2020',
                 },
-                plugins: [dts({ insertTypesEntry: true }), bannerPlugin(banner)],
+                css,
                 define: {
                     __APP_VERSION__: JSON.stringify(version),
                 },
+                plugins: [dts({ insertTypesEntry: true }), bannerPlugin(banner)],
             },
 )

@@ -6,7 +6,6 @@
         "moduleResolution": "bundler",
 
         "outDir": "dist",
-        "declarationDir": "dist",
 
         "strict": true,
         "sourceMap": true,
@@ -18,7 +17,12 @@
         "noImplicitReturns": true,
         "resolveJsonModule": true,
         "noUnusedParameters": true,
-        "useDefineForClassFields": true
+        "useDefineForClassFields": true,
+
+        "verbatimModuleSyntax": true,
+        "allowImportingTsExtensions": true,
+        "rewriteRelativeImportExtensions": true
     },
-    "include": ["**/*.ts", "**/*.js", "**/.*.ts", "**/.*.js"]
+    "include": ["src/**/*.ts", "tests/**/*.ts", "*.ts"],
+    "exclude": ["dist", "node_modules", "examples"]
 }

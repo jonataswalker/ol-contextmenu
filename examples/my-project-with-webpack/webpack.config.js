@@ -1,26 +1,23 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default {
-    mode: 'production',
     entry: './src/index.js',
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js',
-    },
     externals: [
         { ol: 'ol' },
         function ({ context, request }, callback) {
             if (/^ol\/.*$/.test(request)) {
-                console.log({ request, context });
+                console.log({ context, request })
 
-                return callback(null, request.replaceAll('/', '.'));
+                return callback(null, request.replaceAll('/', '.'))
             }
 
-            callback();
+            callback()
         },
     ],
+    mode: 'production',
     module: {
         rules: [
             {
@@ -29,4 +26,8 @@ export default {
             },
         ],
     },
-};
+    output: {
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, 'dist'),
+    },
+}

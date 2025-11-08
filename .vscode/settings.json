@@ -5,7 +5,7 @@
     "eslint.useFlatConfig": true,
     "editor.bracketPairColorization.enabled": true,
     "typescript.tsdk": "node_modules/typescript/lib",
-    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.updateImportsOnFileMove.enabled": "always",
     "search.exclude": {
         "**/node_modules": true,
         "**/bower_components": true,

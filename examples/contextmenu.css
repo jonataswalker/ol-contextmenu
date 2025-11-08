@@ -1,35 +1,51 @@
-html, body, #map {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+html,
+body,
+#map {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 body {
-  font: 1em/1.5 BlinkMacSystemFont,-apple-system,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue","Helvetica","Arial",sans-serif;
-  color: #222;
-  font-weight: 400;
+    font:
+        1em/1.5 BlinkMacSystemFont,
+        -apple-system,
+        "Segoe UI",
+        "Roboto",
+        "Oxygen",
+        "Ubuntu",
+        "Cantarell",
+        "Fira Sans",
+        "Droid Sans",
+        "Helvetica Neue",
+        "Helvetica",
+        "Arial",
+        sans-serif;
+    color: #222;
+    font-weight: 400;
 }
 
 #map {
-  position: absolute;
-  z-index: 1;
-  top: 0; bottom: 0;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
 }
 
 .ol-control button {
-  background-color: rgba(40, 40, 40, 0.8) !important;
+    background-color: rgba(40, 40, 40, 0.8) !important;
 }
 .ol-control button:hover {
-  background-color: rgba(40, 40, 40, 1) !important;
+    background-color: rgba(40, 40, 40, 1) !important;
 }
 
 .marker {
-  text-indent: 20px;
-  background-size: 20px auto;
-  background-image: url("img/pin_drop.png");
-  background-repeat: no-repeat;
-  background-position: left center;
+    text-indent: 20px;
+    background-size: 20px auto;
+    background-image: url("img/pin_drop.png");
+    background-repeat: no-repeat;
+    background-position: left center;
 }
 
 li.bold {
-  font-weight: 700;
+    font-weight: 700;
 }
