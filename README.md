@@ -156,7 +156,7 @@ contextmenu.on('open', function (evt) {
 
 Remove all elements from the menu.
 
-#### contextmenu.close()
+#### contextmenu.closeMenu()
 
 Close the menu programmatically.
 

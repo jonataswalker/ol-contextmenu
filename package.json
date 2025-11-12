@@ -1,6 +1,6 @@
 {
     "name": "ol-contextmenu",
-    "version": "5.4.1",
+    "version": "5.5.0",
     "description": "Custom Context Menu for Openlayers",
     "type": "module",
     "main": "./dist/ol-contextmenu.umd.cjs",
@@ -63,7 +63,7 @@
         "webdriverio": "^9.20.0"
     },
     "peerDependencies": {
-        "ol": "> 7.x <= 9.x"
+        "ol": "> 7.x <= 10.x"
     },
     "dependencies": {
         "tiny-emitter": "^2.1.0"
