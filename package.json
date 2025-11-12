@@ -8,15 +8,8 @@
     "module": "./dist/ol-contextmenu.js",
     "exports": {
         ".": {
-            "import": {
-                "types": "./dist/ol-contextmenu.d.ts",
-                "default": "./dist/ol-contextmenu.js"
-            }
-        },
-        "./*": {
-            "import": "./*",
-            "require": "./*",
-            "style": "./*"
+            "types": "./dist/ol-contextmenu.d.ts",
+            "import": "./dist/ol-contextmenu.js"
         },
         "./ol-contextmenu.css": "./dist/ol-contextmenu.css"
     },
@@ -40,36 +33,34 @@
     },
     "scripts": {
         "dev": "vite",
-        "build": "rimraf ./dist && vite build",
+        "build": "premove ./dist && vite build",
         "preview": "vite preview",
-        "lint": "eslint .",
+        "lint": "eslint . --cache",
         "lint:fix": "npm run lint -- --fix",
-        "test": "jest",
+        "test": "vitest run",
+        "test:ui": "vitest --ui",
         "prepare": "husky",
         "release": "release-it --no-npm.publish"
     },
     "devDependencies": {
-        "@swc/core": "^1.7.6",
-        "@swc/jest": "^0.2.36",
-        "@types/jest": "^29.5.12",
-        "eslint": "^8.57.0",
-        "eslint-config-jwalker": "^8.8.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-jest": "^27.9.0",
-        "eslint-plugin-prettier": "^5.2.1",
-        "husky": "^9.1.4",
-        "identity-obj-proxy": "^3.0.0",
-        "jest": "^29.7.0",
-        "jest-environment-jsdom": "^29.7.0",
-        "ol": "^10.0.0",
-        "prettier": "^3.3.3",
-        "release-it": "^17.6.0",
-        "rimraf": "^6.0.1",
-        "sass": "^1.77.8",
-        "typescript": "^5.5.4",
-        "vite": "^5.3.5",
-        "vite-plugin-banner": "^0.7.1",
-        "vite-plugin-dts": "^4.0.1"
+        "@types/node": "^24.10.1",
+        "@vitest/browser-webdriverio": "^4.0.8",
+        "@vitest/coverage-v8": "^4.0.8",
+        "@vitest/ui": "^4.0.8",
+        "auto-changelog": "^2.5.0",
+        "eslint-config-jwalker": "^12.0.0",
+        "husky": "^9.1.7",
+        "jsdom": "^27.2.0",
+        "ol": "^10.7.0",
+        "premove": "^4.0.0",
+        "release-it": "^19.0.6",
+        "sass": "^1.94.0",
+        "typescript": "^5.9.3",
+        "vite": "^7.2.2",
+        "vite-plugin-banner": "^0.8.1",
+        "vite-plugin-dts": "^4.5.4",
+        "vitest": "^4.0.8",
+        "webdriverio": "^9.20.0"
     },
     "peerDependencies": {
         "ol": "> 7.x <= 10.x"

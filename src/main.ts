@@ -1,285 +1,293 @@
-import type OlMap from 'ol/Map';
-import type { Pixel } from 'ol/pixel';
-import type { EventsKey } from 'ol/events';
-import type BaseEvent from 'ol/events/Event';
-import type { ObjectEvent } from 'ol/Object';
-import type { Coordinate } from 'ol/coordinate';
-import type { Types as ObjectEventTypes } from 'ol/ObjectEventType';
-import type { CombinedOnSignature, EventTypes as OlEventTypes, OnSignature } from 'ol/Observable';
-import Control from 'ol/control/Control';
-import { TinyEmitter } from 'tiny-emitter';
+import Control from 'ol/control/Control'
+import { TinyEmitter } from 'tiny-emitter'
 
-import { addMenuEntries, getLineHeight } from './helpers/dom';
-import { CSS_CLASSES, DEFAULT_ITEMS, DEFAULT_OPTIONS } from './constants';
+import { getLineHeight, addMenuEntries } from './helpers/dom.ts'
+import { CSS_CLASSES, DEFAULT_ITEMS, DEFAULT_OPTIONS } from './constants.ts'
 import {
+    EventTypes,
+    ContextMenuEvent,
+    CustomEventTypes,
+} from './types.ts'
+
+import type OlMap from 'ol/Map'
+import type { Pixel } from 'ol/pixel'
+import type { EventsKey } from 'ol/events'
+import type BaseEvent from 'ol/events/Event'
+import type { ObjectEvent } from 'ol/Object'
+import type { Coordinate } from 'ol/coordinate'
+import type { Types as ObjectEventTypes } from 'ol/ObjectEventType'
+import type { OnSignature, CombinedOnSignature, EventTypes as OlEventTypes } from 'ol/Observable'
+
+import type {
     Item,
     Options,
     MenuEntry,
-    EventTypes,
     CallbackObject,
-    ContextMenuEvent,
-    CustomEventTypes,
-} from './types';
+} from './types.ts'
 
-import './sass/main.scss';
+import './sass/main.scss'
 
 function assert(condition: unknown, message: string): asserts condition {
-    if (!condition) throw new Error(message);
+    if (!condition) throw new Error(message)
 }
 
 export default class ContextMenu extends Control {
-    protected map!: OlMap;
+    protected map!: OlMap
 
-    protected emitter: TinyEmitter = new TinyEmitter();
+    protected emitter: TinyEmitter = new TinyEmitter()
 
-    protected container: HTMLDivElement;
+    protected container: HTMLDivElement
 
-    protected coordinate: Coordinate = [];
+    protected coordinate: Coordinate = []
 
-    protected pixel: Pixel = [];
+    protected pixel: Pixel = []
 
-    protected contextMenuEventListener: (evt: MouseEvent) => void;
+    protected contextMenuEventListener: (evt: MouseEvent) => void
 
-    protected entryCallbackEventListener: (evt: MouseEvent) => void;
+    protected entryCallbackEventListener: (evt: MouseEvent) => void
 
-    protected mapMoveListener: () => void;
+    protected mapMoveListener: () => void
 
-    protected lineHeight = 0;
+    protected lineHeight = 0
 
-    protected disabled: boolean;
+    protected disabled: boolean
 
-    protected opened: boolean;
+    protected opened: boolean
 
-    protected items: Item[] = [];
+    protected items: Item[] = []
 
-    protected menuEntries: Map<string, MenuEntry> = new Map();
+    protected menuEntries: Map<string, MenuEntry> = new Map()
 
-    declare on: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, EventsKey> &
-        OnSignature<
-            `${CustomEventTypes.BEFOREOPEN}` | `${CustomEventTypes.OPEN}`,
+    declare on: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, EventsKey>
+        & OnSignature<
+            `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`,
             ContextMenuEvent,
             EventsKey
-        > &
-        OnSignature<ObjectEventTypes, ObjectEvent, EventsKey> &
-        CombinedOnSignature<
-            | `${CustomEventTypes.BEFOREOPEN}`
-            | `${CustomEventTypes.OPEN}`
+        >
+        & OnSignature<ObjectEventTypes, ObjectEvent, EventsKey>
+        & CombinedOnSignature<
+            | OlEventTypes
             | ObjectEventTypes
+            | `${CustomEventTypes.OPEN}`
             | `${CustomEventTypes.CLOSE}`
-            | OlEventTypes,
+            | `${CustomEventTypes.BEFOREOPEN}`,
             EventsKey
-        >;
+        >
 
-    declare once: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, EventsKey> &
-        OnSignature<
-            `${CustomEventTypes.BEFOREOPEN}` | `${CustomEventTypes.OPEN}`,
+    declare once: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, EventsKey>
+        & OnSignature<
+            `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`,
             ContextMenuEvent,
             EventsKey
-        > &
-        OnSignature<ObjectEventTypes, ObjectEvent, EventsKey> &
-        CombinedOnSignature<
-            | `${CustomEventTypes.BEFOREOPEN}`
-            | `${CustomEventTypes.OPEN}`
+        >
+        & OnSignature<ObjectEventTypes, ObjectEvent, EventsKey>
+        & CombinedOnSignature<
+            | OlEventTypes
             | ObjectEventTypes
+            | `${CustomEventTypes.OPEN}`
             | `${CustomEventTypes.CLOSE}`
-            | OlEventTypes,
+            | `${CustomEventTypes.BEFOREOPEN}`,
             EventsKey
-        >;
+        >
 
-    declare un: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, void> &
-        OnSignature<
-            `${CustomEventTypes.BEFOREOPEN}` | `${CustomEventTypes.OPEN}`,
+    declare un: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, void>
+        & OnSignature<
+            `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`,
             ContextMenuEvent,
             EventsKey
-        > &
-        OnSignature<ObjectEventTypes, ObjectEvent, void> &
-        CombinedOnSignature<
-            | `${CustomEventTypes.BEFOREOPEN}`
-            | `${CustomEventTypes.OPEN}`
+        >
+        & OnSignature<ObjectEventTypes, ObjectEvent, void>
+        & CombinedOnSignature<
+            | OlEventTypes
             | ObjectEventTypes
+            | `${CustomEventTypes.OPEN}`
             | `${CustomEventTypes.CLOSE}`
-            | OlEventTypes,
+            | `${CustomEventTypes.BEFOREOPEN}`,
             void
-        >;
+        >
 
-    options: Options;
+    options: Options
 
     constructor(opts: Partial<Options> = {}) {
-        assert(typeof opts === 'object', '@param `opts` should be object type!');
+        assert(typeof opts === 'object', '@param `opts` should be object type!')
 
-        const container = document.createElement('div');
+        const container = document.createElement('div')
 
-        super({ element: container });
+        super({ element: container })
 
-        this.options = { ...DEFAULT_OPTIONS, ...opts };
-        const menu = document.createElement('ul');
+        this.options = { ...DEFAULT_OPTIONS, ...opts }
+        const menu = document.createElement('ul')
 
-        container.append(menu);
-        container.style.width = `${this.options.width}px`;
+        container.append(menu)
+        container.style.width = `${this.options.width}px`
         container.classList.add(
             CSS_CLASSES.container,
             CSS_CLASSES.unselectable,
             CSS_CLASSES.hidden,
-        );
+        )
 
-        this.container = container;
+        this.container = container
+
         this.contextMenuEventListener = (evt: MouseEvent) => {
-            this.handleContextMenu(evt);
-        };
+            this.handleContextMenu(evt)
+        }
+
         this.entryCallbackEventListener = (evt: MouseEvent) => {
-            this.handleEntryCallback(evt);
-        };
+            this.handleEntryCallback(evt)
+        }
+
         this.mapMoveListener = () => {
-            this.handleMapMove();
-        };
-        this.disabled = false;
-        this.opened = false;
+            this.handleMapMove()
+        }
+        this.disabled = false
+        this.opened = false
 
         window.addEventListener(
             'beforeunload',
             () => {
-                this.removeListeners();
+                this.removeListeners()
             },
             { once: true },
-        );
+        )
     }
 
     clear() {
         for (const id of this.menuEntries.keys()) {
-            this.removeMenuEntry(id);
+            this.removeMenuEntry(id)
         }
 
-        this.container.replaceChildren();
-        this.container.append(document.createElement('ul'));
+        this.container.replaceChildren()
+        this.container.append(document.createElement('ul'))
     }
 
     enable() {
-        this.disabled = false;
+        this.disabled = false
     }
 
     disable() {
-        this.disabled = true;
+        this.disabled = true
     }
 
     getDefaultItems() {
-        return DEFAULT_ITEMS;
+        return DEFAULT_ITEMS
     }
 
     countItems() {
-        return this.menuEntries.size;
+        return this.menuEntries.size
     }
 
     extend(items: Item[]) {
-        assert(Array.isArray(items), '@param `items` should be an Array.');
+        assert(Array.isArray(items), '@param `items` should be an Array.')
         addMenuEntries({
-            items,
-            emitter: this.emitter,
-            menuWidth: this.options.width,
             container: this.container.firstElementChild as HTMLUListElement,
-        });
+            emitter: this.emitter,
+            items,
+            menuWidth: this.options.width,
+        })
     }
 
     closeMenu() {
-        this.opened = false;
-        this.container.classList.add(CSS_CLASSES.hidden);
-        this.dispatchEvent(CustomEventTypes.CLOSE);
+        this.opened = false
+        this.container.classList.add(CSS_CLASSES.hidden)
+        this.dispatchEvent(CustomEventTypes.CLOSE)
     }
 
     isOpen() {
-        return this.opened;
+        return this.opened
     }
 
     updatePosition(pixel: Pixel) {
-        assert(Array.isArray(pixel), '@param `pixel` should be an Array.');
+        assert(Array.isArray(pixel), '@param `pixel` should be an Array.')
 
         if (this.isOpen()) {
-            this.pixel = pixel;
-            this.positionContainer();
+            this.pixel = pixel
+            this.positionContainer()
         }
     }
 
     pop() {
-        const last = Array.from(this.menuEntries.keys()).pop();
+        const last = Array.from(this.menuEntries.keys()).pop()
 
-        last && this.removeMenuEntry(last);
+        last && this.removeMenuEntry(last)
     }
 
     shift() {
-        const first = Array.from(this.menuEntries.keys()).shift();
+        const first = Array.from(this.menuEntries.keys()).shift()
 
-        first && this.removeMenuEntry(first);
+        first && this.removeMenuEntry(first)
     }
 
     push(item: Item) {
-        item && this.extend([item]);
+        item && this.extend([item])
     }
 
     setMap(map: OlMap): void {
-        super.setMap(map);
+        super.setMap(map)
 
         if (map) {
-            this.map = map;
+            this.map = map
 
             map.getViewport().addEventListener(
                 this.options.eventType,
                 this.contextMenuEventListener,
                 false,
-            );
+            )
 
             map.on('movestart', () => {
-                this.handleMapMove();
-            });
+                this.handleMapMove()
+            })
 
             this.emitter.on(
                 CustomEventTypes.ADD_MENU_ENTRY,
                 (item: MenuEntry, element: HTMLLIElement) => {
-                    this.handleAddMenuEntry(item, element);
+                    this.handleAddMenuEntry(item, element)
                 },
                 this,
-            );
+            )
 
             this.items = this.options.defaultItems
                 ? this.options.items.concat(DEFAULT_ITEMS)
-                : this.options.items;
+                : this.options.items
 
             addMenuEntries({
-                items: this.items,
-                emitter: this.emitter,
-                menuWidth: this.options.width,
                 container: this.container.firstElementChild as HTMLUListElement,
-            });
+                emitter: this.emitter,
+                items: this.items,
+                menuWidth: this.options.width,
+            })
 
-            const entriesLength = this.getMenuEntriesLength();
+            const entriesLength = this.getMenuEntriesLength()
 
-            this.lineHeight =
-                entriesLength > 0
+            this.lineHeight
+                = entriesLength > 0
                     ? this.container.offsetHeight / entriesLength
-                    : getLineHeight(this.container);
-        } else {
-            this.removeListeners();
-            this.clear();
+                    : getLineHeight(this.container)
+        }
+        else {
+            this.removeListeners()
+            this.clear()
         }
     }
 
     protected removeListeners() {
         this.map
             .getViewport()
-            .removeEventListener(this.options.eventType, this.contextMenuEventListener, false);
+            .removeEventListener(this.options.eventType, this.contextMenuEventListener, false)
 
-        this.emitter.off(CustomEventTypes.ADD_MENU_ENTRY);
+        this.emitter.off(CustomEventTypes.ADD_MENU_ENTRY)
     }
 
     protected removeMenuEntry(id: string) {
-        let element = document.getElementById(id);
+        let element = document.getElementById(id)
 
-        element?.remove();
-        element = null;
-        this.menuEntries.delete(id);
+        element?.remove()
+        element = null
+        this.menuEntries.delete(id)
     }
 
     protected handleContextMenu(evt: MouseEvent) {
-        this.coordinate = this.map.getEventCoordinate(evt);
-        this.pixel = this.map.getEventPixel(evt);
+        this.coordinate = this.map.getEventCoordinate(evt)
+        this.pixel = this.map.getEventPixel(evt)
 
         this.dispatchEvent(
             new ContextMenuEvent({
@@ -287,35 +295,35 @@ export default class ContextMenu extends Control {
                 originalEvent: evt,
                 type: CustomEventTypes.BEFOREOPEN,
             }),
-        );
+        )
 
-        if (this.disabled) return;
+        if (this.disabled) return
 
         if (this.options.eventType === EventTypes.CONTEXTMENU) {
-            evt.stopPropagation();
-            evt.preventDefault();
+            evt.stopPropagation()
+            evt.preventDefault()
         }
 
         setTimeout(() => {
-            this.openMenu(evt);
-        });
+            this.openMenu(evt)
+        })
 
         evt.target?.addEventListener(
             'pointerdown',
             (event) => {
                 if (this.opened) {
-                    event.stopPropagation();
-                    this.closeMenu();
+                    event.stopPropagation()
+                    this.closeMenu()
                 }
             },
             { once: true },
-        );
+        )
     }
 
     protected openMenu(evt: MouseEvent) {
-        this.opened = true;
-        this.positionContainer();
-        this.container.classList.remove(CSS_CLASSES.hidden);
+        this.opened = true
+        this.positionContainer()
+        this.container.classList.remove(CSS_CLASSES.hidden)
 
         this.dispatchEvent(
             new ContextMenuEvent({
@@ -323,122 +331,122 @@ export default class ContextMenu extends Control {
                 originalEvent: evt,
                 type: CustomEventTypes.OPEN,
             }),
-        );
+        )
     }
 
     protected getMenuEntriesLength(): number {
         return Array.from(this.menuEntries).filter(
             ([, v]) =>
                 v.isSeparator === false && v.isSubmenu === false && v.isInsideSubmenu === false,
-        ).length;
+        ).length
     }
 
     protected positionContainer() {
-        const mapSize = this.map.getSize() || [0, 0];
+        const mapSize = this.map.getSize() || [0, 0]
         const spaceLeft = {
-            w: mapSize[0] - this.pixel[0],
             h: mapSize[1] - this.pixel[1],
-        };
-        const entriesLength = this.getMenuEntriesLength();
+            w: mapSize[0] - this.pixel[0],
+        }
+        const entriesLength = this.getMenuEntriesLength()
         const menuSize = {
-            w: this.container.offsetWidth,
             // a cheap way to recalculate container height
             // since offsetHeight is like cached
             h: Math.round(this.lineHeight * entriesLength),
-        };
-        const left = spaceLeft.w >= menuSize.w ? this.pixel[0] + 5 : this.pixel[0] - menuSize.w;
+            w: this.container.offsetWidth,
+        }
+        const left = spaceLeft.w >= menuSize.w ? this.pixel[0] + 5 : this.pixel[0] - menuSize.w
 
-        this.container.style.left = `${left}px`;
-        this.container.style.top =
-            spaceLeft.h >= menuSize.h
+        this.container.style.left = `${left}px`
+        this.container.style.top
+            = spaceLeft.h >= menuSize.h
                 ? `${this.pixel[1] - 10}px`
-                : `${this.pixel[1] - menuSize.h}px`;
-        this.container.style.right = 'auto';
-        this.container.style.bottom = 'auto';
-        spaceLeft.w -= menuSize.w;
+                : `${this.pixel[1] - menuSize.h}px`
+        this.container.style.right = 'auto'
+        this.container.style.bottom = 'auto'
+        spaceLeft.w -= menuSize.w
 
         const containerSubmenuChildren = (container: HTMLUListElement): HTMLLIElement[] =>
             Array.from(container.children).filter(
                 (el) => el.tagName === 'LI' && el.classList.contains(CSS_CLASSES.submenu),
-            ) as HTMLLIElement[];
+            ) as HTMLLIElement[]
 
-        let countSubMenu = 0;
+        let countSubMenu = 0
         const positionSubmenu = (container: HTMLUListElement, spaceLeftWidth: number) => {
-            countSubMenu += 1;
-            const elements = containerSubmenuChildren(container);
+            countSubMenu += 1
+            const elements = containerSubmenuChildren(container)
 
             elements.forEach((element) => {
-                const lastLeft =
-                    spaceLeftWidth >= menuSize.w ? menuSize.w - 8 : (menuSize.w + 8) * -1;
+                const lastLeft
+                    = spaceLeftWidth >= menuSize.w ? menuSize.w - 8 : (menuSize.w + 8) * -1
 
                 const submenu = element.querySelector(
                     `ul.${CSS_CLASSES.container}`,
-                ) as HTMLUListElement;
+                ) as HTMLUListElement
 
                 const submenuHeight = Math.round(
-                    this.lineHeight *
-                        Array.from(submenu.children).filter((el) => el.tagName === 'LI').length,
-                );
+                    this.lineHeight
+                    * Array.from(submenu.children).filter((el) => el.tagName === 'LI').length,
+                )
 
-                submenu.style.left = `${lastLeft}px`;
-                submenu.style.right = 'auto';
-                submenu.style.top =
-                    spaceLeft.h >= submenuHeight + menuSize.h
+                submenu.style.left = `${lastLeft}px`
+                submenu.style.right = 'auto'
+                submenu.style.top
+                    = spaceLeft.h >= submenuHeight + menuSize.h
                         ? '0'
-                        : `-${submenu.offsetHeight - 25}px`;
-                submenu.style.bottom = 'auto';
-                submenu.style.zIndex = String(countSubMenu);
+                        : `-${submenu.offsetHeight - 25}px`
+                submenu.style.bottom = 'auto'
+                submenu.style.zIndex = String(countSubMenu)
 
                 if (containerSubmenuChildren(submenu).length > 0) {
-                    positionSubmenu(submenu, spaceLeftWidth - menuSize.w);
+                    positionSubmenu(submenu, spaceLeftWidth - menuSize.w)
                 }
-            });
-        };
+            })
+        }
 
-        positionSubmenu(this.container.firstElementChild as HTMLUListElement, spaceLeft.w);
+        positionSubmenu(this.container.firstElementChild as HTMLUListElement, spaceLeft.w)
     }
 
     protected handleMapMove() {
-        this.closeMenu();
+        this.closeMenu()
     }
 
     protected handleEntryCallback(evt: MouseEvent) {
-        evt.preventDefault();
-        evt.stopPropagation();
+        evt.preventDefault()
+        evt.stopPropagation()
 
-        const target = evt.currentTarget as HTMLLIElement;
-        const item = this.menuEntries.get(target.id);
+        const target = evt.currentTarget as HTMLLIElement
+        const item = this.menuEntries.get(target.id)
 
-        if (!item) return;
+        if (!item) return
 
         const object: CallbackObject = {
-            data: item.data,
             coordinate: this.coordinate,
-        };
+            data: item.data,
+        }
 
-        this.closeMenu();
-        item.callback?.(object, this.map);
+        this.closeMenu()
+        item.callback?.(object, this.map)
     }
 
     protected handleAddMenuEntry(item: MenuEntry, element: HTMLLIElement) {
-        this.menuEntries.set(item.id, item);
-        this.positionContainer();
+        this.menuEntries.set(item.id, item)
+        this.positionContainer()
 
         if ('callback' in item && typeof item.callback === 'function') {
-            element.addEventListener('click', this.entryCallbackEventListener, false);
+            element.addEventListener('click', this.entryCallbackEventListener, false)
         }
     }
 }
 
 export {
-    type ItemSeparator,
-    type ItemWithNested,
-    type SingleItem,
     type Item,
     type Options,
     type MenuEntry,
+    type SingleItem,
     type EventTypes,
+    type ItemSeparator,
+    type ItemWithNested,
     type CallbackObject,
     type ContextMenuEvent,
     type CustomEventTypes,
-} from './types';
+} from './types.ts'

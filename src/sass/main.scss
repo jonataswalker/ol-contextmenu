@@ -4,9 +4,18 @@
 @import './vendor/utilities';
 
 // global project variables
-
 $font-size: 13px;
 $container-padding: 8px;
+
+// CSS class name variables
+$namespace: 'ol-ctx-menu';
+$container: '#{$namespace}-container';
+$hidden: '#{$namespace}-hidden';
+$icon: '#{$namespace}-icon';
+$separator: '#{$namespace}-separator';
+$submenu: '#{$namespace}-submenu';
+$zoomIn: '#{$namespace}-zoom-in';
+$zoomOut: '#{$namespace}-zoom-out';
 
 // partials
 @import './partials/grids';

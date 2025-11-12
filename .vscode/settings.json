@@ -1,16 +1,78 @@
 {
-    "editor.bracketPairColorization.enabled": true,
+    "editor.rulers": [100, 120],
+    "editor.formatOnPaste": false,
     "editor.guides.bracketPairs": true,
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.codeActionsOnSave": ["source.fixAll.eslint"],
-    "eslint.validate": ["javascript", "javascriptreact", "typescript"],
-    "typescript.tsdk": "./node_modules/typescript/lib",
-    "svg.preview.background": "editor",
+    "eslint.useFlatConfig": true,
+    "editor.bracketPairColorization.enabled": true,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/dist": true,
+        "**/*.code-search": true
+    },
+
+    // Disable the default formatter, use eslint instead
+    "prettier.enable": false,
+    "editor.formatOnSave": false,
+
+    // Auto fix
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "always",
+        "source.organizeImports": "never"
+    },
+
+    // Silent the stylistic rules in you IDE, but still auto fix them
+    "eslint.rules.customizations": [
+        { "rule": "style/*", "severity": "off" },
+        { "rule": "format/*", "severity": "off" },
+        { "rule": "*-indent", "severity": "off" },
+        { "rule": "*-spacing", "severity": "off" },
+        { "rule": "*-spaces", "severity": "off" },
+        { "rule": "*-order", "severity": "off" },
+        { "rule": "*-dangle", "severity": "off" },
+        { "rule": "*-newline", "severity": "off" },
+        { "rule": "*quotes", "severity": "off" },
+        { "rule": "*semi", "severity": "off" }
+    ],
+
+    // Enable eslint for all supported languages
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "vue",
+        "html",
+        "markdown",
+        "json",
+        "jsonc",
+        "yaml",
+        "toml"
+    ],
+
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
     "[ignore]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
     },
-    "[shellscript]": {
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    },
+    "[css]": {
+        "editor.wordWrap": "off"
+    },
+    "[properties]": {
+        "editor.formatOnSave": false,
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "never"
+        },
         "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[yaml]": {
+        "editor.autoIndent": "advanced",
+        "editor.defaultFormatter": "redhat.vscode-yaml"
     }
 }

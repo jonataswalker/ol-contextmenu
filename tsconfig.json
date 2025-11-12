@@ -1,12 +1,11 @@
 {
     "compilerOptions": {
-        "target": "ES2015",
+        "target": "es2022",
         "module": "ESNext",
-        "lib": ["ESNext", "DOM"],
-        "moduleResolution": "node",
+        "lib": ["es2022", "DOM", "DOM.Iterable"],
+        "moduleResolution": "bundler",
 
         "outDir": "dist",
-        "declarationDir": "dist",
 
         "strict": true,
         "sourceMap": true,
@@ -18,7 +17,12 @@
         "noImplicitReturns": true,
         "resolveJsonModule": true,
         "noUnusedParameters": true,
-        "useDefineForClassFields": true
+        "useDefineForClassFields": true,
+
+        "verbatimModuleSyntax": true,
+        "allowImportingTsExtensions": true,
+        "rewriteRelativeImportExtensions": true
     },
-    "include": ["src"]
+    "include": ["src/**/*.ts", "tests/**/*.ts", "*.ts"],
+    "exclude": ["dist", "node_modules", "examples"]
 }

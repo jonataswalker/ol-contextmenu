@@ -1,52 +1,52 @@
-import { EventTypes, type SingleItem, type Options } from './types';
+import { EventTypes, type Options, type SingleItem } from './types.ts'
 
 export const DEFAULT_OPTIONS: Options = {
-    width: 150,
-    scrollAt: 4,
-    eventType: EventTypes.CONTEXTMENU,
     defaultItems: true,
+    eventType: EventTypes.CONTEXTMENU,
     items: [],
-};
+    scrollAt: 4,
+    width: 150,
+}
 
-const NAMESPACE = 'ol-ctx-menu';
+const NAMESPACE = 'ol-ctx-menu'
 
 export const CSS_CLASSES = {
-    namespace: NAMESPACE,
     container: `${NAMESPACE}-container`,
-    separator: `${NAMESPACE}-separator`,
-    submenu: `${NAMESPACE}-submenu`,
     hidden: `${NAMESPACE}-hidden`,
     icon: `${NAMESPACE}-icon`,
+    namespace: NAMESPACE,
+    separator: `${NAMESPACE}-separator`,
+    submenu: `${NAMESPACE}-submenu`,
+    unselectable: 'ol-unselectable',
     zoomIn: `${NAMESPACE}-zoom-in`,
     zoomOut: `${NAMESPACE}-zoom-out`,
-    unselectable: 'ol-unselectable',
-};
+}
 
 export const DEFAULT_ITEMS: SingleItem[] = [
     {
-        text: 'Zoom In',
-        classname: `${CSS_CLASSES.zoomIn} ${CSS_CLASSES.icon}`,
         callback: (object, map) => {
-            const view = map.getView();
+            const view = map.getView()
 
             view.animate({
-                zoom: Number(view.getZoom()) + 1,
-                duration: 700,
                 center: object.coordinate,
-            });
+                duration: 700,
+                zoom: Number(view.getZoom()) + 1,
+            })
         },
+        classname: `${CSS_CLASSES.zoomIn} ${CSS_CLASSES.icon}`,
+        text: 'Zoom In',
     },
     {
-        text: 'Zoom Out',
-        classname: `${CSS_CLASSES.zoomOut} ${CSS_CLASSES.icon}`,
         callback: (object, map) => {
-            const view = map.getView();
+            const view = map.getView()
 
             view.animate({
-                zoom: Number(view.getZoom()) - 1,
-                duration: 700,
                 center: object.coordinate,
-            });
+                duration: 700,
+                zoom: Number(view.getZoom()) - 1,
+            })
         },
+        classname: `${CSS_CLASSES.zoomOut} ${CSS_CLASSES.icon}`,
+        text: 'Zoom Out',
     },
-];
+]

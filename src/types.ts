@@ -1,6 +1,7 @@
-import type OlMap from 'ol/Map';
-import type { Coordinate } from 'ol/coordinate';
-import MapBrowserEvent from 'ol/MapBrowserEvent';
+import MapBrowserEvent from 'ol/MapBrowserEvent'
+
+import type OlMap from 'ol/Map'
+import type { Coordinate } from 'ol/coordinate'
 
 export enum EventTypes {
     CONTEXTMENU = 'contextmenu',
@@ -15,53 +16,53 @@ export enum CustomEventTypes {
     ADD_MENU_ENTRY = 'add-menu-entry',
 }
 
-export class ContextMenuEvent extends MapBrowserEvent<PointerEvent> {
+export class ContextMenuEvent extends MapBrowserEvent<any> {
     constructor(options: {
-        type: `${CustomEventTypes.BEFOREOPEN}` | `${CustomEventTypes.OPEN}`;
-        map: OlMap;
-        originalEvent: MouseEvent;
+        map: OlMap
+        originalEvent: MouseEvent | PointerEvent
+        type: `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`
     }) {
-        super(options.type, options.map, options.originalEvent);
+        super(options.type, options.map, options.originalEvent as any)
     }
 }
 
 export type CallbackObject = {
-    coordinate: Coordinate;
-    data: unknown;
-};
+    coordinate: Coordinate
+    data: unknown
+}
 
-export type ItemSeparator = '-';
+export type ItemSeparator = '-'
 
 export type SingleItem = {
-    text: string;
-    classname?: string;
-    icon?: string;
-    callback: (object: CallbackObject, map: OlMap) => void;
-    data?: unknown;
-};
+    callback: (object: CallbackObject, map: OlMap) => void
+    classname?: string
+    data?: unknown
+    icon?: string
+    text: string
+}
 
 export type MenuEntry = {
-    id: string;
-    isSubmenu: boolean;
-    isInsideSubmenu: boolean;
-    isSeparator: boolean;
-    callback: SingleItem['callback'] | null;
-    data: unknown;
-};
+    callback: null | SingleItem['callback']
+    data: unknown
+    id: string
+    isInsideSubmenu: boolean
+    isSeparator: boolean
+    isSubmenu: boolean
+}
 
 export type ItemWithNested = {
-    text: string;
-    classname?: string;
-    icon?: string;
-    items: Item[];
-};
+    classname?: string
+    icon?: string
+    items: Item[]
+    text: string
+}
 
-export type Item = SingleItem | ItemSeparator | ItemWithNested;
+export type Item = SingleItem | ItemSeparator | ItemWithNested
 
 export type Options = {
-    width: number;
-    scrollAt: number;
-    eventType: `${EventTypes}`;
-    defaultItems: boolean;
-    items: Item[];
-};
+    defaultItems: boolean
+    eventType: `${EventTypes}`
+    items: Item[]
+    scrollAt: number
+    width: number
+}

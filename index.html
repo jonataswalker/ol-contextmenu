@@ -184,6 +184,9 @@
             map.addControl(contextmenu);
             map2.addControl(contextmenu2);
 
+            // Expose to window for e2e testing
+            window.testMaps = { map, map2, contextmenu, contextmenu2 }
+
             const removeMarkerItem = {
                 text: 'Remove this Marker',
                 classname: 'marker',
