@@ -1,6 +1,6 @@
 import dts from 'vite-plugin-dts'
-import { defineConfig } from 'vite'
 import bannerPlugin from 'vite-plugin-banner'
+import { defineConfig, type CSSOptions } from 'vite'
 
 import { CSS_CLASSES } from './src/constants.ts'
 import { name, version, homepage } from './package.json'
@@ -18,7 +18,14 @@ const additionalData = Object.keys(CSS_CLASSES).reduce(
     '',
 )
 
-const css = { preprocessorOptions: { scss: { additionalData } } }
+const css: CSSOptions = {
+    preprocessorOptions: {
+        scss: {
+            additionalData,
+            silenceDeprecations: ['import'],
+        },
+    },
+}
 
 export default defineConfig(({ command }) =>
     command === 'serve'

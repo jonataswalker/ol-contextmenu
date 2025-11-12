@@ -5,8 +5,8 @@ import TileLayer from 'ol/layer/Tile'
 import { userEvent } from 'vitest/browser'
 import { it, vi, expect, describe, afterEach, beforeEach } from 'vitest'
 
-import ContextMenu from '../src/main'
-import { EventTypes, CustomEventTypes } from '../src/types'
+import ContextMenu from '../src/main.ts'
+import { EventTypes, CustomEventTypes } from '../src/types.ts'
 
 describe('ContextMenu - OpenLayers Map Integration', () => {
     let mapContainer: HTMLElement

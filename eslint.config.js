@@ -8,6 +8,7 @@ export default [
     ...jsonc,
     ...formatters,
     ...disabled,
+    { ignores: ['examples/**/*'] },
     {
         rules: {},
     },
@@ -43,11 +44,4 @@ export default [
             'no-undef': 'off',
         },
     },
-    // {
-    //     files: ['**/*.d.ts'],
-    //     rules: {
-    //         '@typescript-eslint/no-unused-vars': 'off',
-    //         '@typescript-eslint/consistent-type-definitions': 'off',
-    //     },
-    // },
 ]
