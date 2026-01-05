@@ -1,6 +1,6 @@
 {
     "name": "ol-contextmenu",
-    "version": "5.5.0",
+    "version": "6.0.0",
     "description": "Custom Context Menu for Openlayers",
     "keywords": [
         "openlayers",
@@ -18,7 +18,11 @@
     "jsdelivr": "./dist/ol-contextmenu.iife.js",
     "module": "./dist/ol-contextmenu.js",
     "browser": "./dist/ol-contextmenu.js",
-    "sideEffects": ["./dist/ol-contextmenu.js", "./dist/ol-contextmenu.umd.cjs", "./dist/ol-contextmenu.iife.js"],
+    "sideEffects": [
+        "./dist/ol-contextmenu.js",
+        "./dist/ol-contextmenu.umd.cjs",
+        "./dist/ol-contextmenu.iife.js"
+    ],
     "exports": {
         ".": {
             "types": "./dist/ol-contextmenu.d.ts",
