@@ -2,14 +2,29 @@
     "name": "ol-contextmenu",
     "version": "5.5.0",
     "description": "Custom Context Menu for Openlayers",
+    "keywords": [
+        "openlayers",
+        "ol",
+        "contextmenu",
+        "context-menu",
+        "right-click",
+        "menu",
+        "map",
+        "gis",
+        "geospatial"
+    ],
     "type": "module",
     "main": "./dist/ol-contextmenu.umd.cjs",
     "jsdelivr": "./dist/ol-contextmenu.iife.js",
     "module": "./dist/ol-contextmenu.js",
+    "browser": "./dist/ol-contextmenu.js",
+    "sideEffects": ["./dist/ol-contextmenu.js", "./dist/ol-contextmenu.umd.cjs", "./dist/ol-contextmenu.iife.js"],
     "exports": {
         ".": {
             "types": "./dist/ol-contextmenu.d.ts",
-            "import": "./dist/ol-contextmenu.js"
+            "import": "./dist/ol-contextmenu.js",
+            "require": "./dist/ol-contextmenu.umd.cjs",
+            "default": "./dist/ol-contextmenu.js"
         }
     },
     "files": [
@@ -27,8 +42,8 @@
         "url": "https://github.com/jonataswalker/ol-contextmenu/issues"
     },
     "engines": {
-        "node": ">=16",
-        "npm": ">=8"
+        "node": ">=24",
+        "npm": ">=11"
     },
     "scripts": {
         "dev": "vite",
