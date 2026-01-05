@@ -2,12 +2,19 @@ import Control from 'ol/control/Control'
 import { TinyEmitter } from 'tiny-emitter'
 
 import { getLineHeight, addMenuEntries } from './helpers/dom.ts'
-import { CSS_CLASSES, DEFAULT_ITEMS, DEFAULT_OPTIONS } from './constants.ts'
 import {
     EventTypes,
     ContextMenuEvent,
     CustomEventTypes,
 } from './types.ts'
+import {
+    CSS_CLASSES,
+    DEFAULT_ITEMS,
+    DEFAULT_OPTIONS,
+    MENU_POSITION_BUFFER,
+    MENU_POSITION_OFFSET,
+    CONTAINER_PADDING_TOTAL,
+} from './constants.ts'
 
 import type OlMap from 'ol/Map'
 import type { Pixel } from 'ol/pixel'
@@ -325,14 +332,6 @@ export default class ContextMenu extends Control {
         this.positionContainer()
         this.container.classList.remove(CSS_CLASSES.hidden)
 
-        // Reposition after menu is visible to use actual rendered height
-        // This ensures accurate positioning, especially when menu is near viewport edges
-        setTimeout(() => {
-            if (this.isOpen()) {
-                this.positionContainer()
-            }
-        }, 0)
-
         this.dispatchEvent(
             new ContextMenuEvent({
                 map: this.map,
@@ -351,9 +350,8 @@ export default class ContextMenu extends Control {
 
     protected calculateMenuSize(): { h: number, w: number } {
         const entriesLength = this.getMenuEntriesLength()
-        // Container has 8px padding top + bottom = 16px total
         const contentHeight = Math.round(this.lineHeight * entriesLength)
-        const calculatedHeight = contentHeight + 16
+        const calculatedHeight = contentHeight + CONTAINER_PADDING_TOTAL
         const actualHeight = this.container.offsetHeight
         const isVisible = !this.container.classList.contains(CSS_CLASSES.hidden)
 
@@ -371,10 +369,10 @@ export default class ContextMenu extends Control {
         let top: number
 
         if (spaceLeft.h >= menuSize.h) {
-            top = this.pixel[1] - 10
+            top = this.pixel[1] - MENU_POSITION_OFFSET
 
             if (top + menuSize.h > mapSize[1]) {
-                top = Math.max(0, mapSize[1] - menuSize.h - 2)
+                top = Math.max(0, mapSize[1] - menuSize.h - MENU_POSITION_BUFFER)
             }
         }
         else {
@@ -385,13 +383,11 @@ export default class ContextMenu extends Control {
             }
 
             if (top + menuSize.h > mapSize[1]) {
-                top = Math.max(0, mapSize[1] - menuSize.h - 2)
+                top = Math.max(0, mapSize[1] - menuSize.h - MENU_POSITION_BUFFER)
             }
         }
 
-        const buffer = 2
-
-        return Math.max(0, Math.min(top, mapSize[1] - menuSize.h - buffer))
+        return Math.max(0, Math.min(top, mapSize[1] - menuSize.h - MENU_POSITION_BUFFER))
     }
 
     protected adjustPositionAfterRender(
@@ -403,10 +399,9 @@ export default class ContextMenu extends Control {
 
             if (renderedHeight > 0 && renderedHeight !== menuSize.h) {
                 const currentTop = Number.parseInt(this.container.style.top, 10) || 0
-                const buffer = 2
 
                 if (currentTop + renderedHeight > mapSize[1]) {
-                    this.container.style.top = `${Math.max(0, mapSize[1] - renderedHeight - buffer)}px`
+                    this.container.style.top = `${Math.max(0, mapSize[1] - renderedHeight - MENU_POSITION_BUFFER)}px`
                 }
             }
         }

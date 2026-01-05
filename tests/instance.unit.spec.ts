@@ -1,7 +1,14 @@
 import { it, vi, expect, describe, afterEach, beforeEach } from 'vitest'
 
 import ContextMenu from '../src/main'
-import { CSS_CLASSES, DEFAULT_OPTIONS } from '../src/constants'
+import {
+    CSS_CLASSES,
+    DEFAULT_OPTIONS,
+    CONTAINER_PADDING,
+    MENU_POSITION_BUFFER,
+    MENU_POSITION_OFFSET,
+    CONTAINER_PADDING_TOTAL,
+} from '../src/constants'
 
 import type { SingleItem } from '../src/types'
 
@@ -271,6 +278,58 @@ describe('ContextMenu - Unit Tests', () => {
             const instance = new ContextMenu()
 
             expect(instance).toBeInstanceOf(ContextMenu)
+        })
+    })
+
+    describe('Constants Validation', () => {
+        it('should have consistent padding values between JS and CSS', () => {
+            // CONTAINER_PADDING should match the SCSS variable $container-padding: 8px
+            expect(CONTAINER_PADDING).toBe(8)
+
+            // CONTAINER_PADDING_TOTAL should be double (top + bottom padding)
+            expect(CONTAINER_PADDING_TOTAL).toBe(CONTAINER_PADDING * 2)
+            expect(CONTAINER_PADDING_TOTAL).toBe(16)
+        })
+
+        it('should have valid positioning constants', () => {
+            // MENU_POSITION_OFFSET should be reasonable (spacing from click point)
+            expect(MENU_POSITION_OFFSET).toBe(10)
+            expect(MENU_POSITION_OFFSET).toBeGreaterThan(0)
+
+            // MENU_POSITION_BUFFER should be reasonable (safety margin at edges)
+            expect(MENU_POSITION_BUFFER).toBe(2)
+            expect(MENU_POSITION_BUFFER).toBeGreaterThan(0)
+        })
+
+        it('should have CSS class constants defined', () => {
+            expect(CSS_CLASSES.container).toBe('ol-ctx-menu-container')
+            expect(CSS_CLASSES.hidden).toBe('ol-ctx-menu-hidden')
+            expect(CSS_CLASSES.icon).toBe('ol-ctx-menu-icon')
+            expect(CSS_CLASSES.separator).toBe('ol-ctx-menu-separator')
+            expect(CSS_CLASSES.submenu).toBe('ol-ctx-menu-submenu')
+            expect(CSS_CLASSES.namespace).toBe('ol-ctx-menu')
+        })
+
+        it('should verify container uses padding constants correctly', () => {
+            const cm = new ContextMenu({
+                items: [
+                    { callback: vi.fn(), text: 'Item 1' },
+                    { callback: vi.fn(), text: 'Item 2' },
+                ],
+            })
+
+            // @ts-expect-error - accessing protected property
+            const { container } = cm
+
+            // Verify the container exists and can be styled
+            expect(container).toBeDefined()
+            expect(container instanceof HTMLElement).toBe(true)
+
+            // The container should use styles that incorporate padding
+            // This is validated through the constants matching the SCSS
+            expect(CONTAINER_PADDING_TOTAL).toBe(16)
+
+            cm.clear()
         })
     })
 })

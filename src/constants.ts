@@ -22,6 +22,17 @@ export const CSS_CLASSES = {
     zoomOut: `${NAMESPACE}-zoom-out`,
 }
 
+// Container padding from SCSS: $container-padding: 8px
+export const CONTAINER_PADDING = 8
+
+export const CONTAINER_PADDING_TOTAL = CONTAINER_PADDING * 2
+
+// Offset when positioning menu below click point
+export const MENU_POSITION_OFFSET = 10
+
+// Safety buffer to prevent menu cutoff at viewport edges
+export const MENU_POSITION_BUFFER = 2
+
 export const DEFAULT_ITEMS: SingleItem[] = [
     {
         callback: (object, map) => {
