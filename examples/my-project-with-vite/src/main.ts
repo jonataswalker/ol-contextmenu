@@ -30,7 +30,7 @@ import { View, Feature, Map as OlMap } from 'ol'
 import type { Item, SingleItem, CallbackObject, ItemWithNested } from 'ol-contextmenu'
 
 // Import styles - Vite will process CSS imports automatically
-// The ol-contextmenu CSS is imported in style.css
+// Note: ol-contextmenu CSS is now bundled into the JavaScript, no separate import needed
 import './style.css'
 
 // ============================================================================

@@ -1,5 +1,5 @@
 @import "ol/ol.css";
-@import "ol-contextmenu/ol-contextmenu.css";
+/* Note: ol-contextmenu CSS is now bundled into the JavaScript, no separate import needed */
 
 html,
 body {

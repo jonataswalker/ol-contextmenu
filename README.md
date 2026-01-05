@@ -32,25 +32,23 @@ A `contextmenu` extension for [OpenLayers](http://openlayers.org/). **Requires**
 
 ##### CDN Hosted - [jsDelivr](https://www.jsdelivr.com/package/npm/ol-contextmenu)
 
-Load CSS and Javascript:
+Load Javascript (CSS is bundled):
 
 ```HTML
-<link href="https://cdn.jsdelivr.net/npm/ol-contextmenu@latest/dist/ol-contextmenu.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/ol-contextmenu"></script>
 ```
 
 ##### CDN Hosted - UNPKG
 
-Load CSS and Javascript:
+Load Javascript (CSS is bundled):
 
 ```HTML
-<link href="https://unpkg.com/ol-contextmenu/dist/ol-contextmenu.css" rel="stylesheet">
 <script src="https://unpkg.com/ol-contextmenu"></script>
 ```
 
 ##### Self hosted
 
-Download [latest release](https://github.com/jonataswalker/ol-contextmenu/releases/latest) and (obviously) load CSS and Javascript.
+Download [latest release](https://github.com/jonataswalker/ol-contextmenu/releases/latest) and load Javascript (CSS is bundled).
 
 ##### Instantiate with some options and add the Control
 

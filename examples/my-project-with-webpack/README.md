@@ -51,7 +51,7 @@ This example demonstrates how to integrate `ol-contextmenu` in a project using *
 This example shows:
 
 - **ES6 Module Imports**: How to import `ol-contextmenu` and OpenLayers using ES6 syntax
-- **CSS Imports**: How to import the required CSS file in a Webpack project
+- **CSS Bundling**: CSS is automatically bundled into the JavaScript (no separate CSS import needed)
 - **Multi-level Nested Submenus**: Creating submenus within submenus
 - **Default Items**: Using the `defaultItems` option to include built-in Zoom In/Out items
 - **Event Handling**: Using the `beforeopen` event to intercept menu opening
@@ -76,7 +76,7 @@ my-project-with-webpack/
 
 ```javascript
 import ContextMenu from 'ol-contextmenu'
-import 'ol-contextmenu/ol-contextmenu.css'
+// CSS is automatically bundled into the JavaScript, no separate import needed
 ```
 
 ### Creating Nested Submenus
@@ -116,7 +116,7 @@ contextmenu.on('beforeopen', (evt) => {
 
 **Build fails**: Make sure you've run `npm install` in the parent directory first to build `ol-contextmenu`.
 
-**Menu doesn't appear**: Check the browser console for errors. Make sure the CSS file is being loaded correctly.
+**Menu doesn't appear**: Check the browser console for errors. CSS is automatically injected when the JavaScript loads.
 
 **Icons don't show**: The example uses CDN-hosted icons. If they don't load, check your internet connection or replace with local icon files.
 

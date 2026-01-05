@@ -2,12 +2,19 @@ import Control from 'ol/control/Control'
 import { TinyEmitter } from 'tiny-emitter'
 
 import { getLineHeight, addMenuEntries } from './helpers/dom.ts'
-import { CSS_CLASSES, DEFAULT_ITEMS, DEFAULT_OPTIONS } from './constants.ts'
 import {
     EventTypes,
     ContextMenuEvent,
     CustomEventTypes,
 } from './types.ts'
+import {
+    CSS_CLASSES,
+    DEFAULT_ITEMS,
+    DEFAULT_OPTIONS,
+    MENU_POSITION_BUFFER,
+    MENU_POSITION_OFFSET,
+    CONTAINER_PADDING_TOTAL,
+} from './constants.ts'
 
 import type OlMap from 'ol/Map'
 import type { Pixel } from 'ol/pixel'
@@ -341,28 +348,84 @@ export default class ContextMenu extends Control {
         ).length
     }
 
+    protected calculateMenuSize(): { h: number, w: number } {
+        const entriesLength = this.getMenuEntriesLength()
+        const contentHeight = Math.round(this.lineHeight * entriesLength)
+        const calculatedHeight = contentHeight + CONTAINER_PADDING_TOTAL
+        const actualHeight = this.container.offsetHeight
+        const isVisible = !this.container.classList.contains(CSS_CLASSES.hidden)
+
+        return {
+            h: actualHeight > 0 && isVisible ? actualHeight : calculatedHeight,
+            w: this.container.offsetWidth,
+        }
+    }
+
+    protected calculateVerticalPosition(
+        mapSize: [number, number],
+        spaceLeft: { h: number, w: number },
+        menuSize: { h: number, w: number },
+    ): number {
+        let top: number
+
+        if (spaceLeft.h >= menuSize.h) {
+            top = this.pixel[1] - MENU_POSITION_OFFSET
+
+            if (top + menuSize.h > mapSize[1]) {
+                top = Math.max(0, mapSize[1] - menuSize.h - MENU_POSITION_BUFFER)
+            }
+        }
+        else {
+            top = this.pixel[1] - menuSize.h
+
+            if (top < 0) {
+                top = menuSize.h <= mapSize[1] ? 0 : Math.max(0, mapSize[1] - menuSize.h)
+            }
+
+            if (top + menuSize.h > mapSize[1]) {
+                top = Math.max(0, mapSize[1] - menuSize.h - MENU_POSITION_BUFFER)
+            }
+        }
+
+        return Math.max(0, Math.min(top, mapSize[1] - menuSize.h - MENU_POSITION_BUFFER))
+    }
+
+    protected adjustPositionAfterRender(
+        mapSize: [number, number],
+        menuSize: { h: number, w: number },
+    ) {
+        if (!this.container.classList.contains(CSS_CLASSES.hidden)) {
+            const renderedHeight = this.container.offsetHeight
+
+            if (renderedHeight > 0 && renderedHeight !== menuSize.h) {
+                const currentTop = Number.parseInt(this.container.style.top, 10) || 0
+
+                if (currentTop + renderedHeight > mapSize[1]) {
+                    this.container.style.top = `${Math.max(0, mapSize[1] - renderedHeight - MENU_POSITION_BUFFER)}px`
+                }
+            }
+        }
+    }
+
     protected positionContainer() {
-        const mapSize = this.map.getSize() || [0, 0]
+        const mapSizeRaw = this.map.getSize() || [0, 0]
+        const mapSize: [number, number] = [mapSizeRaw[0] || 0, mapSizeRaw[1] || 0]
         const spaceLeft = {
             h: mapSize[1] - this.pixel[1],
             w: mapSize[0] - this.pixel[0],
         }
-        const entriesLength = this.getMenuEntriesLength()
-        const menuSize = {
-            // a cheap way to recalculate container height
-            // since offsetHeight is like cached
-            h: Math.round(this.lineHeight * entriesLength),
-            w: this.container.offsetWidth,
-        }
+        const menuSize = this.calculateMenuSize()
         const left = spaceLeft.w >= menuSize.w ? this.pixel[0] + 5 : this.pixel[0] - menuSize.w
 
         this.container.style.left = `${left}px`
-        this.container.style.top
-            = spaceLeft.h >= menuSize.h
-                ? `${this.pixel[1] - 10}px`
-                : `${this.pixel[1] - menuSize.h}px`
+
+        const top = this.calculateVerticalPosition(mapSize, spaceLeft, menuSize)
+
+        this.container.style.top = `${top}px`
         this.container.style.right = 'auto'
         this.container.style.bottom = 'auto'
+
+        this.adjustPositionAfterRender(mapSize, menuSize)
         spaceLeft.w -= menuSize.w
 
         const containerSubmenuChildren = (container: HTMLUListElement): HTMLLIElement[] =>

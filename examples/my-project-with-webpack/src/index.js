@@ -17,8 +17,7 @@ import VectorSource from 'ol/source/Vector'
 import { Icon, Text, Style } from 'ol/style'
 import { View, Feature, Map as OlMap } from 'ol'
 
-// Import the CSS file - Webpack's css-loader and style-loader will handle this
-import 'ol-contextmenu/ol-contextmenu.css'
+// Note: CSS is now bundled into the JavaScript, no separate CSS import needed
 
 // Import custom styles
 import './style.css'

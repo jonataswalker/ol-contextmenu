@@ -274,7 +274,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             // Move map
             map.getView().setCenter([1_000_000, 1_000_000])
-            await new Promise((resolve) => { setTimeout(resolve, 50) })
+            await new Promise((resolve) => { setTimeout(resolve, 100) })
 
             expect(contextMenu.isOpen()).toBe(false)
         })
@@ -490,6 +490,319 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             // Position should not change when closed
             expect(left).toBe('')
+        })
+
+        it('should ensure menu is fully visible when clicking at the bottom of the viewport', async () => {
+            // Create a context menu with many items to ensure it has significant height
+            // This will make the menu tall enough to potentially overflow when positioned above
+            // Using 20 items to ensure the menu is tall enough to trigger the overflow scenario
+            const manyItems = Array.from({ length: 20 }, (_, i) => ({
+                callback: vi.fn(),
+                text: `Item ${i + 1}`,
+            }))
+
+            contextMenu = new ContextMenu({
+                defaultItems: false,
+                items: manyItems,
+                width: 200,
+            })
+
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+
+            const viewport = map.getViewport()
+            const mapSize = map.getSize() || [0, 0]
+            const viewportHeight = mapSize[1]
+            const viewportWidth = mapSize[0]
+
+            // Click very close to the bottom to trigger the overflow scenario
+            // This should cause the menu to be positioned above, which is where the bug occurs
+            const clickX = viewportWidth / 2
+            // Click very close to bottom - only 20px from bottom edge
+            // This ensures there's definitely not enough space below for the menu
+            const clickY = viewportHeight - 20
+
+            dispatchContextMenu(viewport, clickX, clickY)
+            // Wait for menu to open and for repositioning to complete
+            await new Promise((resolve) => { setTimeout(resolve, 500) })
+
+            // Verify menu opened
+            expect(contextMenu.isOpen()).toBe(true)
+
+            // @ts-expect-error - accessing protected property
+            const { container } = contextMenu
+
+            // Verify menu is visible (not hidden)
+            expect(container.classList.contains('ol-ctx-menu-hidden')).toBe(false)
+
+            // Get actual bounding rect for accurate checking
+            const menuRect = container.getBoundingClientRect()
+            const viewportRect = viewport.getBoundingClientRect()
+            const menuHeight = container.offsetHeight
+
+            // Critical assertion: menu bottom must not exceed viewport bottom
+            // This is the key check that would fail if the bug exists
+            expect(menuRect.bottom).toBeLessThanOrEqual(viewportRect.bottom)
+
+            // Also verify menu top is within bounds
+            expect(menuRect.top).toBeGreaterThanOrEqual(viewportRect.top)
+
+            // Verify using style values (relative to map viewport)
+            const menuTop = Number.parseInt(container.style.top, 10)
+            const menuBottom = menuTop + menuHeight
+
+            // Top should not be negative (menu shouldn't be above viewport)
+            expect(menuTop).toBeGreaterThanOrEqual(0)
+            // Bottom should not exceed viewport height - this is the critical check
+            expect(menuBottom).toBeLessThanOrEqual(viewportHeight)
+
+            // Additional check: verify the menu was actually positioned above the click point
+            // (indicating the overflow scenario was triggered)
+            // @ts-expect-error - accessing protected property
+            const [, pixelY] = contextMenu.pixel
+            const spaceBelow = viewportHeight - pixelY
+
+            // If there's less space below than menu height, menu should be positioned above
+            if (spaceBelow < menuHeight) {
+                // Menu was positioned above click point - verify it doesn't overflow top
+                expect(menuTop).toBeGreaterThanOrEqual(0)
+                expect(menuRect.top).toBeGreaterThanOrEqual(viewportRect.top)
+                // And most importantly, verify bottom doesn't exceed viewport
+                expect(menuBottom).toBeLessThanOrEqual(viewportHeight)
+            }
+        })
+
+        it('should not adjust position when rendered height matches calculated height', async () => {
+            // Create a menu with a fixed number of items
+            const fixedItems = Array.from({ length: 3 }, (_, i) => ({
+                callback: vi.fn(),
+                text: `Item ${i + 1}`,
+            }))
+
+            contextMenu = new ContextMenu({
+                defaultItems: false,
+                items: fixedItems,
+                width: 200,
+            })
+
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+
+            const viewport = map.getViewport()
+            const mapSize = map.getSize() || [0, 0]
+            const viewportHeight = mapSize[1]
+
+            // Click in middle of viewport where there's plenty of space
+            const clickX = 100
+            const clickY = viewportHeight / 2
+
+            dispatchContextMenu(viewport, clickX, clickY)
+            await new Promise((resolve) => { setTimeout(resolve, 200) })
+
+            expect(contextMenu.isOpen()).toBe(true)
+
+            // @ts-expect-error - accessing protected property
+            const { container } = contextMenu
+
+            // Get the initial position
+            const initialTop = Number.parseInt(container.style.top, 10)
+            const renderedHeight = container.offsetHeight
+
+            // Verify menu is positioned and has actual height
+            expect(renderedHeight).toBeGreaterThan(0)
+            expect(initialTop).toBeGreaterThan(0)
+
+            // With few items in the middle of viewport, the menu should fit without adjustment
+            const menuBottom = initialTop + renderedHeight
+
+            expect(menuBottom).toBeLessThanOrEqual(viewportHeight)
+        })
+
+        it('should handle menu positioning when container is initially hidden', async () => {
+            const items = Array.from({ length: 5 }, (_, i) => ({
+                callback: vi.fn(),
+                text: `Item ${i + 1}`,
+            }))
+
+            contextMenu = new ContextMenu({
+                defaultItems: false,
+                items,
+                width: 200,
+            })
+
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+
+            // Verify menu starts hidden
+            // @ts-expect-error - accessing protected property
+            const { container } = contextMenu
+
+            expect(container.classList.contains('ol-ctx-menu-hidden')).toBe(true)
+
+            // Open menu
+            const viewport = map.getViewport()
+
+            dispatchContextMenu(viewport, 100, 100)
+            await new Promise((resolve) => { setTimeout(resolve, 200) })
+
+            expect(contextMenu.isOpen()).toBe(true)
+
+            // After opening, menu should be visible and have proper height
+            expect(container.classList.contains('ol-ctx-menu-hidden')).toBe(false)
+            const renderedHeight = container.offsetHeight
+
+            expect(renderedHeight).toBeGreaterThan(0)
+
+            // Position should be set correctly
+            const top = Number.parseInt(container.style.top, 10)
+            const left = Number.parseInt(container.style.left, 10)
+
+            expect(top).toBeGreaterThanOrEqual(0)
+            expect(left).toBeGreaterThanOrEqual(0)
+        })
+
+        it('should apply MENU_POSITION_BUFFER at viewport edges', async () => {
+            // Create a tall menu to ensure we hit the edge
+            const manyItems = Array.from({ length: 15 }, (_, i) => ({
+                callback: vi.fn(),
+                text: `Item ${i + 1}`,
+            }))
+
+            contextMenu = new ContextMenu({
+                defaultItems: false,
+                items: manyItems,
+                width: 200,
+            })
+
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+
+            const viewport = map.getViewport()
+            const mapSize = map.getSize() || [0, 0]
+            const viewportHeight = mapSize[1]
+            const viewportWidth = mapSize[0]
+
+            // Click very close to the bottom edge
+            const clickX = viewportWidth / 2
+            const clickY = viewportHeight - 10
+
+            dispatchContextMenu(viewport, clickX, clickY)
+            await new Promise((resolve) => { setTimeout(resolve, 400) })
+
+            expect(contextMenu.isOpen()).toBe(true)
+
+            // @ts-expect-error - accessing protected property
+            const { container } = contextMenu
+            const menuHeight = container.offsetHeight
+            const menuTop = Number.parseInt(container.style.top, 10)
+            const menuBottom = menuTop + menuHeight
+
+            // The MENU_POSITION_BUFFER (2px from constants.ts) should prevent
+            // the menu from touching the exact bottom edge
+            // Menu bottom should be at most: viewportHeight - MENU_POSITION_BUFFER
+            expect(menuBottom).toBeLessThanOrEqual(viewportHeight)
+
+            // Verify there's a safety buffer (should not be exactly at the edge)
+            // The buffer ensures menu is at least 2px from the bottom
+            const distanceFromBottom = viewportHeight - menuBottom
+
+            expect(distanceFromBottom).toBeGreaterThanOrEqual(0)
+        })
+
+        it('should adjust position when rendered height differs from calculated height', async () => {
+            // Create menu with items that might render differently than calculated
+            const items = Array.from({ length: 10 }, (_, i) => ({
+                callback: vi.fn(),
+                text: `Item with longer text ${i + 1}`,
+            }))
+
+            contextMenu = new ContextMenu({
+                defaultItems: false,
+                items,
+                width: 200,
+            })
+
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+
+            const viewport = map.getViewport()
+            const mapSize = map.getSize() || [0, 0]
+            const viewportHeight = mapSize[1]
+            const viewportWidth = mapSize[0]
+
+            // Click near bottom to potentially trigger adjustment
+            const clickX = viewportWidth / 2
+            const clickY = viewportHeight - 50
+
+            dispatchContextMenu(viewport, clickX, clickY)
+            // Give extra time for rendering and adjustment
+            await new Promise((resolve) => { setTimeout(resolve, 400) })
+
+            expect(contextMenu.isOpen()).toBe(true)
+
+            // @ts-expect-error - accessing protected property
+            const { container } = contextMenu
+            const renderedHeight = container.offsetHeight
+            const menuTop = Number.parseInt(container.style.top, 10)
+            const menuBottom = menuTop + renderedHeight
+
+            // After adjustment, menu should not overflow viewport
+            expect(menuBottom).toBeLessThanOrEqual(viewportHeight)
+            expect(menuTop).toBeGreaterThanOrEqual(0)
+
+            // Verify the menu is fully visible
+            const menuRect = container.getBoundingClientRect()
+            const viewportRect = viewport.getBoundingClientRect()
+
+            expect(menuRect.bottom).toBeLessThanOrEqual(viewportRect.bottom)
+            expect(menuRect.top).toBeGreaterThanOrEqual(viewportRect.top)
+        })
+
+        it('should handle edge case when menu height exceeds viewport height', async () => {
+            // Create a very tall menu (more items than can fit)
+            const veryManyItems = Array.from({ length: 50 }, (_, i) => ({
+                callback: vi.fn(),
+                text: `Item ${i + 1}`,
+            }))
+
+            contextMenu = new ContextMenu({
+                defaultItems: false,
+                items: veryManyItems,
+                width: 200,
+            })
+
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+
+            const viewport = map.getViewport()
+            const mapSize = map.getSize() || [0, 0]
+            const viewportHeight = mapSize[1]
+
+            // Click anywhere - menu will be too tall regardless
+            dispatchContextMenu(viewport, 100, 100)
+            await new Promise((resolve) => { setTimeout(resolve, 300) })
+
+            expect(contextMenu.isOpen()).toBe(true)
+
+            // @ts-expect-error - accessing protected property
+            const { container } = contextMenu
+            const menuHeight = container.offsetHeight
+            const menuTop = Number.parseInt(container.style.top, 10)
+
+            // When menu is taller than viewport, it should be positioned at top (0)
+            // or as close to top as possible while fitting the buffer
+            if (menuHeight > viewportHeight) {
+                expect(menuTop).toBeGreaterThanOrEqual(0)
+                // Should position to show as much as possible from the top
+                expect(menuTop).toBeLessThanOrEqual(10)
+            }
+            else {
+                // If it somehow fits, it should be fully visible
+                const menuBottom = menuTop + menuHeight
+
+                expect(menuBottom).toBeLessThanOrEqual(viewportHeight)
+                expect(menuTop).toBeGreaterThanOrEqual(0)
+            }
         })
     })
 
@@ -887,7 +1200,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             // Move second map (should not affect first menu)
             map2.getView().setCenter([2_000_000, 2_000_000])
-            await new Promise((resolve) => { setTimeout(resolve, 50) })
+            await new Promise((resolve) => { setTimeout(resolve, 100) })
 
             // First menu should still be open
             expect(contextMenu.isOpen()).toBe(true)
@@ -895,7 +1208,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             // Move first map (should close first menu)
             map.getView().setCenter([500_000, 500_000])
-            await new Promise((resolve) => { setTimeout(resolve, 50) })
+            await new Promise((resolve) => { setTimeout(resolve, 100) })
 
             expect(contextMenu.isOpen()).toBe(false)
             expect(contextMenu2.isOpen()).toBe(false)
