@@ -1,0 +1,53 @@
+name: ❓ Question
+description: Ask a question about using ol-contextmenu
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question? We're here to help!
+
+        **Before asking:**
+        - Check the [documentation](https://github.com/jonataswalker/ol-contextmenu#readme)
+        - Search [existing issues](https://github.com/jonataswalker/ol-contextmenu/issues)
+        - Review the [examples](https://github.com/jonataswalker/ol-contextmenu/tree/master/examples)
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: How do I...?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: What You've Tried
+      description: What have you already attempted?
+      placeholder: |
+        I tried...
+        I looked at...
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code Example
+      description: Share relevant code (if applicable)
+      render: javascript
+
+  - type: input
+    id: version
+    attributes:
+      label: ol-contextmenu Version
+      placeholder: "5.5.0"
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have read the documentation
+        - label: I have searched existing issues

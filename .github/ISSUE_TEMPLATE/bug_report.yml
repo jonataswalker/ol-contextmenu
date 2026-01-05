@@ -1,0 +1,131 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out this form to help us understand and fix the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+      placeholder: The context menu doesn't appear when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Create a map with '...'
+        2. Right-click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: The context menu should appear...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: Instead, nothing happens...
+    validations:
+      required: true
+
+  - type: input
+    id: version-contextmenu
+    attributes:
+      label: ol-contextmenu Version
+      description: Which version of ol-contextmenu are you using?
+      placeholder: "5.5.0"
+    validations:
+      required: true
+
+  - type: input
+    id: version-openlayers
+    attributes:
+      label: OpenLayers Version
+      description: Which version of OpenLayers are you using?
+      placeholder: "10.2.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: Which browser are you using?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser Version
+      placeholder: "120.0"
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - iOS
+        - Android
+        - Other
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal Reproduction
+      description: |
+        Please provide a link to a minimal reproduction (CodeSandbox, JSFiddle, or GitHub repository).
+        This helps us identify and fix the issue faster.
+      placeholder: https://codesandbox.io/s/...
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console Errors
+      description: Any errors from the browser console
+      render: shell
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, screenshots, or information about the problem
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I have provided a minimal reproduction (if applicable)
+        - label: I am using a supported version of OpenLayers (7.x - 10.x)
+          required: true

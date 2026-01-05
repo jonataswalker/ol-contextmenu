@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://github.com/jonataswalker/ol-contextmenu#readme
+    about: Read the documentation and guides
+  - name: 💬 Discussions
+    url: https://github.com/jonataswalker/ol-contextmenu/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 🎮 Examples
+    url: https://github.com/jonataswalker/ol-contextmenu/tree/master/examples
+    about: Check out working examples

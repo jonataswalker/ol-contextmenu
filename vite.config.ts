@@ -62,8 +62,8 @@ export default defineConfig(({ command }) =>
                     dts({
                         exclude: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'tests/**', '**/*.config.ts'],
                         include: ['src/**/*.ts'],
-                        insertTypesEntry: true,
                         outDir: 'dist',
+                        rollupTypes: true,
                     }),
                     bannerPlugin(banner),
                     cssInjectedByJsPlugin(),
