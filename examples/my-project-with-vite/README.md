@@ -60,7 +60,7 @@ This example shows:
 - **Type Imports**: How to import TypeScript types from the library
 - **ES6 Modules**: Modern JavaScript module syntax
 - **Vite Bundling**: Fast development and optimized production builds
-- **CSS Imports**: How Vite handles CSS imports (via `style.css`)
+- **CSS Bundling**: CSS is automatically bundled into the JavaScript (no separate CSS import needed)
 - **Multi-level Nested Submenus**: Creating complex menu structures
 - **Default Items**: Using built-in Zoom In/Out items
 - **Event Handling**: Type-safe event listeners
@@ -71,7 +71,7 @@ This example shows:
 my-project-with-vite/
 ├── src/
 │   ├── main.ts          # Main application code (TypeScript)
-│   ├── style.css        # Custom styles (includes ol-contextmenu CSS)
+│   ├── style.css        # Custom styles (ol-contextmenu CSS is bundled in JS)
 │   └── vite-env.d.ts    # Vite type definitions
 ├── index.html           # HTML entry point
 ├── tsconfig.json        # TypeScript configuration
@@ -99,15 +99,9 @@ function center(obj: CallbackObject) {
 }
 ```
 
-### CSS Import
+### CSS Bundling
 
-The CSS is imported in `style.css`:
-
-```css
-@import "ol-contextmenu/ol-contextmenu.css";
-```
-
-Vite processes this import automatically.
+CSS is automatically bundled into the JavaScript when you import `ol-contextmenu`. No separate CSS import is needed. The CSS will be automatically injected into the page when the JavaScript loads.
 
 ### Creating Typed Menu Items
 
@@ -150,7 +144,7 @@ Using TypeScript types ensures your menu items are correctly structured.
 
 **Dev server won't start**: Check that all dependencies are installed and the parent package is built.
 
-**CSS not loading**: Ensure `ol-contextmenu` is properly installed and the CSS import path is correct in `style.css`.
+**CSS not loading**: CSS is automatically bundled into the JavaScript. If styles aren't appearing, check the browser console for errors.
 
 **TypeScript errors**: Run `npm run build` to see detailed TypeScript error messages.
 

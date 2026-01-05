@@ -491,6 +491,86 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             // Position should not change when closed
             expect(left).toBe('')
         })
+
+        it('should ensure menu is fully visible when clicking at the bottom of the viewport', async () => {
+            // Create a context menu with many items to ensure it has significant height
+            // This will make the menu tall enough to potentially overflow when positioned above
+            // Using 20 items to ensure the menu is tall enough to trigger the overflow scenario
+            const manyItems = Array.from({ length: 20 }, (_, i) => ({
+                callback: vi.fn(),
+                text: `Item ${i + 1}`,
+            }))
+
+            contextMenu = new ContextMenu({
+                defaultItems: false,
+                items: manyItems,
+                width: 200,
+            })
+
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+
+            const viewport = map.getViewport()
+            const mapSize = map.getSize() || [0, 0]
+            const viewportHeight = mapSize[1]
+            const viewportWidth = mapSize[0]
+
+            // Click very close to the bottom to trigger the overflow scenario
+            // This should cause the menu to be positioned above, which is where the bug occurs
+            const clickX = viewportWidth / 2
+            // Click very close to bottom - only 20px from bottom edge
+            // This ensures there's definitely not enough space below for the menu
+            const clickY = viewportHeight - 20
+
+            dispatchContextMenu(viewport, clickX, clickY)
+            // Wait for menu to open and for repositioning to complete
+            await new Promise((resolve) => { setTimeout(resolve, 500) })
+
+            // Verify menu opened
+            expect(contextMenu.isOpen()).toBe(true)
+
+            // @ts-expect-error - accessing protected property
+            const { container } = contextMenu
+
+            // Verify menu is visible (not hidden)
+            expect(container.classList.contains('ol-ctx-menu-hidden')).toBe(false)
+
+            // Get actual bounding rect for accurate checking
+            const menuRect = container.getBoundingClientRect()
+            const viewportRect = viewport.getBoundingClientRect()
+            const menuHeight = container.offsetHeight
+
+            // Critical assertion: menu bottom must not exceed viewport bottom
+            // This is the key check that would fail if the bug exists
+            expect(menuRect.bottom).toBeLessThanOrEqual(viewportRect.bottom)
+
+            // Also verify menu top is within bounds
+            expect(menuRect.top).toBeGreaterThanOrEqual(viewportRect.top)
+
+            // Verify using style values (relative to map viewport)
+            const menuTop = Number.parseInt(container.style.top, 10)
+            const menuBottom = menuTop + menuHeight
+
+            // Top should not be negative (menu shouldn't be above viewport)
+            expect(menuTop).toBeGreaterThanOrEqual(0)
+            // Bottom should not exceed viewport height - this is the critical check
+            expect(menuBottom).toBeLessThanOrEqual(viewportHeight)
+
+            // Additional check: verify the menu was actually positioned above the click point
+            // (indicating the overflow scenario was triggered)
+            // @ts-expect-error - accessing protected property
+            const [, pixelY] = contextMenu.pixel
+            const spaceBelow = viewportHeight - pixelY
+
+            // If there's less space below than menu height, menu should be positioned above
+            if (spaceBelow < menuHeight) {
+                // Menu was positioned above click point - verify it doesn't overflow top
+                expect(menuTop).toBeGreaterThanOrEqual(0)
+                expect(menuRect.top).toBeGreaterThanOrEqual(viewportRect.top)
+                // And most importantly, verify bottom doesn't exceed viewport
+                expect(menuBottom).toBeLessThanOrEqual(viewportHeight)
+            }
+        })
     })
 
     describe('Event Type Options', () => {

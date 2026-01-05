@@ -10,8 +10,7 @@
         ".": {
             "types": "./dist/ol-contextmenu.d.ts",
             "import": "./dist/ol-contextmenu.js"
-        },
-        "./ol-contextmenu.css": "./dist/ol-contextmenu.css"
+        }
     },
     "files": [
         "./dist"
@@ -43,24 +42,25 @@
         "release": "release-it --no-npm.publish"
     },
     "devDependencies": {
-        "@types/node": "^24.10.1",
-        "@vitest/browser-webdriverio": "^4.0.8",
-        "@vitest/coverage-v8": "^4.0.8",
-        "@vitest/ui": "^4.0.8",
+        "@types/node": "^25.0.3",
+        "@vitest/browser-webdriverio": "^4.0.16",
+        "@vitest/coverage-v8": "^4.0.16",
+        "@vitest/ui": "^4.0.16",
         "auto-changelog": "^2.5.0",
-        "eslint-config-jwalker": "^12.0.0",
+        "eslint-config-jwalker": "^12.1.0",
         "husky": "^9.1.7",
-        "jsdom": "^27.2.0",
+        "jsdom": "^27.4.0",
         "ol": "^10.7.0",
         "premove": "^4.0.0",
-        "release-it": "^19.0.6",
-        "sass": "^1.94.0",
+        "release-it": "^19.2.2",
+        "sass": "^1.97.1",
         "typescript": "^5.9.3",
-        "vite": "^7.2.2",
+        "vite": "^7.3.0",
         "vite-plugin-banner": "^0.8.1",
+        "vite-plugin-css-injected-by-js": "^3.5.2",
         "vite-plugin-dts": "^4.5.4",
-        "vitest": "^4.0.8",
-        "webdriverio": "^9.20.0"
+        "vitest": "^4.0.16",
+        "webdriverio": "^9.23.0"
     },
     "peerDependencies": {
         "ol": "> 7.x <= 10.x"

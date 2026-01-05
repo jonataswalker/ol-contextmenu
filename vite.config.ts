@@ -1,6 +1,7 @@
 import dts from 'vite-plugin-dts'
 import bannerPlugin from 'vite-plugin-banner'
 import { defineConfig, type CSSOptions } from 'vite'
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
 import { CSS_CLASSES } from './src/constants.ts'
 import { name, version, homepage } from './package.json'
@@ -35,6 +36,7 @@ export default defineConfig(({ command }) =>
             }
         : {
                 build: {
+                    cssCodeSplit: false,
                     lib: {
                         entry: './src/main.ts',
                         fileName: 'ol-contextmenu',
@@ -44,7 +46,6 @@ export default defineConfig(({ command }) =>
                     rollupOptions: {
                         external: [/^ol.*/],
                         output: {
-                            assetFileNames: () => 'ol-contextmenu.css',
                             globals: {
                                 'ol/control/Control': 'ol.control.Control',
                                 'ol/MapBrowserEvent': 'ol.MapBrowserEvent',
@@ -57,6 +58,15 @@ export default defineConfig(({ command }) =>
                 define: {
                     __APP_VERSION__: JSON.stringify(version),
                 },
-                plugins: [dts({ insertTypesEntry: true }), bannerPlugin(banner)],
+                plugins: [
+                    dts({
+                        exclude: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'tests/**', '**/*.config.ts'],
+                        include: ['src/**/*.ts'],
+                        insertTypesEntry: true,
+                        outDir: 'dist',
+                    }),
+                    bannerPlugin(banner),
+                    cssInjectedByJsPlugin(),
+                ],
             },
 )
