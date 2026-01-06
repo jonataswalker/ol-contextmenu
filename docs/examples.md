@@ -287,22 +287,41 @@ const items = [
 }
 ```
 
-### Font Awesome Icons
+### Using Icons
+
+The `icon` property accepts image URLs (absolute or relative paths) or data URIs. Icons are displayed as background images on the left side of menu items.
 
 ```javascript
 const items = [
     {
+        text: 'Add Marker',
+        // Using a CDN URL
+        icon: 'https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons/map-pin.svg',
+        callback: addMarker,
+    },
+    {
         text: 'Delete',
-        classname: 'fa fa-trash',
+        // Using a relative path
+        icon: './icons/trash.png',
         callback: deleteItem,
     },
     {
         text: 'Edit',
-        classname: 'fa fa-edit',
+        // Using a data URI (base64 encoded image)
+        icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTExIDRINDRWMjBIMTJWNEgxMVoiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8cGF0aCBkPSJNMTggMThMMjEgMTVMMTggMTIiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K',
         callback: editItem,
+    },
+    {
+        text: 'Save',
+        // Combining icon with custom classname
+        icon: './icons/save.png',
+        classname: 'success-item',
+        callback: saveItem,
     },
 ];
 ```
+
+**Note:** Icons are displayed using CSS `background-image`, so they work best with PNG, SVG, or other image formats. The library automatically adds spacing for icons on the left side of menu items.
 
 ## Advanced Patterns
 
