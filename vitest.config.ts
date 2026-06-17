@@ -7,12 +7,20 @@ export default defineConfig({
             {
                 test: {
                     browser: {
+                        connectTimeout: 120_000,
                         enabled: true,
                         instances: [
                             { browser: 'chrome' },
                             { browser: 'firefox' },
                         ],
-                        provider: webdriverio(),
+                        provider: webdriverio({
+                            cacheDir: '.wdio-cache',
+                            capabilities: {
+                                'goog:chromeOptions': {
+                                    args: ['--no-sandbox', '--disable-dev-shm-usage'],
+                                },
+                            },
+                        }),
                     },
                     include: [
                         'tests/browser/**/*.{test,spec}.ts',

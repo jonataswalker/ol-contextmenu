@@ -21,6 +21,14 @@ jobs:
                   node-version: ${{ matrix.node }}
             - name: Install dependencies
               run: npm ci
+            - name: Cache test browsers
+              uses: actions/cache@v4
+              with:
+                  path: .wdio-cache
+                  key: wdio-browsers-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+                  restore-keys: wdio-browsers-${{ runner.os }}-
+            - name: Install test browsers
+              run: npx @puppeteer/browsers install chrome@stable chromedriver@stable --path .wdio-cache
             - name: Lint
               run: npm run lint
             - name: Run tests

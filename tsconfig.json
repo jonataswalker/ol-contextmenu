@@ -6,6 +6,7 @@
         "moduleResolution": "bundler",
 
         "outDir": "dist",
+        "types": ["node"],
 
         "strict": true,
         "sourceMap": true,

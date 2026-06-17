@@ -1,4 +1,4 @@
-import { node, jsonc, common, GLOB_TS, disabled, typescript, formatters, GLOB_TESTS } from 'eslint-config-jwalker'
+import { node, jsonc, common, disabled, typescript, formatters, GLOB_TESTS } from 'eslint-config-jwalker'
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -10,22 +10,18 @@ export default [
     ...disabled,
     { ignores: ['examples/**/*'] },
     {
-        rules: {},
-    },
-    {
-        files: [GLOB_TS],
         rules: {
-            '@typescript-eslint/consistent-type-imports': 'error',
-
             'no-duplicate-imports': 'off',
-            'no-restricted-globals': 'off',
             'no-unused-vars': 'off',
+            'no-useless-assignment': 'off',
 
-            'unicorn/prefer-single-call': 'off',
+            'unicorn/consistent-compound-words': 'warn',
+            'unicorn/logical-assignment-operators': 'off',
+            'unicorn/prefer-number-coercion': 'off',
         },
     },
     {
-        files: Array.from(GLOB_TESTS),
+        files: GLOB_TESTS,
         rules: {
             '@typescript-eslint/ban-ts-comment': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
@@ -42,6 +38,8 @@ export default [
             'no-console': 'off',
             'no-empty-function': 'off',
             'no-undef': 'off',
+
+            'unicorn/prefer-single-call': 'off',
         },
     },
 ]
