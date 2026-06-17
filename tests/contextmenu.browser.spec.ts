@@ -1,7 +1,7 @@
 import { page } from 'vitest/browser'
 import { it, expect, describe, beforeAll } from 'vitest'
 
-import ContextMenu from '../src/main'
+import ContextMenu from '../src/main.ts'
 
 describe('ContextMenu - Browser Tests', () => {
     beforeAll(() => {

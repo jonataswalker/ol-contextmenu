@@ -237,7 +237,7 @@ export default class ContextMenu extends Control {
             map.getViewport().addEventListener(
                 this.options.eventType,
                 this.contextMenuEventListener,
-                false,
+                { capture: false },
             )
 
             map.on('movestart', () => {
@@ -311,17 +311,20 @@ export default class ContextMenu extends Control {
             evt.preventDefault()
         }
 
+        // eslint-disable-next-line no-restricted-globals
         setTimeout(() => {
             this.openMenu(evt)
-        })
+        }, 0)
 
         evt.target?.addEventListener(
             'pointerdown',
             (event) => {
-                if (this.opened) {
-                    event.stopPropagation()
-                    this.closeMenu()
+                if (!this.opened) {
+                    return
                 }
+
+                event.stopPropagation()
+                this.closeMenu()
             },
             { once: true },
         )
@@ -394,15 +397,17 @@ export default class ContextMenu extends Control {
         mapSize: [number, number],
         menuSize: { h: number, w: number },
     ) {
-        if (!this.container.classList.contains(CSS_CLASSES.hidden)) {
-            const renderedHeight = this.container.offsetHeight
+        if (this.container.classList.contains(CSS_CLASSES.hidden)) {
+            return
+        }
 
-            if (renderedHeight > 0 && renderedHeight !== menuSize.h) {
-                const currentTop = Number.parseInt(this.container.style.top, 10) || 0
+        const renderedHeight = this.container.offsetHeight
 
-                if (currentTop + renderedHeight > mapSize[1]) {
-                    this.container.style.top = `${Math.max(0, mapSize[1] - renderedHeight - MENU_POSITION_BUFFER)}px`
-                }
+        if (renderedHeight > 0 && renderedHeight !== menuSize.h) {
+            const currentTop = Number.parseInt(this.container.style.top, 10) || 0
+
+            if (currentTop + renderedHeight > mapSize[1]) {
+                this.container.style.top = `${Math.max(0, mapSize[1] - renderedHeight - MENU_POSITION_BUFFER)}px`
             }
         }
     }
@@ -496,7 +501,7 @@ export default class ContextMenu extends Control {
         this.positionContainer()
 
         if ('callback' in item && typeof item.callback === 'function') {
-            element.addEventListener('click', this.entryCallbackEventListener, false)
+            element.addEventListener('click', this.entryCallbackEventListener, { capture: false })
         }
     }
 }

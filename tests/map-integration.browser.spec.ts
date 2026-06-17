@@ -144,11 +144,11 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            let beforeOpenFired = false
+            let isBeforeOpenFired = false
             let eventData: any = null
 
             contextMenu.on(CustomEventTypes.BEFOREOPEN, (evt) => {
-                beforeOpenFired = true
+                isBeforeOpenFired = true
                 eventData = evt
             })
 
@@ -160,7 +160,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             // Wait for async menu opening
             await new Promise((resolve) => { setTimeout(resolve, 150) })
 
-            expect(beforeOpenFired).toBe(true)
+            expect(isBeforeOpenFired).toBe(true)
             expect(eventData).not.toBeNull()
             expect(eventData.map).toBe(map)
         })
@@ -169,11 +169,11 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            let openFired = false
+            let isOpenFired = false
             let eventData: any = null
 
             contextMenu.on(CustomEventTypes.OPEN, (evt) => {
-                openFired = true
+                isOpenFired = true
                 eventData = evt
             })
 
@@ -182,7 +182,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             dispatchContextMenu(viewport)
             await new Promise((resolve) => { setTimeout(resolve, 150) })
 
-            expect(openFired).toBe(true)
+            expect(isOpenFired).toBe(true)
             expect(eventData).not.toBeNull()
             expect(eventData.map).toBe(map)
         })
@@ -190,10 +190,10 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
         it('should dispatch CLOSE event when menu closes', async () => {
             map.addControl(contextMenu)
 
-            let closeFired = false
+            let isCloseFired = false
 
             contextMenu.on(CustomEventTypes.CLOSE, () => {
-                closeFired = true
+                isCloseFired = true
             })
 
             // Open menu
@@ -205,7 +205,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             // Close menu
             contextMenu.closeMenu()
 
-            expect(closeFired).toBe(true)
+            expect(isCloseFired).toBe(true)
         })
 
         it('should allow unsubscribing from events', async () => {
@@ -1108,15 +1108,15 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
         })
 
         it('should have independent event listeners', async () => {
-            let menu1OpenFired = false
-            let menu2OpenFired = false
+            let isMenu1OpenFired = false
+            let isMenu2OpenFired = false
 
             contextMenu.on(CustomEventTypes.OPEN, () => {
-                menu1OpenFired = true
+                isMenu1OpenFired = true
             })
 
             contextMenu2.on(CustomEventTypes.OPEN, () => {
-                menu2OpenFired = true
+                isMenu2OpenFired = true
             })
 
             map.addControl(contextMenu)
@@ -1130,11 +1130,11 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             dispatchContextMenu(viewport1)
             await new Promise((resolve) => { setTimeout(resolve, 150) })
 
-            expect(menu1OpenFired).toBe(true)
-            expect(menu2OpenFired).toBe(false)
+            expect(isMenu1OpenFired).toBe(true)
+            expect(isMenu2OpenFired).toBe(false)
 
             // Reset
-            menu1OpenFired = false
+            isMenu1OpenFired = false
             contextMenu.closeMenu()
 
             // Open menu on second map
@@ -1143,8 +1143,8 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             dispatchContextMenu(viewport2)
             await new Promise((resolve) => { setTimeout(resolve, 150) })
 
-            expect(menu1OpenFired).toBe(false)
-            expect(menu2OpenFired).toBe(true)
+            expect(isMenu1OpenFired).toBe(false)
+            expect(isMenu2OpenFired).toBe(true)
         })
 
         it('should have independent menu items', () => {

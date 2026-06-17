@@ -9,7 +9,7 @@ on:
 jobs:
     test:
         timeout-minutes: 60
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         strategy:
             matrix:
                 node: [24]
@@ -24,4 +24,8 @@ jobs:
             - name: Lint
               run: npm run lint
             - name: Run tests
-              run: npm test
+              run: |
+                  export CHROME_BIN="$(command -v google-chrome-stable || command -v google-chrome)"
+                  export CHROMEDRIVER_BIN="$(command -v chromedriver)"
+                  export FIREFOX_BIN="$(command -v firefox)"
+                  npm test

@@ -199,7 +199,7 @@ describe('ContextMenu - User Interactions (Browser)', () => {
             const { container } = contextMenu
 
             document.body.appendChild(container)
-            const computedStyle = globalThis.getComputedStyle(container)
+            const computedStyle = getComputedStyle(container)
 
             expect(container.style.width).toBe('300px')
             expect(computedStyle.width).toBe('300px')
@@ -225,16 +225,16 @@ describe('ContextMenu - User Interactions (Browser)', () => {
 
     describe('Event Handling', () => {
         it('should handle custom events', () => {
-            let eventFired = false
+            let isEventFired = false
             const button = document.createElement('button')
 
             button.textContent = 'Fire Event'
-            button.addEventListener('custom-event', () => { eventFired = true })
+            button.addEventListener('custom-event', () => { isEventFired = true })
             testContainer.appendChild(button)
 
             button.dispatchEvent(new Event('custom-event'))
 
-            expect(eventFired).toBe(true)
+            expect(isEventFired).toBe(true)
         })
 
         it('should handle event delegation', () => {

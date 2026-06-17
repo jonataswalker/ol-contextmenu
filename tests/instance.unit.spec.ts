@@ -1,6 +1,6 @@
 import { it, vi, expect, describe, afterEach, beforeEach } from 'vitest'
 
-import ContextMenu from '../src/main'
+import ContextMenu from '../src/main.ts'
 import {
     CSS_CLASSES,
     DEFAULT_OPTIONS,
@@ -8,9 +8,9 @@ import {
     MENU_POSITION_BUFFER,
     MENU_POSITION_OFFSET,
     CONTAINER_PADDING_TOTAL,
-} from '../src/constants'
+} from '../src/constants.ts'
 
-import type { SingleItem } from '../src/types'
+import type { SingleItem } from '../src/types.ts'
 
 describe('ContextMenu - Unit Tests', () => {
     let contextMenu: ContextMenu
