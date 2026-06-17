@@ -8,4 +8,3 @@ dist
 coverage
 .idea
 .claude
-.wdio-cache

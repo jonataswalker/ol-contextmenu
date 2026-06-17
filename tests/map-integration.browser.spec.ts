@@ -1,5 +1,3 @@
-import { setTimeout } from 'node:timers'
-
 import Map from 'ol/Map'
 import View from 'ol/View'
 import OSM from 'ol/source/OSM'

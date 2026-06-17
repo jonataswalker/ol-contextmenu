@@ -42,4 +42,10 @@ export default [
             'unicorn/prefer-single-call': 'off',
         },
     },
+    {
+        files: ['tests/browser/**/*.{test,spec}.ts', 'tests/**/*.browser.{test,spec}.ts'],
+        rules: {
+            'no-restricted-globals': 'off',
+        },
+    },
 ]

@@ -1,5 +1,3 @@
-import { setTimeout } from 'node:timers'
-
 import { page, userEvent } from 'vitest/browser'
 import { it, expect, describe, afterEach, beforeEach } from 'vitest'
 
