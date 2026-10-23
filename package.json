@@ -61,6 +61,7 @@
         "release": "release-it --no-npm.publish"
     },
     "devDependencies": {
+        "@microsoft/api-extractor": "^7.59.4",
         "@types/node": "^25.9.3",
         "@vitest/browser-webdriverio": "^4.1.9",
         "@vitest/coverage-v8": "^4.1.9",

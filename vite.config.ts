@@ -60,10 +60,11 @@ export default defineConfig(({ command }) =>
                 },
                 plugins: [
                     dts({
+                        bundleTypes: true,
+                        compilerOptions: { rootDir: 'src' },
                         exclude: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'tests/**', '**/*.config.ts'],
                         include: ['src/**/*.ts'],
                         outDir: 'dist',
-                        rollupTypes: true,
                     }),
                     bannerPlugin(banner),
                     cssInjectedByJsPlugin(),
