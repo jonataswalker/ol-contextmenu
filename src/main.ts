@@ -521,10 +521,10 @@ export {
     type Options,
     type MenuEntry,
     type SingleItem,
-    type EventTypes,
+    EventTypes,
     type ItemSeparator,
     type ItemWithNested,
     type CallbackObject,
-    type ContextMenuEvent,
-    type CustomEventTypes,
+    ContextMenuEvent,
+    CustomEventTypes,
 } from './types.ts'

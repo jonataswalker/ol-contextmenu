@@ -51,14 +51,14 @@
     },
     "scripts": {
         "dev": "vite",
-        "build": "premove ./dist && vite build",
+        "build": "premove ./dist && vite build && vite build --mode umd",
         "preview": "vite preview",
         "lint": "oxlint",
         "lint:fix": "npm run lint -- --fix",
         "test": "vitest run",
         "test:ui": "vitest --ui",
         "pretest:types": "npm run build",
-        "test:types": "tsc -p tests/types && attw --pack . --ignore-rules false-esm false-export-default && publint",
+        "test:types": "tsc -p tests/types && vitest run --config tests/types/vitest.config.ts && attw --pack . --ignore-rules false-esm false-export-default && publint",
         "prepare": "husky",
         "release": "release-it --no-npm.publish"
     },

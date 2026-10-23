@@ -14,6 +14,8 @@ const { name, version, homepage } = packageJson
 const typescript6Require = createRequire(createRequire(import.meta.url).resolve('@typescript/typescript6'))
 const typescript6Folder = path.dirname(typescript6Require.resolve('@typescript/old/package.json'))
 
+const UMD_MODE = 'umd'
+
 const banner = `
   /*!
   * ${name} - v${version}
@@ -36,7 +38,7 @@ const css: CSSOptions = {
     },
 }
 
-export default defineConfig(({ command }) =>
+export default defineConfig(({ command, mode }) =>
     command === 'serve'
         ? {
                 build: { target: 'es2020' },
@@ -45,12 +47,20 @@ export default defineConfig(({ command }) =>
         : {
                 build: {
                     cssCodeSplit: false,
-                    lib: {
-                        entry: './src/main.ts',
-                        fileName: 'ol-contextmenu',
-                        formats: ['es', 'umd', 'iife'],
-                        name: 'ContextMenu',
-                    },
+                    emptyOutDir: mode !== UMD_MODE,
+                    lib:
+                        mode === UMD_MODE
+                            ? {
+                                    entry: './src/umd.ts',
+                                    fileName: 'ol-contextmenu',
+                                    formats: ['umd', 'iife'],
+                                    name: 'ContextMenu',
+                                }
+                            : {
+                                    entry: './src/main.ts',
+                                    fileName: 'ol-contextmenu',
+                                    formats: ['es'],
+                                },
                     rollupOptions: {
                         external: [/^ol.*/],
                         output: {
@@ -67,10 +77,11 @@ export default defineConfig(({ command }) =>
                     __APP_VERSION__: JSON.stringify(version),
                 },
                 plugins: [
-                    dts({
+                    mode !== UMD_MODE
+                    && dts({
                         bundleTypes: { invokeOptions: { typescriptCompilerFolder: typescript6Folder } },
                         compilerOptions: { rootDir: 'src' },
-                        exclude: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'tests/**', '**/*.config.ts'],
+                        exclude: ['src/umd.ts', 'src/**/*.spec.ts', 'src/**/*.test.ts', 'tests/**', '**/*.config.ts'],
                         include: ['src/**/*.ts'],
                         outDirs: 'dist',
                     }),

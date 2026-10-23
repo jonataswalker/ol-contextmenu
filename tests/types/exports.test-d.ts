@@ -1,5 +1,7 @@
 import { expectTypeOf } from 'vitest'
 import ContextMenu, {
+    EventTypes,
+    CustomEventTypes,
     type Item,
     type Options,
     type MenuEntry,
@@ -16,6 +18,7 @@ import type { Coordinate } from 'ol/coordinate'
 
 expectTypeOf(ContextMenu).toBeConstructibleWith()
 expectTypeOf(ContextMenu).toBeConstructibleWith({ eventType: 'click', items: ['-'], width: 180 })
+expectTypeOf(ContextMenu).toBeConstructibleWith({ eventType: EventTypes.DBLCLICK })
 expectTypeOf(ContextMenu).constructorParameters.toEqualTypeOf<[opts?: Partial<Options>]>()
 
 expectTypeOf<Options>().toEqualTypeOf<{
@@ -54,7 +57,7 @@ expectTypeOf<ContextMenu['isOpen']>().toEqualTypeOf<() => boolean>()
 expectTypeOf<ContextMenu['countItems']>().toEqualTypeOf<() => number>()
 expectTypeOf<ContextMenu['getDefaultItems']>().toEqualTypeOf<() => SingleItem[]>()
 
-menu.on('open', (evt) => {
+menu.on(CustomEventTypes.OPEN, (evt) => {
     expectTypeOf(evt).toEqualTypeOf<ContextMenuEvent>()
 })
 menu.on('beforeopen', (evt) => {
