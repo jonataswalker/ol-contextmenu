@@ -99,6 +99,10 @@ npm run test:types
 # then open the script-tag demo in headless Chrome
 npm run test:examples
 
+# Everything CI runs, in order: typecheck, lint, tests, one build,
+# type/package checks and example checks
+npm run verify
+
 # Run linter
 npm run lint
 
@@ -147,17 +151,11 @@ git checkout -b fix/issue-description
 ### 3. Test Your Changes
 
 ```bash
-# Run all tests
-npm test
-
-# Run linter
-npm run lint
-
-# Build to ensure no errors
-npm run build
+# Typecheck, lint, test, build, then check types, package and examples
+npm run verify
 ```
 
-**All tests must pass before submitting a PR.**
+**`npm run verify` must pass before submitting a PR; CI runs the same command.**
 
 ### 4. Commit Your Changes
 
