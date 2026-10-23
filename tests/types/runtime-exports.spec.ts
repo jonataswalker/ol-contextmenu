@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { createRequire } from 'node:module'
 import process from 'node:process'
 import { readFileSync } from 'node:fs'
 import { runInThisContext } from 'node:vm'
@@ -45,3 +46,12 @@ it.each(['ol-contextmenu.umd.cjs', 'ol-contextmenu.iife.js'])(
         expect(global).not.toHaveProperty('default')
     },
 )
+
+it('require() returns the class from the CommonJS build', () => {
+    const required: unknown = createRequire(import.meta.url)('ol-contextmenu')
+
+    if (typeof required !== 'function') throw new TypeError('require() did not return the ContextMenu class')
+
+    expect(Reflect.get(required.prototype, 'extend')).toBeTypeOf('function')
+    expect(required).not.toHaveProperty('default')
+})

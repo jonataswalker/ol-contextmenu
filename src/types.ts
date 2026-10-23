@@ -1,7 +1,7 @@
-import MapBrowserEvent from 'ol/MapBrowserEvent'
+import MapBrowserEvent from 'ol/MapBrowserEvent.js'
 
-import type OlMap from 'ol/Map'
-import type { Coordinate } from 'ol/coordinate'
+import type OlMap from 'ol/Map.js'
+import type { Coordinate } from 'ol/coordinate.js'
 
 export enum EventTypes {
     CONTEXTMENU = 'contextmenu',

@@ -13,6 +13,12 @@ const config: OxlintConfig = defineConfig({
     overrides: [
         ...(base.overrides ?? []),
         {
+            files: ['types/**/*.d.cts'],
+            rules: {
+                'no-redeclare': 'off',
+            },
+        },
+        {
             files: ['tests/**/*.ts'],
             rules: {
                 'import/no-unassigned-import': 'off',

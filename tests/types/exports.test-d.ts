@@ -12,9 +12,9 @@ import ContextMenu, {
     type ContextMenuEvent,
 } from 'ol-contextmenu'
 
-import type OlMap from 'ol/Map'
-import type { Pixel } from 'ol/pixel'
-import type { Coordinate } from 'ol/coordinate'
+import type OlMap from 'ol/Map.js'
+import type { Pixel } from 'ol/pixel.js'
+import type { Coordinate } from 'ol/coordinate.js'
 
 expectTypeOf(ContextMenu).toBeConstructibleWith()
 expectTypeOf(ContextMenu).toBeConstructibleWith({ eventType: 'click', items: ['-'], width: 180 })

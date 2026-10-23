@@ -1,4 +1,4 @@
-import Control from 'ol/control/Control'
+import Control from 'ol/control/Control.js'
 import { TinyEmitter } from 'tiny-emitter'
 
 import { getLineHeight, addMenuEntries } from './helpers/dom.ts'
@@ -15,14 +15,14 @@ import {
     CONTAINER_PADDING_TOTAL,
 } from './constants.ts'
 
-import type OlMap from 'ol/Map'
-import type { Pixel } from 'ol/pixel'
-import type { EventsKey } from 'ol/events'
-import type BaseEvent from 'ol/events/Event'
-import type { ObjectEvent } from 'ol/Object'
-import type { Coordinate } from 'ol/coordinate'
-import type { Types as ObjectEventTypes } from 'ol/ObjectEventType'
-import type { OnSignature, CombinedOnSignature, EventTypes as OlEventTypes } from 'ol/Observable'
+import type OlMap from 'ol/Map.js'
+import type { Pixel } from 'ol/pixel.js'
+import type { EventsKey } from 'ol/events.js'
+import type BaseEvent from 'ol/events/Event.js'
+import type { ObjectEvent } from 'ol/Object.js'
+import type { Coordinate } from 'ol/coordinate.js'
+import type { Types as ObjectEventTypes } from 'ol/ObjectEventType.js'
+import type { OnSignature, CombinedOnSignature, EventTypes as OlEventTypes } from 'ol/Observable.js'
 
 import type {
     Item,

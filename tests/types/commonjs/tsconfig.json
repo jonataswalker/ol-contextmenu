@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "module": "nodenext",
+        "lib": ["es2022", "DOM", "DOM.Iterable"],
+        "moduleResolution": "nodenext",
+        "types": [],
+        "strict": true,
+        "noEmit": true,
+        "skipLibCheck": false,
+        "verbatimModuleSyntax": true
+    },
+    "include": ["./*.test-d.cts"]
+}

@@ -1,9 +1,10 @@
 import path from 'node:path'
+import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 
 import dts from 'vite-plugin-dts'
 import bannerPlugin from 'vite-plugin-banner'
-import { defineConfig, type CSSOptions } from 'vite'
+import { defineConfig, type Plugin, type CSSOptions } from 'vite'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
 import { CSS_CLASSES } from './src/constants.ts'
@@ -15,6 +16,42 @@ const typescript6Require = createRequire(createRequire(import.meta.url).resolve(
 const typescript6Folder = path.dirname(typescript6Require.resolve('@typescript/old/package.json'))
 
 const UMD_MODE = 'umd'
+const OL_INTEROP_PREFIX = '\0ol-interop:'
+
+function commonJsTypes(): Plugin {
+    return {
+        generateBundle(outputOptions) {
+            if (outputOptions.format !== 'umd') return
+            this.emitFile({
+                fileName: 'ol-contextmenu.d.cts',
+                source: readFileSync('types/ol-contextmenu.d.cts', 'utf8'),
+                type: 'asset',
+            })
+        },
+        name: 'commonjs-types',
+    }
+}
+
+function olDefaultInterop(): Plugin {
+    return {
+        load(id) {
+            if (!id.startsWith(OL_INTEROP_PREFIX)) return null
+            const source = id.slice(OL_INTEROP_PREFIX.length)
+            return [
+                `import * as namespace from '${source}'`,
+                'const value = namespace.default',
+                'export default value && value.__esModule ? value.default : value',
+            ].join('\n')
+        },
+        name: 'ol-default-interop',
+        resolveId(source, importer) {
+            if (!source.startsWith('ol/') || !importer || importer.startsWith(OL_INTEROP_PREFIX)) {
+                return null
+            }
+            return `${OL_INTEROP_PREFIX}${source}`
+        },
+    }
+}
 
 const banner = `
   /*!
@@ -62,11 +99,13 @@ export default defineConfig(({ command, mode }) =>
                                     formats: ['es'],
                                 },
                     rollupOptions: {
-                        external: [/^ol.*/],
+                        external: (source, importer) =>
+                            source.startsWith('ol/')
+                            && (mode !== UMD_MODE || importer?.startsWith(OL_INTEROP_PREFIX) === true),
                         output: {
                             globals: {
-                                'ol/control/Control': 'ol.control.Control',
-                                'ol/MapBrowserEvent': 'ol.MapBrowserEvent',
+                                'ol/control/Control.js': 'ol.control.Control',
+                                'ol/MapBrowserEvent.js': 'ol.MapBrowserEvent',
                             },
                         },
                     },
@@ -77,6 +116,8 @@ export default defineConfig(({ command, mode }) =>
                     __APP_VERSION__: JSON.stringify(version),
                 },
                 plugins: [
+                    mode === UMD_MODE && olDefaultInterop(),
+                    mode === UMD_MODE && commonJsTypes(),
                     mode !== UMD_MODE
                     && dts({
                         bundleTypes: { invokeOptions: { typescriptCompilerFolder: typescript6Folder } },
