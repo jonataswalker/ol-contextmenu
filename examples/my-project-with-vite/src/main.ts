@@ -11,7 +11,8 @@ import { transform } from 'ol/proj'
 import Stroke from 'ol/style/Stroke'
 import TileLayer from 'ol/layer/Tile'
 import { format } from 'ol/coordinate'
-import ContextMenu from 'ol-contextmenu'
+import { unByKey } from 'ol/Observable'
+import ContextMenu, { EventTypes, CustomEventTypes } from 'ol-contextmenu'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { Icon, Text, Style } from 'ol/style'
@@ -151,6 +152,7 @@ items.push(firstLevelSubmenu)
 
 const contextmenu = new ContextMenu({
     defaultItems: true, // Enable default Zoom In/Out items
+    eventType: EventTypes.CONTEXTMENU, // Named runtime export from the ESM build
     items,
     width: 200,
 })
@@ -167,16 +169,23 @@ console.log({ contextmenu })
 // The 'beforeopen' event fires before the menu opens.
 // Use this to conditionally enable/disable the menu or perform checks.
 // The event is a ContextMenuEvent with coordinate, pixel and originalEvent
-contextmenu.on('beforeopen', (evt) => {
+const beforeOpenKey = contextmenu.on(CustomEventTypes.BEFOREOPEN, (evt) => {
     console.log({ evt })
     // Example: You could check conditions here and call
     // contextmenu.enable() or contextmenu.disable()
 })
 
 // Example: Check if menu is open when map moves
-map.on('moveend', () => {
+const moveEndKey = map.on('moveend', () => {
     console.log('moveend', contextmenu.isOpen())
 })
+
+// Teardown: removeControl detaches the menu's own listeners; remove the
+// listeners this app added with the keys that on() returned.
+export function destroyContextMenu(): void {
+    unByKey([beforeOpenKey, moveEndKey])
+    map.removeControl(contextmenu)
+}
 
 // ============================================================================
 // CALLBACK FUNCTIONS (TYPE-SAFE)
