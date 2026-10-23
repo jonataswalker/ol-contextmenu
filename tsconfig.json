@@ -25,5 +25,5 @@
         "rewriteRelativeImportExtensions": true
     },
     "include": ["src/**/*.ts", "tests/**/*.ts", "*.ts"],
-    "exclude": ["dist", "node_modules", "examples"]
+    "exclude": ["dist", "node_modules", "examples", "tests/types"]
 }

@@ -29,3 +29,5 @@ jobs:
                   export CHROMEDRIVER_BIN="$(command -v chromedriver)"
                   export FIREFOX_BIN="$(command -v firefox)"
                   npm test
+            - name: Test exported types
+              run: npm run test:types

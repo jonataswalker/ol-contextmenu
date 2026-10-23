@@ -92,6 +92,9 @@ npm test
 # Run tests in watch mode
 npm run test:ui
 
+# Build, then check the published types and package exports
+npm run test:types
+
 # Run linter
 npm run lint
 

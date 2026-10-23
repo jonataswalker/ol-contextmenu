@@ -57,10 +57,13 @@
         "lint:fix": "npm run lint -- --fix",
         "test": "vitest run",
         "test:ui": "vitest --ui",
+        "pretest:types": "npm run build",
+        "test:types": "tsc -p tests/types && attw --pack . --ignore-rules false-esm false-export-default && publint",
         "prepare": "husky",
         "release": "release-it --no-npm.publish"
     },
     "devDependencies": {
+        "@arethetypeswrong/cli": "^0.18.5",
         "@microsoft/api-extractor": "^7.59.4",
         "@types/node": "^26.6.5",
         "@typescript/typescript6": "^6.0.2",
@@ -75,6 +78,7 @@
         "oxlint-config-jwalker": "^0.2.1",
         "oxlint-tsgolint": "^7.0.2005",
         "premove": "^4.0.0",
+        "publint": "^0.3.25",
         "release-it": "^21.1.1",
         "sass": "^1.106.1",
         "typescript": "^7.0.2",
