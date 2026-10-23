@@ -136,12 +136,14 @@ new ContextMenu(options)
 ### Methods
 
 - `clear()` - Remove all items
-- `close()` - Close menu programmatically
+- `closeMenu()` - Close menu programmatically
 - `extend(items)` - Add multiple items
 - `push(item)` - Add single item
 - `pop()` / `shift()` - Remove items
 - `getDefaultItems()` - Get default items array
 - `isOpen()` - Check if menu is open
+- `countItems()` - Number of menu entries
+- `updatePosition(pixel)` - Move an open menu to a new pixel
 - `enable()` / `disable()` - Control menu state
 
 ### Events
