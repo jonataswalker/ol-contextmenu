@@ -31,3 +31,8 @@ jobs:
                   npm test
             - name: Test exported types
               run: npm run test:types
+            - name: Build examples against the packed package
+              run: |
+                  export CHROME_BIN="$(command -v google-chrome-stable || command -v google-chrome)"
+                  export CHROMEDRIVER_BIN="$(command -v chromedriver)"
+                  npm run test:examples

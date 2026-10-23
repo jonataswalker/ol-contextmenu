@@ -13,6 +13,12 @@ const config: OxlintConfig = defineConfig({
     overrides: [
         ...(base.overrides ?? []),
         {
+            files: ['scripts/**/*.mjs'],
+            rules: {
+                'no-console': 'off',
+            },
+        },
+        {
             files: ['types/**/*.d.cts'],
             rules: {
                 'no-redeclare': 'off',

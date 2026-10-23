@@ -95,6 +95,10 @@ npm run test:ui
 # Build, then check the published types and package exports
 npm run test:types
 
+# Build, pack, and build the Vite and webpack examples against the tarball,
+# then open the script-tag demo in headless Chrome
+npm run test:examples
+
 # Run linter
 npm run lint
 

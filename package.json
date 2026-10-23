@@ -62,6 +62,8 @@
         "lint:fix": "npm run lint -- --fix",
         "test": "vitest run",
         "test:ui": "vitest --ui",
+        "pretest:examples": "npm run build",
+        "test:examples": "node scripts/check-examples.mjs && node scripts/smoke-script-tag.mjs",
         "pretest:types": "npm run build",
         "test:types": "oxlint tests/types && tsc -p tests/types && tsc -p tests/types/tsconfig.nodenext.json && tsc -p tests/types/commonjs && vitest run --config tests/types/vitest.config.ts && attw --pack . --profile node16 --ignore-rules false-export-default && publint",
         "prepare": "husky",
