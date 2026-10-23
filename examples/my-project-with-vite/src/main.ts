@@ -166,8 +166,7 @@ console.log({ contextmenu })
 
 // The 'beforeopen' event fires before the menu opens.
 // Use this to conditionally enable/disable the menu or perform checks.
-// The event object contains: coordinate, pixel, and originalEvent
-// Note: Type definitions for events may need to be added to the library
+// The event is a ContextMenuEvent with coordinate, pixel and originalEvent
 contextmenu.on('beforeopen', (evt) => {
     console.log({ evt })
     // Example: You could check conditions here and call
@@ -182,10 +181,9 @@ map.on('moveend', () => {
 // ============================================================================
 // CALLBACK FUNCTIONS (TYPE-SAFE)
 // ============================================================================
-// Callback functions receive a CallbackObject with typed properties:
-//   - coordinate: [number, number] in map projection (EPSG:3857)
-//   - pixel: [number, number] in screen pixels
-//   - data: any (or your custom type if you attach data to menu items)
+// Callback functions receive a CallbackObject and the map:
+//   - coordinate: Coordinate in map projection (EPSG:3857)
+//   - data: unknown (the item's data, if you attached any)
 
 // Easing function for smooth animations
 function elastic(t: number): number {
@@ -196,7 +194,7 @@ function elastic(t: number): number {
 // Using CallbackObject type ensures type safety for the parameter
 function center(obj: CallbackObject): void {
     view.animate({
-        center: obj.coordinate, // TypeScript knows this is [number, number]
+        center: obj.coordinate, // TypeScript knows this is a Coordinate
         duration: 700,
         easing: elastic,
     })

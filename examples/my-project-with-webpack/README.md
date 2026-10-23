@@ -4,17 +4,22 @@ This example demonstrates how to integrate `ol-contextmenu` in a project using *
 
 ## Prerequisites
 
-- **Node.js** (version 16 or higher)
-- **npm** (version 8 or higher)
+- **Node.js** (version 24 or higher)
+- **npm** (version 11 or higher)
 
 ## Installation
 
-1. Navigate to this directory:
+1. Build the library from the repository root (this example links to it):
+   ```bash
+   npm install && npm run build
+   ```
+
+2. Navigate to this directory:
    ```bash
    cd examples/my-project-with-webpack
    ```
 
-2. Install dependencies:
+3. Install dependencies:
    ```bash
    npm install
    ```
@@ -110,11 +115,11 @@ contextmenu.on('beforeopen', (evt) => {
 - Add your own callback functions
 - Experiment with different menu configurations
 - Check out the [Vite example](../my-project-with-vite/) for TypeScript support
-- See the [CDN example](../README.md) for a simpler setup without build tools
+- See the [script-tag example](../README.md) for a setup without a bundler
 
 ## Troubleshooting
 
-**Build fails**: Make sure you've run `npm install` in the parent directory first to build `ol-contextmenu`.
+**Build fails**: Make sure you've run `npm install && npm run build` in the repository root first to build `ol-contextmenu`.
 
 **Menu doesn't appear**: Check the browser console for errors. CSS is automatically injected when the JavaScript loads.
 

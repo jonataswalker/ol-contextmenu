@@ -143,10 +143,9 @@ map.on('pointermove', (e) => {
 // CALLBACK FUNCTIONS
 // ============================================================================
 // These functions are called when menu items are clicked.
-// Each callback receives an object with:
+// Each callback receives an object and the map:
 //   - coordinate: [x, y] array in map projection (EPSG:3857)
 //   - data: Custom data attached to the menu item (if set)
-//   pixel: [x, y] array of the click position in pixels
 
 // Easing function for smooth animations
 // from https://github.com/DmitryBaranovskiy/raphael

@@ -4,17 +4,22 @@ This example demonstrates how to integrate `ol-contextmenu` in a modern project 
 
 ## Prerequisites
 
-- **Node.js** (version 16 or higher)
-- **npm** (version 8 or higher)
+- **Node.js** (version 24 or higher)
+- **npm** (version 11 or higher)
 
 ## Installation
 
-1. Navigate to this directory:
+1. Build the library from the repository root (this example links to it):
+   ```bash
+   npm install && npm run build
+   ```
+
+2. Navigate to this directory:
    ```bash
    cd examples/my-project-with-vite
    ```
 
-2. Install dependencies:
+3. Install dependencies:
    ```bash
    npm install
    ```
@@ -92,10 +97,13 @@ These types help ensure type safety when creating menu items and callbacks.
 ### Type-Safe Callback Functions
 
 ```typescript
-function center(obj: CallbackObject) {
-    // obj.coordinate is typed as [number, number]
-    // obj.pixel is typed as [number, number]
-    // obj.data is typed as any (or your custom type)
+import type Map from 'ol/Map.js'
+import type { CallbackObject } from 'ol-contextmenu'
+
+function center(obj: CallbackObject, map: Map) {
+    // obj.coordinate is typed as Coordinate
+    // obj.data is typed as unknown; narrow it before use
+    map.getView().setCenter(obj.coordinate)
 }
 ```
 
@@ -136,7 +144,7 @@ Using TypeScript types ensures your menu items are correctly structured.
 - Experiment with different TypeScript types
 - Add your own custom types for menu item data
 - Check out the [Webpack example](../my-project-with-webpack/) for ES6 JavaScript
-- See the [CDN example](../README.md) for a simpler setup
+- See the [script-tag example](../README.md) for a setup without a bundler
 
 ## Troubleshooting
 

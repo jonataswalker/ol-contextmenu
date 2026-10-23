@@ -43,7 +43,7 @@
 **Try it live:**
 - 🎮 [CodeSandbox](https://codesandbox.io/s/openlayers-custom-context-menu-5s99kb?file=/src/index.js) - Interactive demo with full source
 - 📝 [JSFiddle](https://jsfiddle.net/jonataswalker/ooxs1w5d/) - Quick playground
-- 💻 [Local Examples](./examples) - Webpack, Vite, and CDN examples
+- 💻 [Local Examples](./examples) - Webpack, Vite, and script-tag examples
 
 ## 📦 Installation
 
@@ -156,7 +156,7 @@ new ContextMenu(options)
 
 - **[Examples & Recipes](docs/examples.md)** - Common patterns and code examples
 - **[Local Examples](./examples)** - Complete working projects:
-  - [CDN Example](./examples/contextmenu.html) - No build tools required
+  - [Script-tag Example](./examples/contextmenu.html) - No bundler; run `npm run build` first
   - [Webpack Example](./examples/my-project-with-webpack) - Integration with Webpack
   - [Vite Example](./examples/my-project-with-vite) - Modern setup with Vite + TypeScript
 
