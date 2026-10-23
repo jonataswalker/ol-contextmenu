@@ -64,6 +64,7 @@ export type Options = {
     defaultItems: boolean
     eventType: `${EventTypes}`
     items: Item[]
+    /** @deprecated Has no effect and will be removed in 7.0. */
     scrollAt: number
     width: number
 }
