@@ -252,9 +252,7 @@ export default class ContextMenu extends Control {
                 { capture: false },
             )
 
-            map.on('movestart', () => {
-                this.handleMapMove()
-            })
+            map.on('movestart', this.mapMoveListener)
 
             this.emitter.on(
                 CustomEventTypes.ADD_MENU_ENTRY,
@@ -292,6 +290,8 @@ export default class ContextMenu extends Control {
         this.map
             .getViewport()
             ?.removeEventListener(this.options.eventType, this.contextMenuEventListener, false)
+
+        this.map.un('movestart', this.mapMoveListener)
 
         this.emitter.off(CustomEventTypes.ADD_MENU_ENTRY)
     }

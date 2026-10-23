@@ -116,6 +116,19 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             expect(contextMenu.countItems()).toBe(0)
         })
 
+        it('should detach its movestart listener when removed and not stack it when re-added', () => {
+            const initial = map.getListeners('movestart')?.length ?? 0
+
+            map.addControl(contextMenu)
+            expect(map.getListeners('movestart')?.length ?? 0).toBe(initial + 1)
+
+            map.removeControl(contextMenu)
+            expect(map.getListeners('movestart')?.length ?? 0).toBe(initial)
+
+            map.addControl(contextMenu)
+            expect(map.getListeners('movestart')?.length ?? 0).toBe(initial + 1)
+        })
+
         it('should initialize menu items when attached to map', () => {
             const items = [
                 { callback: vi.fn(), text: 'Test Item 1' },
