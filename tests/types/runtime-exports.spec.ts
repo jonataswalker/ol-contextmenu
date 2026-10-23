@@ -40,7 +40,8 @@ it.each(['ol-contextmenu.umd.cjs', 'ol-contextmenu.iife.js'])(
     (file) => {
         const global = loadScript(file)
 
-        if (typeof global !== 'function') throw new TypeError(`${file} did not define a ContextMenu class`)
+        if (typeof global !== 'function')
+            throw new TypeError(`${file} did not define a ContextMenu class`)
 
         expect(Reflect.get(global.prototype, 'extend')).toBeTypeOf('function')
         expect(global).not.toHaveProperty('default')
@@ -50,7 +51,8 @@ it.each(['ol-contextmenu.umd.cjs', 'ol-contextmenu.iife.js'])(
 it('require() returns the class from the CommonJS build', () => {
     const required: unknown = createRequire(import.meta.url)('ol-contextmenu')
 
-    if (typeof required !== 'function') throw new TypeError('require() did not return the ContextMenu class')
+    if (typeof required !== 'function')
+        throw new TypeError('require() did not return the ContextMenu class')
 
     expect(Reflect.get(required.prototype, 'extend')).toBeTypeOf('function')
     expect(required).not.toHaveProperty('default')

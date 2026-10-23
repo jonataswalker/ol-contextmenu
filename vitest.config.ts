@@ -16,10 +16,7 @@ export default defineConfig({
                         connectTimeout: 120_000,
                         enabled: true,
                         headless: true,
-                        instances: [
-                            { browser: 'chrome' },
-                            { browser: 'firefox' },
-                        ],
+                        instances: [{ browser: 'chrome' }, { browser: 'firefox' }],
                         provider: webdriverio({
                             capabilities: {
                                 'goog:chromeOptions': {
@@ -45,10 +42,7 @@ export default defineConfig({
             {
                 test: {
                     environment: 'jsdom',
-                    include: [
-                        'tests/unit/**/*.{test,spec}.ts',
-                        'tests/**/*.unit.{test,spec}.ts',
-                    ],
+                    include: ['tests/unit/**/*.{test,spec}.ts', 'tests/**/*.unit.{test,spec}.ts'],
                     name: 'unit',
                 },
             },

@@ -2,10 +2,7 @@ import Control from 'ol/control/Control.js'
 import { TinyEmitter } from 'tiny-emitter'
 
 import { getLineHeight, addMenuEntries } from './helpers/dom.ts'
-import {
-    ContextMenuEvent,
-    CustomEventTypes,
-} from './types.ts'
+import { ContextMenuEvent, CustomEventTypes } from './types.ts'
 import {
     CSS_CLASSES,
     DEFAULT_ITEMS,
@@ -24,12 +21,7 @@ import type { Coordinate } from 'ol/coordinate.js'
 import type { Types as ObjectEventTypes } from 'ol/ObjectEventType.js'
 import type { OnSignature, CombinedOnSignature, EventTypes as OlEventTypes } from 'ol/Observable.js'
 
-import type {
-    Item,
-    Options,
-    MenuEntry,
-    CallbackObject,
-} from './types.ts'
+import type { Item, Options, MenuEntry, CallbackObject } from './types.ts'
 
 import './sass/main.scss'
 
@@ -139,11 +131,7 @@ export default class ContextMenu extends Control {
 
         container.append(menu)
         container.style.width = `${this.options.width}px`
-        container.classList.add(
-            CSS_CLASSES.container,
-            CSS_CLASSES.unselectable,
-            CSS_CLASSES.hidden,
-        )
+        container.classList.add(CSS_CLASSES.container, CSS_CLASSES.unselectable, CSS_CLASSES.hidden)
 
         this.container = container
 
@@ -275,12 +263,11 @@ export default class ContextMenu extends Control {
 
             const entriesLength = this.getMenuEntriesLength()
 
-            this.lineHeight
-                = entriesLength > 0
+            this.lineHeight =
+                entriesLength > 0
                     ? this.container.offsetHeight / entriesLength
                     : getLineHeight(this.container)
-        }
-        else {
+        } else {
             this.removeListeners()
             this.clear()
         }
@@ -363,7 +350,7 @@ export default class ContextMenu extends Control {
         ).length
     }
 
-    protected calculateMenuSize(): { h: number, w: number } {
+    protected calculateMenuSize(): { h: number; w: number } {
         const entriesLength = this.getMenuEntriesLength()
         const contentHeight = Math.round(this.lineHeight * entriesLength)
         const calculatedHeight = contentHeight + CONTAINER_PADDING_TOTAL
@@ -378,8 +365,8 @@ export default class ContextMenu extends Control {
 
     protected calculateVerticalPosition(
         mapSize: [number, number],
-        spaceLeft: { h: number, w: number },
-        menuSize: { h: number, w: number },
+        spaceLeft: { h: number; w: number },
+        menuSize: { h: number; w: number },
     ): number {
         let top: number
 
@@ -389,8 +376,7 @@ export default class ContextMenu extends Control {
             if (top + menuSize.h > mapSize[1]) {
                 top = Math.max(0, mapSize[1] - menuSize.h - MENU_POSITION_BUFFER)
             }
-        }
-        else {
+        } else {
             top = this.pixel[1] - menuSize.h
 
             if (top < 0) {
@@ -407,7 +393,7 @@ export default class ContextMenu extends Control {
 
     protected adjustPositionAfterRender(
         mapSize: [number, number],
-        menuSize: { h: number, w: number },
+        menuSize: { h: number; w: number },
     ) {
         if (this.container.classList.contains(CSS_CLASSES.hidden)) {
             return
@@ -451,8 +437,8 @@ export default class ContextMenu extends Control {
             const elements = submenuChildrenOf(container)
 
             elements.forEach((element) => {
-                const lastLeft
-                    = spaceLeftWidth >= menuSize.w ? menuSize.w - 8 : (menuSize.w + 8) * -1
+                const lastLeft =
+                    spaceLeftWidth >= menuSize.w ? menuSize.w - 8 : (menuSize.w + 8) * -1
 
                 const submenu = element.querySelector(`ul.${CSS_CLASSES.container}`)
 
@@ -460,13 +446,13 @@ export default class ContextMenu extends Control {
 
                 const submenuHeight = Math.round(
                     this.lineHeight
-                    * Array.from(submenu.children).filter((el) => el.tagName === 'LI').length,
+                        * Array.from(submenu.children).filter((el) => el.tagName === 'LI').length,
                 )
 
                 submenu.style.left = `${lastLeft}px`
                 submenu.style.right = 'auto'
-                submenu.style.top
-                    = spaceLeft.h >= submenuHeight + menuSize.h
+                submenu.style.top =
+                    spaceLeft.h >= submenuHeight + menuSize.h
                         ? '0'
                         : `-${submenu.offsetHeight - 25}px`
                 submenu.style.bottom = 'auto'

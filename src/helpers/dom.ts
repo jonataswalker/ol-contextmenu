@@ -69,8 +69,7 @@ export function addMenuEntry({
         if (item.icon) {
             if (item.classname === '') {
                 item.classname = CSS_CLASSES.icon
-            }
-            else if (item.classname.includes(CSS_CLASSES.icon) === false) {
+            } else if (item.classname.includes(CSS_CLASSES.icon) === false) {
                 item.classname += ` ${CSS_CLASSES.icon}`
             }
 
@@ -101,7 +100,8 @@ export function addMenuEntry({
 
     const element = parentNode.lastElementChild
 
-    if (!(element instanceof HTMLLIElement)) throw new Error('The separator entry was not appended.')
+    if (!(element instanceof HTMLLIElement))
+        throw new Error('The separator entry was not appended.')
 
     const entry: MenuEntry = {
         callback: null,
@@ -149,8 +149,7 @@ export function addMenuEntries({
                 items: item.items,
                 menuWidth,
             })
-        }
-        else {
+        } else {
             addMenuEntry({
                 emitter,
                 isInsideSubmenu,

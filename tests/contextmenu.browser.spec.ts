@@ -191,9 +191,7 @@ describe('ContextMenu - Browser Tests', () => {
             })
 
             const defaultItems = contextMenu.getDefaultItems()
-            const texts = defaultItems.map((item) =>
-                typeof item === 'string' ? item : item.text,
-            )
+            const texts = defaultItems.map((item) => (typeof item === 'string' ? item : item.text))
 
             expect(texts.some((t) => t.includes('Zoom In'))).toBe(true)
             expect(texts.some((t) => t.includes('Zoom Out'))).toBe(true)

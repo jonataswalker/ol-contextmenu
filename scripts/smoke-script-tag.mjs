@@ -13,16 +13,21 @@ const browser = await remote({
             args: ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage'],
             binary: process.env.CHROME_BIN ?? '/usr/bin/google-chrome-stable',
         },
-        'wdio:chromedriverOptions': { binary: process.env.CHROMEDRIVER_BIN ?? '/usr/bin/chromedriver' },
+        'wdio:chromedriverOptions': {
+            binary: process.env.CHROMEDRIVER_BIN ?? '/usr/bin/chromedriver',
+        },
     },
     logLevel: 'error',
 })
 
 try {
     await browser.url(page)
-    await browser.waitUntil(() => browser.execute(() => document.querySelector('.ol-viewport') !== null), {
-        timeout: 20_000,
-    })
+    await browser.waitUntil(
+        () => browser.execute(() => document.querySelector('.ol-viewport') !== null),
+        {
+            timeout: 20_000,
+        },
+    )
 
     const global = await browser.execute(() => ({
         hasDefault: 'default' in globalThis.ContextMenu,
@@ -44,11 +49,18 @@ try {
         )
     })
     await browser.waitUntil(
-        () => browser.execute(() => document.querySelector('.ol-ctx-menu-container:not(.ol-ctx-menu-hidden) li') !== null),
+        () =>
+            browser.execute(
+                () =>
+                    document.querySelector('.ol-ctx-menu-container:not(.ol-ctx-menu-hidden) li')
+                    !== null,
+            ),
         { timeout: 5_000 },
     )
 
-    const items = await browser.execute(() => document.querySelectorAll('.ol-ctx-menu-container li').length)
+    const items = await browser.execute(
+        () => document.querySelectorAll('.ol-ctx-menu-container li').length,
+    )
 
     if (global.type !== 'function' || global.hasDefault) {
         throw new Error(`The ContextMenu global should be the class, got ${JSON.stringify(global)}`)

@@ -27,7 +27,10 @@ for (const example of examples) {
     const source = path.join(root, 'examples', example)
     const target = path.join(workDir, example)
 
-    cpSync(source, target, { filter: (file) => !skippedFolders.test(`${path.sep}${path.relative(source, file)}`), recursive: true })
+    cpSync(source, target, {
+        filter: (file) => !skippedFolders.test(`${path.sep}${path.relative(source, file)}`),
+        recursive: true,
+    })
     run('npm', ['install', '--no-audit', '--no-fund', path.join(workDir, tarball)], target)
 
     if (lstatSync(path.join(target, 'node_modules', 'ol-contextmenu')).isSymbolicLink()) {

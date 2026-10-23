@@ -12,7 +12,9 @@ import packageJson from './package.json' with { type: 'json' }
 
 const { name, version, homepage } = packageJson
 
-const typescript6Require = createRequire(createRequire(import.meta.url).resolve('@typescript/typescript6'))
+const typescript6Require = createRequire(
+    createRequire(import.meta.url).resolve('@typescript/typescript6'),
+)
 const typescript6Folder = path.dirname(typescript6Require.resolve('@typescript/old/package.json'))
 
 const UMD_MODE = 'umd'
@@ -78,56 +80,65 @@ const css: CSSOptions = {
 export default defineConfig(({ command, mode }) =>
     command === 'serve'
         ? {
-                build: { target: 'es2020' },
-                css,
-            }
+              build: { target: 'es2020' },
+              css,
+          }
         : {
-                build: {
-                    cssCodeSplit: false,
-                    emptyOutDir: mode !== UMD_MODE,
-                    lib:
-                        mode === UMD_MODE
-                            ? {
-                                    entry: './src/umd.ts',
-                                    fileName: 'ol-contextmenu',
-                                    formats: ['umd', 'iife'],
-                                    name: 'ContextMenu',
-                                }
-                            : {
-                                    entry: './src/main.ts',
-                                    fileName: 'ol-contextmenu',
-                                    formats: ['es'],
-                                },
-                    rollupOptions: {
-                        external: (source, importer) =>
-                            source.startsWith('ol/')
-                            && (mode !== UMD_MODE || importer?.startsWith(OL_INTEROP_PREFIX) === true),
-                        output: {
-                            globals: {
-                                'ol/control/Control.js': 'ol.control.Control',
-                                'ol/MapBrowserEvent.js': 'ol.MapBrowserEvent',
+              build: {
+                  cssCodeSplit: false,
+                  emptyOutDir: mode !== UMD_MODE,
+                  lib:
+                      mode === UMD_MODE
+                          ? {
+                                entry: './src/umd.ts',
+                                fileName: 'ol-contextmenu',
+                                formats: ['umd', 'iife'],
+                                name: 'ContextMenu',
+                            }
+                          : {
+                                entry: './src/main.ts',
+                                fileName: 'ol-contextmenu',
+                                formats: ['es'],
                             },
-                        },
-                    },
-                    target: 'es2020',
-                },
-                css,
-                define: {
-                    __APP_VERSION__: JSON.stringify(version),
-                },
-                plugins: [
-                    mode === UMD_MODE && olDefaultInterop(),
-                    mode === UMD_MODE && commonJsTypes(),
-                    mode !== UMD_MODE
-                    && dts({
-                        bundleTypes: { invokeOptions: { typescriptCompilerFolder: typescript6Folder } },
-                        compilerOptions: { rootDir: 'src' },
-                        exclude: ['src/umd.ts', 'src/**/*.spec.ts', 'src/**/*.test.ts', 'tests/**', '**/*.config.ts'],
-                        include: ['src/**/*.ts'],
-                        outDirs: 'dist',
-                    }),
-                    bannerPlugin(banner),
-                    cssInjectedByJsPlugin(),
-                ],
-            },
+                  rollupOptions: {
+                      external: (source, importer) =>
+                          source.startsWith('ol/')
+                          && (mode !== UMD_MODE
+                              || importer?.startsWith(OL_INTEROP_PREFIX) === true),
+                      output: {
+                          globals: {
+                              'ol/control/Control.js': 'ol.control.Control',
+                              'ol/MapBrowserEvent.js': 'ol.MapBrowserEvent',
+                          },
+                      },
+                  },
+                  target: 'es2020',
+              },
+              css,
+              define: {
+                  __APP_VERSION__: JSON.stringify(version),
+              },
+              plugins: [
+                  mode === UMD_MODE && olDefaultInterop(),
+                  mode === UMD_MODE && commonJsTypes(),
+                  mode !== UMD_MODE
+                      && dts({
+                          bundleTypes: {
+                              invokeOptions: { typescriptCompilerFolder: typescript6Folder },
+                          },
+                          compilerOptions: { rootDir: 'src' },
+                          exclude: [
+                              'src/umd.ts',
+                              'src/**/*.spec.ts',
+                              'src/**/*.test.ts',
+                              'tests/**',
+                              '**/*.config.ts',
+                          ],
+                          include: ['src/**/*.ts'],
+                          outDirs: 'dist',
+                      }),
+                  bannerPlugin(banner),
+                  cssInjectedByJsPlugin(),
+              ],
+          },
 )
