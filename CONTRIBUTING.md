@@ -99,7 +99,7 @@ npm run test:types
 # then open the script-tag demo in headless Chrome
 npm run test:examples
 
-# Everything CI runs, in order: typecheck, lint, tests, one build,
+# Everything CI runs, in order: typecheck, lint, format check, tests, one build,
 # type/package checks and example checks
 npm run verify
 

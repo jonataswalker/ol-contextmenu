@@ -69,7 +69,7 @@
         "test:types": "npm run build && npm run check:types",
         "check:examples": "node scripts/check-examples.mjs && node scripts/smoke-script-tag.mjs",
         "check:types": "oxlint tests/types && tsc -p tests/types && tsc -p tests/types/tsconfig.nodenext.json && tsc -p tests/types/commonjs && vitest run --config tests/types/vitest.config.ts && attw --pack . --profile node16 --ignore-rules false-export-default && publint",
-        "verify": "npm run typecheck && npm run lint && npm test && npm run build && npm run check:types && npm run check:examples",
+        "verify": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build && npm run check:types && npm run check:examples",
         "prepare": "husky",
         "release": "release-it --no-npm.publish"
     },
