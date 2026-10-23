@@ -15,6 +15,7 @@ export default defineConfig({
                     browser: {
                         connectTimeout: 120_000,
                         enabled: true,
+                        headless: true,
                         instances: [
                             { browser: 'chrome' },
                             { browser: 'firefox' },

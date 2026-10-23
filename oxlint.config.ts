@@ -1,9 +1,9 @@
-import { defineConfig } from 'oxlint'
+import { type OxlintConfig, defineConfig } from 'oxlint'
 import { jwalker } from 'oxlint-config-jwalker'
 
 const base = jwalker({ ignores: ['examples/**', 'dist/**'] })
 
-export default defineConfig({
+const config: OxlintConfig = defineConfig({
     ...base,
     rules: {
         ...base.rules,
@@ -25,3 +25,5 @@ export default defineConfig({
         },
     ],
 })
+
+export default config

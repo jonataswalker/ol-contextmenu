@@ -1,10 +1,18 @@
+import path from 'node:path'
+import { createRequire } from 'node:module'
+
 import dts from 'vite-plugin-dts'
 import bannerPlugin from 'vite-plugin-banner'
 import { defineConfig, type CSSOptions } from 'vite'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
 import { CSS_CLASSES } from './src/constants.ts'
-import { name, version, homepage } from './package.json'
+import packageJson from './package.json' with { type: 'json' }
+
+const { name, version, homepage } = packageJson
+
+const typescript6Require = createRequire(createRequire(import.meta.url).resolve('@typescript/typescript6'))
+const typescript6Folder = path.dirname(typescript6Require.resolve('@typescript/old/package.json'))
 
 const banner = `
   /*!
@@ -60,11 +68,11 @@ export default defineConfig(({ command }) =>
                 },
                 plugins: [
                     dts({
-                        bundleTypes: true,
+                        bundleTypes: { invokeOptions: { typescriptCompilerFolder: typescript6Folder } },
                         compilerOptions: { rootDir: 'src' },
                         exclude: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'tests/**', '**/*.config.ts'],
                         include: ['src/**/*.ts'],
-                        outDir: 'dist',
+                        outDirs: 'dist',
                     }),
                     bannerPlugin(banner),
                     cssInjectedByJsPlugin(),
