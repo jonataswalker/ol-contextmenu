@@ -109,6 +109,9 @@ npm run lint
 # Fix linting issues
 npm run lint:fix
 
+# Format JS, TS and JSON with oxfmt (Markdown, YAML, styles and HTML are not formatted)
+npm run format
+
 # Build for production
 npm run build
 ```
@@ -231,7 +234,7 @@ function doSomething(data: any) { ... }
 
 ### Code Style
 
-We use [oxlint](https://oxc.rs) with [oxlint-config-jwalker](https://github.com/jonataswalker/oxlint-config-jwalker). Run `npm run lint:fix` to auto-fix issues.
+We use [oxlint](https://oxc.rs) with [oxlint-config-jwalker](https://github.com/jonataswalker/oxlint-config-jwalker), and [oxfmt](https://oxc.rs/docs/guide/usage/formatter) for formatting (`npm run format`). Run `npm run lint:fix` to auto-fix issues.
 
 **Key points:**
 - **Indentation**: 4 spaces

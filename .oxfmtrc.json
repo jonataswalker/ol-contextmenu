@@ -1,0 +1,12 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "printWidth": 100,
+    "tabWidth": 4,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "arrowParens": "always",
+    "experimentalOperatorPosition": "start",
+    "sortPackageJson": false,
+    "ignorePatterns": ["**/*.md", "**/*.yml", "**/*.scss", "**/*.css", "**/*.html", "examples/**"]
+}
