@@ -22,6 +22,7 @@ export class ContextMenuEvent extends MapBrowserEvent<any> {
         originalEvent: MouseEvent | PointerEvent
         type: `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`
     }) {
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- ol's MapBrowserEvent does not admit MouseEvent
         super(options.type, options.map, options.originalEvent as any)
     }
 }

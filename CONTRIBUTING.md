@@ -226,7 +226,7 @@ function doSomething(data: any) { ... }
 
 ### Code Style
 
-We use ESLint for code style. Run `npm run lint:fix` to auto-fix issues.
+We use [oxlint](https://oxc.rs) with [oxlint-config-jwalker](https://github.com/jonataswalker/oxlint-config-jwalker). Run `npm run lint:fix` to auto-fix issues.
 
 **Key points:**
 - **Indentation**: 4 spaces

@@ -14,8 +14,8 @@ const banner = `
   */
 `
 
-const additionalData = Object.keys(CSS_CLASSES).reduce(
-    (accumulator, current) => `${accumulator}$${current}:${CSS_CLASSES[current as keyof typeof CSS_CLASSES]};`,
+const additionalData = Object.entries(CSS_CLASSES).reduce(
+    (accumulator, [key, value]) => `${accumulator}$${key}:${value};`,
     '',
 )
 

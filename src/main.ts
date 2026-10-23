@@ -3,7 +3,6 @@ import { TinyEmitter } from 'tiny-emitter'
 
 import { getLineHeight, addMenuEntries } from './helpers/dom.ts'
 import {
-    EventTypes,
     ContextMenuEvent,
     CustomEventTypes,
 } from './types.ts'
@@ -36,6 +35,19 @@ import './sass/main.scss'
 
 function assert(condition: unknown, message: string): asserts condition {
     if (!condition) throw new Error(message)
+}
+
+function menuListOf(container: HTMLDivElement): HTMLUListElement {
+    const list = container.firstElementChild
+    assert(list instanceof HTMLUListElement, 'The menu container has no list element.')
+    return list
+}
+
+function submenuChildrenOf(container: HTMLUListElement): HTMLLIElement[] {
+    return Array.from(container.children).filter(
+        (el): el is HTMLLIElement =>
+            el instanceof HTMLLIElement && el.classList.contains(CSS_CLASSES.submenu),
+    )
 }
 
 export default class ContextMenu extends Control {
@@ -186,7 +198,7 @@ export default class ContextMenu extends Control {
     extend(items: Item[]) {
         assert(Array.isArray(items), '@param `items` should be an Array.')
         addMenuEntries({
-            container: this.container.firstElementChild as HTMLUListElement,
+            container: menuListOf(this.container),
             emitter: this.emitter,
             items,
             menuWidth: this.options.width,
@@ -257,7 +269,7 @@ export default class ContextMenu extends Control {
                 : this.options.items
 
             addMenuEntries({
-                container: this.container.firstElementChild as HTMLUListElement,
+                container: menuListOf(this.container),
                 emitter: this.emitter,
                 items: this.items,
                 menuWidth: this.options.width,
@@ -306,12 +318,12 @@ export default class ContextMenu extends Control {
 
         if (this.disabled) return
 
-        if (this.options.eventType === EventTypes.CONTEXTMENU) {
+        if (this.options.eventType === 'contextmenu') {
             evt.stopPropagation()
             evt.preventDefault()
         }
 
-        // eslint-disable-next-line no-restricted-globals
+        // oxlint-disable-next-line no-restricted-globals
         setTimeout(() => {
             this.openMenu(evt)
         }, 0)
@@ -433,23 +445,18 @@ export default class ContextMenu extends Control {
         this.adjustPositionAfterRender(mapSize, menuSize)
         spaceLeft.w -= menuSize.w
 
-        const containerSubmenuChildren = (container: HTMLUListElement): HTMLLIElement[] =>
-            Array.from(container.children).filter(
-                (el) => el.tagName === 'LI' && el.classList.contains(CSS_CLASSES.submenu),
-            ) as HTMLLIElement[]
-
         let countSubMenu = 0
         const positionSubmenu = (container: HTMLUListElement, spaceLeftWidth: number) => {
             countSubMenu += 1
-            const elements = containerSubmenuChildren(container)
+            const elements = submenuChildrenOf(container)
 
             elements.forEach((element) => {
                 const lastLeft
                     = spaceLeftWidth >= menuSize.w ? menuSize.w - 8 : (menuSize.w + 8) * -1
 
-                const submenu = element.querySelector(
-                    `ul.${CSS_CLASSES.container}`,
-                ) as HTMLUListElement
+                const submenu = element.querySelector(`ul.${CSS_CLASSES.container}`)
+
+                if (!(submenu instanceof HTMLUListElement)) return
 
                 const submenuHeight = Math.round(
                     this.lineHeight
@@ -465,13 +472,13 @@ export default class ContextMenu extends Control {
                 submenu.style.bottom = 'auto'
                 submenu.style.zIndex = String(countSubMenu)
 
-                if (containerSubmenuChildren(submenu).length > 0) {
+                if (submenuChildrenOf(submenu).length > 0) {
                     positionSubmenu(submenu, spaceLeftWidth - menuSize.w)
                 }
             })
         }
 
-        positionSubmenu(this.container.firstElementChild as HTMLUListElement, spaceLeft.w)
+        positionSubmenu(menuListOf(this.container), spaceLeft.w)
     }
 
     protected handleMapMove() {
@@ -482,7 +489,10 @@ export default class ContextMenu extends Control {
         evt.preventDefault()
         evt.stopPropagation()
 
-        const target = evt.currentTarget as HTMLLIElement
+        const target = evt.currentTarget
+
+        if (!(target instanceof HTMLLIElement)) return
+
         const item = this.menuEntries.get(target.id)
 
         if (!item) return
