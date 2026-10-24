@@ -90,7 +90,9 @@ describe('GitHub Issues - Regression Tests', () => {
             ]
 
             // Should not throw when extending with icon items
-            expect(() => { contextMenu.extend(items) }).not.toThrow()
+            expect(() => {
+                contextMenu.extend(items)
+            }).not.toThrow()
         })
 
         it('should accept items with Font Awesome class names', () => {
@@ -104,7 +106,9 @@ describe('GitHub Issues - Regression Tests', () => {
             ]
 
             // Should not throw when extending with FA class items
-            expect(() => { contextMenu.extend(items) }).not.toThrow()
+            expect(() => {
+                contextMenu.extend(items)
+            }).not.toThrow()
         })
 
         it('should support mixed icon types in same menu', () => {
@@ -126,7 +130,9 @@ describe('GitHub Issues - Regression Tests', () => {
             ]
 
             // Should not throw with mixed icon types
-            expect(() => { contextMenu.extend(items) }).not.toThrow()
+            expect(() => {
+                contextMenu.extend(items)
+            }).not.toThrow()
         })
     })
 
@@ -182,7 +188,9 @@ describe('GitHub Issues - Regression Tests', () => {
             ]
 
             // Should not throw with nested items
-            expect(() => { contextMenu.extend(items) }).not.toThrow()
+            expect(() => {
+                contextMenu.extend(items)
+            }).not.toThrow()
         })
 
         it('should maintain menu state across multiple open/close cycles', () => {
@@ -227,8 +235,12 @@ describe('GitHub Issues - Regression Tests', () => {
             const item1: SingleItem = { callback: vi.fn(), text: 'Item 1' }
             const item2: SingleItem = { callback: vi.fn(), text: 'Item 2' }
 
-            expect(() => { contextMenu.push(item1) }).not.toThrow()
-            expect(() => { contextMenu.push(item2) }).not.toThrow()
+            expect(() => {
+                contextMenu.push(item1)
+            }).not.toThrow()
+            expect(() => {
+                contextMenu.push(item2)
+            }).not.toThrow()
         })
 
         it('should support extend operation', () => {
@@ -246,8 +258,12 @@ describe('GitHub Issues - Regression Tests', () => {
                 { callback: vi.fn(), text: 'Second' },
             ])
 
-            expect(() => { contextMenu.shift() }).not.toThrow()
-            expect(() => { contextMenu.pop() }).not.toThrow()
+            expect(() => {
+                contextMenu.shift()
+            }).not.toThrow()
+            expect(() => {
+                contextMenu.pop()
+            }).not.toThrow()
         })
 
         it('should handle disable/enable operations', () => {

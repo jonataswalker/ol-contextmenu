@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "module": "ESNext",
+        "lib": ["es2022", "DOM", "DOM.Iterable"],
+        "moduleResolution": "bundler",
+        "types": [],
+        "strict": true,
+        "noEmit": true,
+        "skipLibCheck": false,
+        "verbatimModuleSyntax": true
+    },
+    "include": ["./*.test-d.ts"]
+}

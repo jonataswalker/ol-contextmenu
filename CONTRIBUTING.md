@@ -92,11 +92,25 @@ npm test
 # Run tests in watch mode
 npm run test:ui
 
+# Build, then check the published types and package exports
+npm run test:types
+
+# Build, pack, and build the Vite and webpack examples against the tarball,
+# then open the script-tag demo in headless Chrome
+npm run test:examples
+
+# Everything CI runs, in order: typecheck, lint, format check, tests, one build,
+# type/package checks and example checks
+npm run verify
+
 # Run linter
 npm run lint
 
 # Fix linting issues
 npm run lint:fix
+
+# Format JS, TS and JSON with oxfmt (Markdown, YAML, styles and HTML are not formatted)
+npm run format
 
 # Build for production
 npm run build
@@ -140,17 +154,11 @@ git checkout -b fix/issue-description
 ### 3. Test Your Changes
 
 ```bash
-# Run all tests
-npm test
-
-# Run linter
-npm run lint
-
-# Build to ensure no errors
-npm run build
+# Typecheck, lint, test, build, then check types, package and examples
+npm run verify
 ```
 
-**All tests must pass before submitting a PR.**
+**`npm run verify` must pass before submitting a PR; CI runs the same command.**
 
 ### 4. Commit Your Changes
 
@@ -226,7 +234,7 @@ function doSomething(data: any) { ... }
 
 ### Code Style
 
-We use ESLint for code style. Run `npm run lint:fix` to auto-fix issues.
+We use [oxlint](https://oxc.rs) with [oxlint-config-jwalker](https://github.com/jonataswalker/oxlint-config-jwalker), and [oxfmt](https://oxc.rs/docs/guide/usage/formatter) for formatting (`npm run format`). Run `npm run lint:fix` to auto-fix issues.
 
 **Key points:**
 - **Indentation**: 4 spaces

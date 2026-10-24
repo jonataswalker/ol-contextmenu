@@ -152,7 +152,7 @@ console.log({ contextmenu })
 
 // The 'beforeopen' event fires before the menu opens.
 // Use this to conditionally enable/disable the menu or perform checks.
-// The event object contains: coordinate, pixel, and originalEvent
+// The event is a ContextMenuEvent with coordinate, pixel and originalEvent
 contextmenu.on('beforeopen', (evt) => {
     console.log({ evt })
     // Example: You could check conditions here and call
@@ -167,9 +167,8 @@ map.on('moveend', () => {
 // ============================================================================
 // CALLBACK FUNCTIONS
 // ============================================================================
-// Callback functions receive an object with:
+// Callback functions receive an object and the map:
 //   - coordinate: [x, y] in map projection (EPSG:3857)
-//   - pixel: [x, y] in screen pixels
 //   - data: Custom data (if attached to menu item)
 
 // Easing function for smooth animations

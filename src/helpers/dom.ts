@@ -47,7 +47,7 @@ export function getLineHeight(container: HTMLDivElement): number {
 export function addMenuEntry({
     emitter,
     isInsideSubmenu = false,
-    isSubmenu = false,
+    isSubmenu,
     item,
     parentNode,
 }: {
@@ -69,8 +69,7 @@ export function addMenuEntry({
         if (item.icon) {
             if (item.classname === '') {
                 item.classname = CSS_CLASSES.icon
-            }
-            else if (item.classname.includes(CSS_CLASSES.icon) === false) {
+            } else if (item.classname.includes(CSS_CLASSES.icon) === false) {
                 item.classname += ` ${CSS_CLASSES.icon}`
             }
 
@@ -97,11 +96,13 @@ export function addMenuEntry({
     }
 
     const html = `<li id="${id}" class="${CSS_CLASSES.separator}"><hr></li>`
-    const frag = createFragment(html)
+    parentNode.append(createFragment(html))
 
-    parentNode.append(frag)
+    const element = parentNode.lastElementChild
 
-    const element = parentNode.lastChild as HTMLLIElement
+    if (!(element instanceof HTMLLIElement))
+        throw new Error('The separator entry was not appended.')
+
     const entry: MenuEntry = {
         callback: null,
         data: null,
@@ -148,8 +149,7 @@ export function addMenuEntries({
                 items: item.items,
                 menuWidth,
             })
-        }
-        else {
+        } else {
             addMenuEntry({
                 emitter,
                 isInsideSubmenu,

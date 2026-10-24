@@ -43,7 +43,7 @@
 **Try it live:**
 - 🎮 [CodeSandbox](https://codesandbox.io/s/openlayers-custom-context-menu-5s99kb?file=/src/index.js) - Interactive demo with full source
 - 📝 [JSFiddle](https://jsfiddle.net/jonataswalker/ooxs1w5d/) - Quick playground
-- 💻 [Local Examples](./examples) - Webpack, Vite, and CDN examples
+- 💻 [Local Examples](./examples) - Webpack, Vite, and script-tag examples
 
 ## 📦 Installation
 
@@ -136,12 +136,14 @@ new ContextMenu(options)
 ### Methods
 
 - `clear()` - Remove all items
-- `close()` - Close menu programmatically
+- `closeMenu()` - Close menu programmatically
 - `extend(items)` - Add multiple items
 - `push(item)` - Add single item
 - `pop()` / `shift()` - Remove items
 - `getDefaultItems()` - Get default items array
 - `isOpen()` - Check if menu is open
+- `countItems()` - Number of menu entries
+- `updatePosition(pixel)` - Move an open menu to a new pixel
 - `enable()` / `disable()` - Control menu state
 
 ### Events
@@ -156,7 +158,7 @@ new ContextMenu(options)
 
 - **[Examples & Recipes](docs/examples.md)** - Common patterns and code examples
 - **[Local Examples](./examples)** - Complete working projects:
-  - [CDN Example](./examples/contextmenu.html) - No build tools required
+  - [Script-tag Example](./examples/contextmenu.html) - No bundler; run `npm run build` first
   - [Webpack Example](./examples/my-project-with-webpack) - Integration with Webpack
   - [Vite Example](./examples/my-project-with-vite) - Modern setup with Vite + TypeScript
 

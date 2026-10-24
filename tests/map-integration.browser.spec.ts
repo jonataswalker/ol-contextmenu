@@ -19,8 +19,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             if (mapInstance.getView().getCenter()) {
                 // Wait a bit for map to render
                 setTimeout(resolve, 200)
-            }
-            else {
+            } else {
                 mapInstance.once('rendercomplete', () => {
                     setTimeout(resolve, 100)
                 })
@@ -29,6 +28,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
     }
 
     // Helper to dispatch contextmenu event
+    const viewportOf = (olMap: Map): HTMLElement => {
+        const viewport = olMap.getViewport()
+        if (!viewport) throw new Error('The map has no viewport.')
+        return viewport
+    }
+
     const dispatchContextMenu = (element: HTMLElement, x = 100, y = 100) => {
         const rect = element.getBoundingClientRect()
         const contextMenuEvent = new MouseEvent('contextmenu', {
@@ -110,6 +115,19 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             expect(contextMenu.countItems()).toBe(0)
         })
 
+        it('should detach its movestart listener when removed and not stack it when re-added', () => {
+            const initial = map.getListeners('movestart')?.length ?? 0
+
+            map.addControl(contextMenu)
+            expect(map.getListeners('movestart')?.length ?? 0).toBe(initial + 1)
+
+            map.removeControl(contextMenu)
+            expect(map.getListeners('movestart')?.length ?? 0).toBe(initial)
+
+            map.addControl(contextMenu)
+            expect(map.getListeners('movestart')?.length ?? 0).toBe(initial + 1)
+        })
+
         it('should initialize menu items when attached to map', () => {
             const items = [
                 { callback: vi.fn(), text: 'Test Item 1' },
@@ -153,12 +171,14 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             })
 
             // Simulate right-click on map
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport, viewport.offsetWidth / 2, viewport.offsetHeight / 2)
 
             // Wait for async menu opening
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(isBeforeOpenFired).toBe(true)
             expect(eventData).not.toBeNull()
@@ -177,10 +197,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
                 eventData = evt
             })
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(isOpenFired).toBe(true)
             expect(eventData).not.toBeNull()
@@ -197,10 +219,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             })
 
             // Open menu
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 100) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 100)
+            })
 
             // Close menu
             contextMenu.closeMenu()
@@ -220,10 +244,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             contextMenu.on(CustomEventTypes.OPEN, handler)
 
             // Open menu
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 100) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 100)
+            })
 
             expect(eventCount).toBe(1)
 
@@ -233,7 +259,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             // Close and reopen
             contextMenu.closeMenu()
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 100) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 100)
+            })
 
             // Should still be 1, not 2
             expect(eventCount).toBe(1)
@@ -247,10 +275,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             expect(contextMenu.isOpen()).toBe(false)
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
 
@@ -265,16 +295,20 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             await waitForMapReady(map)
 
             // Open menu
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
 
             // Move map
             map.getView().setCenter([1_000_000, 1_000_000])
-            await new Promise((resolve) => { setTimeout(resolve, 100) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 100)
+            })
 
             expect(contextMenu.isOpen()).toBe(false)
         })
@@ -284,19 +318,19 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             contextMenu = new ContextMenu({
                 defaultItems: false,
-                items: [
-                    { callback, text: 'Test Item' },
-                ],
+                items: [{ callback, text: 'Test Item' }],
             })
 
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
             // Open menu
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
 
@@ -307,7 +341,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             if (menuItem) {
                 await userEvent.click(menuItem)
-                await new Promise((resolve) => { setTimeout(resolve, 50) })
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 50)
+                })
 
                 expect(contextMenu.isOpen()).toBe(false)
                 expect(callback).toHaveBeenCalled()
@@ -318,10 +354,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             contextMenu.disable()
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 100) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 100)
+            })
 
             expect(contextMenu.isOpen()).toBe(false)
         })
@@ -334,19 +372,19 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             contextMenu = new ContextMenu({
                 defaultItems: false,
-                items: [
-                    { callback, data: testData, text: 'Test Item' },
-                ],
+                items: [{ callback, data: testData, text: 'Test Item' }],
             })
 
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
             // Open menu
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             // Click item
             // @ts-expect-error - accessing protected property
@@ -355,7 +393,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             if (menuItem) {
                 await userEvent.click(menuItem)
-                await new Promise((resolve) => { setTimeout(resolve, 50) })
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 50)
+                })
 
                 expect(callback).toHaveBeenCalledTimes(1)
                 const callArgs = callback.mock.calls[0]
@@ -372,22 +412,22 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             contextMenu = new ContextMenu({
                 defaultItems: false,
-                items: [
-                    { callback, text: 'Test Item' },
-                ],
+                items: [{ callback, text: 'Test Item' }],
             })
 
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
             // Click at specific location
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
             const rect = viewport.getBoundingClientRect()
             const x = rect.width / 2
             const y = rect.height / 2
 
             dispatchContextMenu(viewport, x, y)
-            await new Promise((resolve) => { setTimeout(resolve, 200) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 200)
+            })
 
             // Verify menu opened
             expect(contextMenu.isOpen()).toBe(true)
@@ -395,7 +435,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             // Click item
             // @ts-expect-error - accessing protected property
             const { container } = contextMenu
-            const menuItem = container.querySelector('li:not(.ol-ctx-menu-separator)') as HTMLElement
+            const menuItem = container.querySelector(
+                'li:not(.ol-ctx-menu-separator)',
+            ) as HTMLElement
 
             expect(menuItem).not.toBeNull()
 
@@ -407,7 +449,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
                 })
 
                 menuItem.dispatchEvent(clickEvent)
-                await new Promise((resolve) => { setTimeout(resolve, 100) })
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 100)
+                })
 
                 // Callback should be called, but if menu didn't have items properly set up,
                 // we at least verify the menu opened and coordinate was captured
@@ -417,8 +461,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
                     expect(coordinate).toBeDefined()
                     expect(Array.isArray(coordinate)).toBe(true)
                     expect(coordinate.length).toBe(2)
-                }
-                else {
+                } else {
                     // Menu opened successfully, coordinate was captured
                     // @ts-expect-error - accessing protected property
                     expect(contextMenu.coordinate).toBeDefined()
@@ -434,10 +477,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport, 100, 100)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             // @ts-expect-error - accessing protected property
             const { container } = contextMenu
@@ -453,10 +498,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             await waitForMapReady(map)
 
             // Open menu first
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
 
@@ -510,7 +557,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
             const mapSize = map.getSize() || [0, 0]
             const viewportHeight = mapSize[1]
             const viewportWidth = mapSize[0]
@@ -524,7 +571,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             dispatchContextMenu(viewport, clickX, clickY)
             // Wait for menu to open and for repositioning to complete
-            await new Promise((resolve) => { setTimeout(resolve, 500) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 500)
+            })
 
             // Verify menu opened
             expect(contextMenu.isOpen()).toBe(true)
@@ -588,7 +637,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
             const mapSize = map.getSize() || [0, 0]
             const viewportHeight = mapSize[1]
 
@@ -597,7 +646,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             const clickY = viewportHeight / 2
 
             dispatchContextMenu(viewport, clickX, clickY)
-            await new Promise((resolve) => { setTimeout(resolve, 200) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 200)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
 
@@ -640,10 +691,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             expect(container.classList.contains('ol-ctx-menu-hidden')).toBe(true)
 
             // Open menu
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport, 100, 100)
-            await new Promise((resolve) => { setTimeout(resolve, 200) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 200)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
 
@@ -677,7 +730,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
             const mapSize = map.getSize() || [0, 0]
             const viewportHeight = mapSize[1]
             const viewportWidth = mapSize[0]
@@ -687,7 +740,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             const clickY = viewportHeight - 10
 
             dispatchContextMenu(viewport, clickX, clickY)
-            await new Promise((resolve) => { setTimeout(resolve, 400) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 400)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
 
@@ -725,7 +780,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
             const mapSize = map.getSize() || [0, 0]
             const viewportHeight = mapSize[1]
             const viewportWidth = mapSize[0]
@@ -736,7 +791,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             dispatchContextMenu(viewport, clickX, clickY)
             // Give extra time for rendering and adjustment
-            await new Promise((resolve) => { setTimeout(resolve, 400) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 400)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
 
@@ -774,13 +831,15 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
             const mapSize = map.getSize() || [0, 0]
             const viewportHeight = mapSize[1]
 
             // Click anywhere - menu will be too tall regardless
             dispatchContextMenu(viewport, 100, 100)
-            await new Promise((resolve) => { setTimeout(resolve, 300) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 300)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
 
@@ -795,8 +854,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
                 expect(menuTop).toBeGreaterThanOrEqual(0)
                 // Should position to show as much as possible from the top
                 expect(menuTop).toBeLessThanOrEqual(10)
-            }
-            else {
+            } else {
                 // If it somehow fits, it should be fully visible
                 const menuBottom = menuTop + menuHeight
 
@@ -816,10 +874,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
         })
@@ -833,7 +893,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
             // For click event type, use regular click
             const clickEvent = new MouseEvent('click', {
                 bubbles: true,
@@ -843,7 +903,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             })
 
             viewport.dispatchEvent(clickEvent)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
         })
@@ -857,7 +919,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             map.addControl(contextMenu)
             await waitForMapReady(map)
 
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             // Simulate double click by dispatching dblclick event directly
             // userEvent.dblClick might not work reliably for this
@@ -869,7 +931,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             })
 
             viewport.dispatchEvent(dblClickEvent)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
         })
@@ -955,9 +1019,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
                 defaultItems: false,
                 items: [
                     {
-                        items: [
-                            { callback: vi.fn(), text: 'Nested Item' },
-                        ],
+                        items: [{ callback: vi.fn(), text: 'Nested Item' }],
                         text: 'Parent',
                     },
                 ],
@@ -967,10 +1029,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             await waitForMapReady(map)
 
             // Open menu
-            const viewport = map.getViewport()
+            const viewport = viewportOf(map)
 
             dispatchContextMenu(viewport)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             // @ts-expect-error - accessing protected property
             const { container } = contextMenu
@@ -1086,10 +1150,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             await waitForMapReady(map2)
 
             // Open menu on first map
-            const viewport1 = map.getViewport()
+            const viewport1 = viewportOf(map)
 
             dispatchContextMenu(viewport1)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
             expect(contextMenu2.isOpen()).toBe(false)
@@ -1098,10 +1164,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             contextMenu.closeMenu()
 
             // Open menu on second map
-            const viewport2 = map2.getViewport()
+            const viewport2 = viewportOf(map2)
 
             dispatchContextMenu(viewport2)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(contextMenu.isOpen()).toBe(false)
             expect(contextMenu2.isOpen()).toBe(true)
@@ -1125,10 +1193,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             await waitForMapReady(map2)
 
             // Open menu on first map
-            const viewport1 = map.getViewport()
+            const viewport1 = viewportOf(map)
 
             dispatchContextMenu(viewport1)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(isMenu1OpenFired).toBe(true)
             expect(isMenu2OpenFired).toBe(false)
@@ -1138,10 +1208,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             contextMenu.closeMenu()
 
             // Open menu on second map
-            const viewport2 = map2.getViewport()
+            const viewport2 = viewportOf(map2)
 
             dispatchContextMenu(viewport2)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(isMenu1OpenFired).toBe(false)
             expect(isMenu2OpenFired).toBe(true)
@@ -1153,16 +1225,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             contextMenu = new ContextMenu({
                 defaultItems: false,
-                items: [
-                    { callback: callback1, text: 'Menu 1 Item' },
-                ],
+                items: [{ callback: callback1, text: 'Menu 1 Item' }],
             })
 
             contextMenu2 = new ContextMenu({
                 defaultItems: false,
-                items: [
-                    { callback: callback2, text: 'Menu 2 Item' },
-                ],
+                items: [{ callback: callback2, text: 'Menu 2 Item' }],
             })
 
             map.addControl(contextMenu)
@@ -1190,17 +1258,21 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             await waitForMapReady(map2)
 
             // Open menu on first map
-            const viewport1 = map.getViewport()
+            const viewport1 = viewportOf(map)
 
             dispatchContextMenu(viewport1)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             expect(contextMenu.isOpen()).toBe(true)
             expect(contextMenu2.isOpen()).toBe(false)
 
             // Move second map (should not affect first menu)
             map2.getView().setCenter([2_000_000, 2_000_000])
-            await new Promise((resolve) => { setTimeout(resolve, 100) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 100)
+            })
 
             // First menu should still be open
             expect(contextMenu.isOpen()).toBe(true)
@@ -1208,7 +1280,9 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             // Move first map (should close first menu)
             map.getView().setCenter([500_000, 500_000])
-            await new Promise((resolve) => { setTimeout(resolve, 100) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 100)
+            })
 
             expect(contextMenu.isOpen()).toBe(false)
             expect(contextMenu2.isOpen()).toBe(false)
@@ -1220,16 +1294,12 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             contextMenu = new ContextMenu({
                 defaultItems: false,
-                items: [
-                    { callback: callback1, text: 'Item 1' },
-                ],
+                items: [{ callback: callback1, text: 'Item 1' }],
             })
 
             contextMenu2 = new ContextMenu({
                 defaultItems: false,
-                items: [
-                    { callback: callback2, text: 'Item 2' },
-                ],
+                items: [{ callback: callback2, text: 'Item 2' }],
             })
 
             map.addControl(contextMenu)
@@ -1238,17 +1308,23 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             await waitForMapReady(map2)
 
             // Open and click on first menu
-            const viewport1 = map.getViewport()
+            const viewport1 = viewportOf(map)
 
             dispatchContextMenu(viewport1)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             // @ts-expect-error - accessing protected property
             const menuItem1 = contextMenu.container.querySelector('li') as HTMLElement
 
             if (menuItem1) {
-                menuItem1.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
-                await new Promise((resolve) => { setTimeout(resolve, 100) })
+                menuItem1.dispatchEvent(
+                    new MouseEvent('click', { bubbles: true, cancelable: true }),
+                )
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 100)
+                })
             }
 
             expect(callback1).toHaveBeenCalled()
@@ -1258,17 +1334,23 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
             callback1.mockClear()
 
             // Open and click on second menu
-            const viewport2 = map2.getViewport()
+            const viewport2 = viewportOf(map2)
 
             dispatchContextMenu(viewport2)
-            await new Promise((resolve) => { setTimeout(resolve, 150) })
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
 
             // @ts-expect-error - accessing protected property
             const menuItem2 = contextMenu2.container.querySelector('li') as HTMLElement
 
             if (menuItem2) {
-                menuItem2.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
-                await new Promise((resolve) => { setTimeout(resolve, 100) })
+                menuItem2.dispatchEvent(
+                    new MouseEvent('click', { bubbles: true, cancelable: true }),
+                )
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 100)
+                })
             }
 
             expect(callback1).not.toHaveBeenCalled()
@@ -1283,9 +1365,7 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
 
             contextMenu2 = new ContextMenu({
                 defaultItems: false,
-                items: [
-                    { callback: vi.fn(), text: 'Custom Item' },
-                ],
+                items: [{ callback: vi.fn(), text: 'Custom Item' }],
                 width: 300,
             })
 

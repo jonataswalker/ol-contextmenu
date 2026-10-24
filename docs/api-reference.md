@@ -17,7 +17,6 @@ Creates a new context menu instance.
 | `options.defaultItems` | `boolean` | `true` | Include default zoom items |
 | `options.items` | `Item[]` | `[]` | Array of custom menu items |
 | `options.eventType` | `EventTypes` | `'contextmenu'` | Event that triggers the menu |
-| `options.scrollAt` | `number` | `4` | Number of items before menu becomes scrollable |
 
 **Example:**
 
@@ -380,7 +379,6 @@ interface Options {
     defaultItems: boolean;
     items: Item[];
     eventType: EventTypes;
-    scrollAt: number;
 }
 ```
 

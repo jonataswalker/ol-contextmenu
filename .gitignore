@@ -4,7 +4,8 @@ npm-debug.log*
 node_modules
 dist
 .npm
-.eslintcache
 coverage
 .idea
 .claude
+.vitest
+.examples-check

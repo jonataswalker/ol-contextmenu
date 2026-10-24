@@ -9,6 +9,7 @@ Common patterns and code examples for `ol-contextmenu`.
 - [Feature Detection](#feature-detection)
 - [Custom Styling](#custom-styling)
 - [Advanced Patterns](#advanced-patterns)
+- [Lifecycle](#lifecycle)
 
 ## Basic Examples
 
@@ -475,6 +476,63 @@ function startDrawing(type) {
     map.addInteraction(draw);
 }
 ```
+
+## Lifecycle
+
+### Setup and Teardown
+
+`map.removeControl(contextmenu)` detaches the menu from the map: it removes the
+menu's own map and viewport listeners and clears its entries. Listeners your app
+added with `contextmenu.on()` or `map.on()` are yours to remove, using the keys
+those calls return.
+
+```typescript
+import Map from 'ol/Map.js'
+import { unByKey } from 'ol/Observable.js'
+import ContextMenu from 'ol-contextmenu'
+
+export function attachContextMenu(map: Map): () => void {
+    const contextmenu = new ContextMenu({ defaultItems: true })
+
+    map.addControl(contextmenu)
+
+    const keys = [
+        contextmenu.on('open', (evt) => {
+            console.log('menu opened at', evt.coordinate)
+        }),
+        map.on('moveend', () => {
+            console.log('menu open after move:', contextmenu.isOpen())
+        }),
+    ]
+
+    return () => {
+        unByKey(keys)
+        map.removeControl(contextmenu)
+    }
+}
+```
+
+Call the returned function when the map or your component goes away. To move a
+menu to another map, remove it from the first map before adding it to the second.
+
+### Named Exports (ESM)
+
+The ES module build also exports the enums and the event class, so you can use
+them as values instead of string literals:
+
+```typescript
+import ContextMenu, { EventTypes, CustomEventTypes, ContextMenuEvent } from 'ol-contextmenu'
+
+const contextmenu = new ContextMenu({ eventType: EventTypes.CLICK })
+
+contextmenu.on(CustomEventTypes.BEFOREOPEN, (evt) => {
+    console.log(evt instanceof ContextMenuEvent, evt.pixel)
+})
+```
+
+These named exports exist only in the ES module build. With a script tag or
+`require('ol-contextmenu')`, `ContextMenu` is the class itself, so use the string
+values (`'click'`, `'beforeopen'`).
 
 ## See Also
 

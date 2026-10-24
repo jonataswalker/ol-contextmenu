@@ -1,7 +1,7 @@
-import MapBrowserEvent from 'ol/MapBrowserEvent'
+import MapBrowserEvent from 'ol/MapBrowserEvent.js'
 
-import type OlMap from 'ol/Map'
-import type { Coordinate } from 'ol/coordinate'
+import type OlMap from 'ol/Map.js'
+import type { Coordinate } from 'ol/coordinate.js'
 
 export enum EventTypes {
     CONTEXTMENU = 'contextmenu',
@@ -22,6 +22,7 @@ export class ContextMenuEvent extends MapBrowserEvent<any> {
         originalEvent: MouseEvent | PointerEvent
         type: `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`
     }) {
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- ol's MapBrowserEvent does not admit MouseEvent
         super(options.type, options.map, options.originalEvent as any)
     }
 }
@@ -63,6 +64,7 @@ export type Options = {
     defaultItems: boolean
     eventType: `${EventTypes}`
     items: Item[]
+    /** @deprecated Has no effect and will be removed in 7.0. */
     scrollAt: number
     width: number
 }

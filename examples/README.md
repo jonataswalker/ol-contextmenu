@@ -4,11 +4,11 @@ This directory contains example projects demonstrating how to use `ol-contextmen
 
 ## Available Examples
 
-### 1. CDN Example (`contextmenu.html`)
+### 1. Script-tag Example (`contextmenu.html`)
 
-**Best for**: Quick start, no build tools required
+**Best for**: Quick start without a bundler
 
-This example shows how to use `ol-contextmenu` with CDN-hosted libraries. It demonstrates:
+This example loads OpenLayers from a CDN and `ol-contextmenu` from this repository's build output (`../dist/ol-contextmenu.iife.js`). It demonstrates:
 - Basic menu item setup with callbacks
 - Menu items with icons
 - Submenus (nested menu items)
@@ -18,9 +18,13 @@ This example shows how to use `ol-contextmenu` with CDN-hosted libraries. It dem
 - Custom data propagation to callbacks
 
 **How to run**:
-1. Open `contextmenu.html` in a web browser
-2. Right-click anywhere on the map to see the context menu
-3. Right-click on a marker to see a different menu
+1. Build the library once from the repository root: `npm install && npm run build`
+2. Open `contextmenu.html` in a web browser
+3. Right-click anywhere on the map to see the context menu
+4. Right-click on a marker to see a different menu
+
+In your own page, load the published build instead of `../dist`:
+`<script src="https://cdn.jsdelivr.net/npm/ol-contextmenu"></script>`
 
 **Key concepts demonstrated**:
 - Creating a context menu with custom items

@@ -97,7 +97,9 @@ describe('ContextMenu - User Interactions (Browser)', () => {
             input.type = 'text'
             input.placeholder = 'Press keys'
 
-            input.addEventListener('keydown', (e) => { keyPressed = e.key })
+            input.addEventListener('keydown', (e) => {
+                keyPressed = e.key
+            })
             testContainer.appendChild(input)
 
             const inputElement = page.getByPlaceholder('Press keys')
@@ -121,8 +123,12 @@ describe('ContextMenu - User Interactions (Browser)', () => {
             contextMenu.push({ callback: () => {}, text: 'Item 2' })
 
             // Operations should work without errors
-            expect(() => { contextMenu.pop() }).not.toThrow()
-            expect(() => { contextMenu.clear() }).not.toThrow()
+            expect(() => {
+                contextMenu.pop()
+            }).not.toThrow()
+            expect(() => {
+                contextMenu.clear()
+            }).not.toThrow()
             expect(contextMenu.countItems()).toBe(0)
         })
 
@@ -229,7 +235,9 @@ describe('ContextMenu - User Interactions (Browser)', () => {
             const button = document.createElement('button')
 
             button.textContent = 'Fire Event'
-            button.addEventListener('custom-event', () => { isEventFired = true })
+            button.addEventListener('custom-event', () => {
+                isEventFired = true
+            })
             testContainer.appendChild(button)
 
             button.dispatchEvent(new Event('custom-event'))
