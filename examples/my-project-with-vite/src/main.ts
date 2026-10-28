@@ -4,18 +4,18 @@
 // Import OpenLayers components using ES6 module syntax.
 // Vite will handle these imports and bundle them efficiently.
 
-import OSM from 'ol/source/OSM'
-import Fill from 'ol/style/Fill'
-import Point from 'ol/geom/Point'
-import { transform } from 'ol/proj'
-import Stroke from 'ol/style/Stroke'
-import TileLayer from 'ol/layer/Tile'
-import { format } from 'ol/coordinate'
-import { unByKey } from 'ol/Observable'
+import OSM from 'ol/source/OSM.js'
+import Fill from 'ol/style/Fill.js'
+import Point from 'ol/geom/Point.js'
+import { transform } from 'ol/proj.js'
+import Stroke from 'ol/style/Stroke.js'
+import TileLayer from 'ol/layer/Tile.js'
+import { format } from 'ol/coordinate.js'
+import { unByKey } from 'ol/Observable.js'
 import ContextMenu, { EventTypes, CustomEventTypes } from 'ol-contextmenu'
-import VectorLayer from 'ol/layer/Vector'
-import VectorSource from 'ol/source/Vector'
-import { Icon, Text, Style } from 'ol/style'
+import VectorLayer from 'ol/layer/Vector.js'
+import VectorSource from 'ol/source/Vector.js'
+import { Icon, Text, Style } from 'ol/style.js'
 import { View, Feature, Map as OlMap } from 'ol'
 
 // ============================================================================
