@@ -3,11 +3,14 @@ import process from 'node:process'
 import { defineConfig } from 'vitest/config'
 import { webdriverio } from '@vitest/browser-webdriverio'
 
+import { css } from './sass.config.ts'
+
 const chromeBinary = process.env.CHROME_BIN ?? '/usr/bin/google-chrome-stable'
 const chromedriverBinary = process.env.CHROMEDRIVER_BIN ?? '/usr/bin/chromedriver'
 const firefoxBinary = process.env.FIREFOX_BIN ?? '/usr/bin/firefox'
 
 export default defineConfig({
+    css,
     test: {
         projects: [
             {

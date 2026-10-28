@@ -54,8 +54,8 @@ We actively welcome pull requests!
 
 ### Prerequisites
 
-- **Node.js**: 16.x or higher
-- **npm**: 8.x or higher
+- **Node.js**: 24.x or higher
+- **npm**: 11.x or higher
 - **Git**
 
 ### Fork and Clone
