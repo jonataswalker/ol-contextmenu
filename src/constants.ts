@@ -33,6 +33,15 @@ export const MENU_POSITION_OFFSET = 10
 // Safety buffer to prevent menu cutoff at viewport edges
 export const MENU_POSITION_BUFFER = 2
 
+// Horizontal gap between the click point and a menu opening to the right
+export const MENU_CURSOR_GAP = 5
+
+// How far a submenu overlaps its parent menu
+export const SUBMENU_OVERLAP = 8
+
+// Distance a submenu opening upward keeps below its parent row
+export const SUBMENU_UPWARD_OFFSET = 25
+
 export const DEFAULT_ITEMS: SingleItem[] = [
     {
         callback: (object, map) => {

@@ -3,17 +3,24 @@ import { type Item, type MenuEntry, CustomEventTypes } from '../types.ts'
 
 import type { TinyEmitter } from 'tiny-emitter'
 
-export function createFragment(html: string): DocumentFragment {
-    const fragment = document.createDocumentFragment()
-    const div = document.createElement('div')
+function sampleRow(): HTMLLIElement {
+    const element = document.createElement('li')
+    const span = document.createElement('span')
 
-    div.innerHTML = html
+    span.textContent = 'Foo'
+    element.append(span)
 
-    while (div.firstChild) {
-        fragment.append(div.firstChild)
-    }
+    return element
+}
 
-    return fragment
+function separatorRow(id: string): HTMLLIElement {
+    const element = document.createElement('li')
+
+    element.id = id
+    element.className = CSS_CLASSES.separator
+    element.append(document.createElement('hr'))
+
+    return element
 }
 
 export function cssString(value: string): string {
@@ -31,15 +38,7 @@ export function getLineHeight(container: HTMLDivElement): number {
 
     cloned.style.cssText = `position: fixed; top: 0; left: 0; overflow: auto; visibility: hidden; pointer-events: none; height: unset; max-height: unset; width: ${width}px`
 
-    const frag = createFragment('<span>Foo</span>')
-    const frag2 = createFragment('<span>Foo</span>')
-    const element = document.createElement('li')
-    const element2 = document.createElement('li')
-
-    element.append(frag)
-    element2.append(frag2)
-    cloned.append(element)
-    cloned.append(element2)
+    cloned.append(sampleRow(), sampleRow())
     container.parentNode?.append(cloned)
 
     const clonedStyle = getComputedStyle(cloned)
@@ -69,9 +68,10 @@ export function addMenuEntry({
     const id = `_${Math.random().toString(36).slice(2, 11)}`
 
     if (typeof item !== 'string' && 'text' in item) {
-        const html = `<span>${item.text}</span>`
-        const frag = createFragment(html)
+        const span = document.createElement('span')
         const element = document.createElement('li')
+
+        span.innerHTML = item.text
 
         let classname = item.classname || ''
 
@@ -87,7 +87,7 @@ export function addMenuEntry({
 
         element.id = id
         element.className = classname
-        element.append(frag)
+        element.append(span)
         parentNode.append(element)
 
         const entry: MenuEntry = {
@@ -104,13 +104,9 @@ export function addMenuEntry({
         return element
     }
 
-    const html = `<li id="${id}" class="${CSS_CLASSES.separator}"><hr></li>`
-    parentNode.append(createFragment(html))
+    const element = separatorRow(id)
 
-    const element = parentNode.lastElementChild
-
-    if (!(element instanceof HTMLLIElement))
-        throw new Error('The separator entry was not appended.')
+    parentNode.append(element)
 
     const entry: MenuEntry = {
         callback: null,
