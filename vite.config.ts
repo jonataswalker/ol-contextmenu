@@ -4,10 +4,10 @@ import { createRequire } from 'node:module'
 
 import dts from 'vite-plugin-dts'
 import bannerPlugin from 'vite-plugin-banner'
-import { defineConfig, type Plugin, type CSSOptions } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
-import { CSS_CLASSES } from './src/constants.ts'
+import { css } from './sass.config.ts'
 import packageJson from './package.json' with { type: 'json' }
 
 const { name, version, homepage } = packageJson
@@ -62,20 +62,6 @@ const banner = `
   * Built: ${new Date().toISOString()}
   */
 `
-
-const additionalData = Object.entries(CSS_CLASSES).reduce(
-    (accumulator, [key, value]) => `${accumulator}$${key}:${value};`,
-    '',
-)
-
-const css: CSSOptions = {
-    preprocessorOptions: {
-        scss: {
-            additionalData,
-            silenceDeprecations: ['import'],
-        },
-    },
-}
 
 export default defineConfig(({ command, mode }) =>
     command === 'serve'

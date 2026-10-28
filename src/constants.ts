@@ -22,7 +22,7 @@ export const CSS_CLASSES = {
     zoomOut: `${NAMESPACE}-zoom-out`,
 }
 
-// Container padding from SCSS: $container-padding: 8px
+// Injected into SCSS as $container-padding (vite.config.ts)
 export const CONTAINER_PADDING = 8
 
 export const CONTAINER_PADDING_TOTAL = CONTAINER_PADDING * 2
