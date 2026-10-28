@@ -36,7 +36,7 @@
 - 📱 **Viewport-Aware** - Automatically repositions to stay visible at screen edges
 - 💪 **TypeScript Support** - Full type definitions included out of the box
 - ⚡ **Lightweight** - Minimal footprint with only one dependency (`tiny-emitter`)
-- ✅ **Well Tested** - 191 tests covering all functionality
+- ✅ **Well Tested** - unit tests plus real Chrome and Firefox runs
 
 ## 🎪 Demo
 

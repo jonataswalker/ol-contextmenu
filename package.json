@@ -45,7 +45,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git://github.com/jonataswalker/ol-contextmenu.git"
+        "url": "git+https://github.com/jonataswalker/ol-contextmenu.git"
     },
     "bugs": {
         "url": "https://github.com/jonataswalker/ol-contextmenu/issues"
@@ -102,7 +102,7 @@
         "webdriverio": "^9.32.0"
     },
     "peerDependencies": {
-        "ol": "> 7.x <= 10.x"
+        "ol": ">=7 <11"
     },
     "dependencies": {
         "tiny-emitter": "^2.1.0"

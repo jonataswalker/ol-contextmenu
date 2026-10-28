@@ -1,11 +1,11 @@
 name: npm-publish
 on:
     release:
-        types: [created, published]
+        types: [published]
     workflow_dispatch:
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         permissions:
             contents: read
             id-token: write
@@ -16,7 +16,12 @@ jobs:
                   node-version: "24.x"
                   registry-url: "https://registry.npmjs.org"
             - run: npm ci
-            - run: npm run build
+            - name: Verify
+              run: |
+                  export CHROME_BIN="$(command -v google-chrome-stable || command -v google-chrome)"
+                  export CHROMEDRIVER_BIN="$(command -v chromedriver)"
+                  export FIREFOX_BIN="$(command -v firefox)"
+                  npm run verify
             - run: npm publish --provenance --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
