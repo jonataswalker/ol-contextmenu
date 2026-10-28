@@ -107,6 +107,9 @@
     "dependencies": {
         "tiny-emitter": "^2.1.0"
     },
+    "overrides": {
+        "undici@7": "^7.30.1"
+    },
     "allowScripts": {
         "geckodriver@6.1.0": true
     }
