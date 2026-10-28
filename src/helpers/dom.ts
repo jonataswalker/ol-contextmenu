@@ -16,6 +16,15 @@ export function createFragment(html: string): DocumentFragment {
     return fragment
 }
 
+export function cssString(value: string): string {
+    const escaped = value.replaceAll(
+        /["\\\n\r\f]/g,
+        (char) => `\\${(char.codePointAt(0) ?? 0).toString(16)} `,
+    )
+
+    return `"${escaped}"`
+}
+
 export function getLineHeight(container: HTMLDivElement): number {
     const cloned = document.importNode(container)
     const width = container.offsetWidth
@@ -64,20 +73,20 @@ export function addMenuEntry({
         const frag = createFragment(html)
         const element = document.createElement('li')
 
-        item.classname = item.classname || ''
+        let classname = item.classname || ''
 
         if (item.icon) {
-            if (item.classname === '') {
-                item.classname = CSS_CLASSES.icon
-            } else if (item.classname.includes(CSS_CLASSES.icon) === false) {
-                item.classname += ` ${CSS_CLASSES.icon}`
+            if (classname === '') {
+                classname = CSS_CLASSES.icon
+            } else if (classname.includes(CSS_CLASSES.icon) === false) {
+                classname += ` ${CSS_CLASSES.icon}`
             }
 
-            element.setAttribute('style', `background-image:url(${item.icon})`)
+            element.style.backgroundImage = `url(${cssString(item.icon)})`
         }
 
         element.id = id
-        element.className = item.classname
+        element.className = classname
         element.append(frag)
         parentNode.append(element)
 

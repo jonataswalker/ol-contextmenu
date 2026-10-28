@@ -1068,6 +1068,88 @@ describe('ContextMenu - OpenLayers Map Integration', () => {
         })
     })
 
+    describe('Items Added Before the Map', () => {
+        const openAndClickFirstItem = async () => {
+            const viewport = viewportOf(map)
+
+            dispatchContextMenu(viewport)
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
+
+            // @ts-expect-error - accessing protected property
+            const { container } = contextMenu
+            const menuItem = container.querySelector('li:not(.ol-ctx-menu-separator)')
+
+            if (!(menuItem instanceof HTMLLIElement)) throw new Error('The menu has no item.')
+
+            menuItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+        }
+
+        it('should run the callback of an item extended before addControl', async () => {
+            const callback = vi.fn()
+
+            contextMenu.extend([{ callback, text: 'Early' }])
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+            await openAndClickFirstItem()
+
+            expect(callback).toHaveBeenCalledTimes(1)
+        })
+
+        it('should run a callback once after the control is removed and added again', async () => {
+            const callback = vi.fn()
+
+            contextMenu = new ContextMenu({
+                defaultItems: false,
+                items: [{ callback, text: 'Item' }],
+            })
+            map.addControl(contextMenu)
+            map.removeControl(contextMenu)
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+            await openAndClickFirstItem()
+
+            expect(callback).toHaveBeenCalledTimes(1)
+            expect(contextMenu.countItems()).toBe(1)
+        })
+
+        it('should position an open menu once per extend call', async () => {
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+            dispatchContextMenu(viewportOf(map))
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
+
+            const positionContainer = vi.spyOn(contextMenu as any, 'positionContainer')
+
+            contextMenu.extend([
+                { callback: vi.fn(), text: 'Item 1' },
+                { callback: vi.fn(), text: 'Item 2' },
+                { callback: vi.fn(), text: 'Item 3' },
+            ])
+
+            expect(positionContainer).toHaveBeenCalledTimes(1)
+        })
+
+        it('should dispatch OPEN with defaultItems: false and no items (#245)', async () => {
+            map.addControl(contextMenu)
+            await waitForMapReady(map)
+
+            const onOpen = vi.fn()
+
+            contextMenu.on(CustomEventTypes.OPEN, onOpen)
+            dispatchContextMenu(viewportOf(map))
+            await new Promise((resolve) => {
+                setTimeout(resolve, 150)
+            })
+
+            expect(contextMenu.countItems()).toBe(0)
+            expect(onOpen).toHaveBeenCalledTimes(1)
+        })
+    })
+
     describe('Multiple Instances Side by Side', () => {
         let map2Container: HTMLElement
         let map2: Map

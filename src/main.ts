@@ -149,12 +149,12 @@ export default class ContextMenu extends Control {
         this.disabled = false
         this.opened = false
 
-        window.addEventListener(
-            'beforeunload',
-            () => {
-                this.removeListeners()
+        this.emitter.on(
+            CustomEventTypes.ADD_MENU_ENTRY,
+            (item: MenuEntry, element: HTMLLIElement) => {
+                this.handleAddMenuEntry(item, element)
             },
-            { once: true },
+            this,
         )
     }
 
@@ -176,7 +176,7 @@ export default class ContextMenu extends Control {
     }
 
     getDefaultItems() {
-        return DEFAULT_ITEMS
+        return DEFAULT_ITEMS.map((item) => ({ ...item }))
     }
 
     countItems() {
@@ -191,6 +191,8 @@ export default class ContextMenu extends Control {
             items,
             menuWidth: this.options.width,
         })
+
+        if (this.isOpen()) this.positionContainer()
     }
 
     closeMenu() {
@@ -229,7 +231,11 @@ export default class ContextMenu extends Control {
     }
 
     setMap(map: OlMap): void {
+        const previousMap = this.getMap()
+
         super.setMap(map)
+
+        if (previousMap) this.removeListeners(previousMap)
 
         if (map) {
             this.map = map
@@ -241,14 +247,6 @@ export default class ContextMenu extends Control {
             )
 
             map.on('movestart', this.mapMoveListener)
-
-            this.emitter.on(
-                CustomEventTypes.ADD_MENU_ENTRY,
-                (item: MenuEntry, element: HTMLLIElement) => {
-                    this.handleAddMenuEntry(item, element)
-                },
-                this,
-            )
 
             this.items = this.options.defaultItems
                 ? this.options.items.concat(DEFAULT_ITEMS)
@@ -268,26 +266,27 @@ export default class ContextMenu extends Control {
                     ? this.container.offsetHeight / entriesLength
                     : getLineHeight(this.container)
         } else {
-            this.removeListeners()
             this.clear()
         }
     }
 
-    protected removeListeners() {
-        this.map
-            .getViewport()
-            ?.removeEventListener(this.options.eventType, this.contextMenuEventListener, false)
+    protected removeListeners(map: OlMap) {
+        map.getViewport()?.removeEventListener(
+            this.options.eventType,
+            this.contextMenuEventListener,
+            false,
+        )
 
-        this.map.un('movestart', this.mapMoveListener)
-
-        this.emitter.off(CustomEventTypes.ADD_MENU_ENTRY)
+        map.un('movestart', this.mapMoveListener)
     }
 
     protected removeMenuEntry(id: string) {
-        let element = document.getElementById(id)
+        const element = this.container.querySelector(`[id="${id}"]`)
 
+        element?.querySelectorAll('li').forEach((child) => {
+            this.menuEntries.delete(child.id)
+        })
         element?.remove()
-        element = null
         this.menuEntries.delete(id)
     }
 
@@ -494,7 +493,6 @@ export default class ContextMenu extends Control {
 
     protected handleAddMenuEntry(item: MenuEntry, element: HTMLLIElement) {
         this.menuEntries.set(item.id, item)
-        this.positionContainer()
 
         if ('callback' in item && typeof item.callback === 'function') {
             element.addEventListener('click', this.entryCallbackEventListener, { capture: false })

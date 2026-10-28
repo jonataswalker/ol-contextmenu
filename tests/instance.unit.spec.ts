@@ -12,6 +12,13 @@ import {
 
 import type { SingleItem } from '../src/types.ts'
 
+function listItemsOf(menu: ContextMenu): HTMLLIElement[] {
+    // @ts-expect-error - accessing protected property
+    const { container }: { container: HTMLDivElement } = menu
+
+    return Array.from(container.querySelectorAll('li'))
+}
+
 describe('ContextMenu - Unit Tests', () => {
     let contextMenu: ContextMenu
 
@@ -330,6 +337,102 @@ describe('ContextMenu - Unit Tests', () => {
             expect(CONTAINER_PADDING_TOTAL).toBe(16)
 
             cm.clear()
+        })
+    })
+
+    describe('Without a map', () => {
+        it('should not register a window beforeunload listener', () => {
+            const addEventListener = vi.spyOn(globalThis, 'addEventListener')
+
+            const menu = new ContextMenu()
+
+            expect(addEventListener.mock.calls.some(([type]) => type === 'beforeunload')).toBe(
+                false,
+            )
+            expect(() => globalThis.dispatchEvent(new Event('beforeunload'))).not.toThrow()
+
+            addEventListener.mockRestore()
+            menu.clear()
+        })
+
+        it('should track items added before the menu joins a map', () => {
+            const menu = new ContextMenu({ defaultItems: false })
+
+            menu.extend([
+                { callback: vi.fn(), text: 'Item 1' },
+                { callback: vi.fn(), text: 'Item 2' },
+            ])
+
+            expect(menu.countItems()).toBe(2)
+        })
+
+        it('should remove entries from a menu that is not in the document', () => {
+            const menu = new ContextMenu({ defaultItems: false })
+
+            menu.extend([
+                { callback: vi.fn(), text: 'Item 1' },
+                { callback: vi.fn(), text: 'Item 2' },
+            ])
+            menu.pop()
+
+            expect(menu.countItems()).toBe(1)
+            expect(listItemsOf(menu)).toHaveLength(1)
+        })
+
+        it('should remove the children of a removed submenu', () => {
+            const menu = new ContextMenu({ defaultItems: false })
+
+            menu.extend([
+                {
+                    items: [
+                        { callback: vi.fn(), text: 'Child 1' },
+                        { callback: vi.fn(), text: 'Child 2' },
+                    ],
+                    text: 'Submenu',
+                },
+                { callback: vi.fn(), text: 'Last' },
+            ])
+            menu.shift()
+
+            expect(menu.countItems()).toBe(1)
+            expect(listItemsOf(menu)).toHaveLength(1)
+
+            menu.pop()
+
+            expect(menu.countItems()).toBe(0)
+            expect(listItemsOf(menu)).toHaveLength(0)
+        })
+    })
+
+    describe('Input objects', () => {
+        it('should not modify the items it is given', () => {
+            const item: SingleItem = { callback: vi.fn(), icon: 'pin.png', text: 'Pin' }
+            const menu = new ContextMenu({ defaultItems: false })
+
+            menu.extend([item])
+
+            expect(Object.keys(item)).toEqual(['callback', 'icon', 'text'])
+            expect(listItemsOf(menu)[0]?.classList.contains(CSS_CLASSES.icon)).toBe(true)
+        })
+
+        it('should return independent copies of the default items', () => {
+            const first = contextMenu.getDefaultItems()
+
+            first[0].text = 'Changed'
+
+            expect(contextMenu.getDefaultItems()[0].text).toBe('Zoom In')
+            expect(new ContextMenu().getDefaultItems()[0].text).toBe('Zoom In')
+        })
+
+        it('should keep an icon URL inside the background-image declaration', () => {
+            const menu = new ContextMenu({ defaultItems: false })
+
+            menu.extend([{ callback: vi.fn(), icon: 'x.png");color:red;("', text: 'Icon' }])
+
+            const li = listItemsOf(menu)[0]
+
+            expect(li?.style.color).toBe('')
+            expect(li?.style.backgroundImage).toContain('x.png')
         })
     })
 })
