@@ -7,8 +7,11 @@ import {
     CSS_CLASSES,
     DEFAULT_ITEMS,
     DEFAULT_OPTIONS,
+    MENU_CURSOR_GAP,
+    SUBMENU_OVERLAP,
     MENU_POSITION_BUFFER,
     MENU_POSITION_OFFSET,
+    SUBMENU_UPWARD_OFFSET,
     CONTAINER_PADDING_TOTAL,
 } from './constants.ts'
 
@@ -42,6 +45,26 @@ function submenuChildrenOf(container: HTMLUListElement): HTMLLIElement[] {
     )
 }
 
+type ContextMenuSignature<Return> = OnSignature<
+    OlEventTypes | `${CustomEventTypes.CLOSE}`,
+    BaseEvent,
+    Return
+>
+    & OnSignature<
+        `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`,
+        ContextMenuEvent,
+        Return
+    >
+    & OnSignature<ObjectEventTypes, ObjectEvent, Return>
+    & CombinedOnSignature<
+        | OlEventTypes
+        | ObjectEventTypes
+        | `${CustomEventTypes.OPEN}`
+        | `${CustomEventTypes.CLOSE}`
+        | `${CustomEventTypes.BEFOREOPEN}`,
+        Return
+    >
+
 export default class ContextMenu extends Control {
     protected map!: OlMap
 
@@ -69,53 +92,11 @@ export default class ContextMenu extends Control {
 
     protected menuEntries: Map<string, MenuEntry> = new Map()
 
-    declare on: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, EventsKey>
-        & OnSignature<
-            `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`,
-            ContextMenuEvent,
-            EventsKey
-        >
-        & OnSignature<ObjectEventTypes, ObjectEvent, EventsKey>
-        & CombinedOnSignature<
-            | OlEventTypes
-            | ObjectEventTypes
-            | `${CustomEventTypes.OPEN}`
-            | `${CustomEventTypes.CLOSE}`
-            | `${CustomEventTypes.BEFOREOPEN}`,
-            EventsKey
-        >
+    declare on: ContextMenuSignature<EventsKey>
 
-    declare once: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, EventsKey>
-        & OnSignature<
-            `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`,
-            ContextMenuEvent,
-            EventsKey
-        >
-        & OnSignature<ObjectEventTypes, ObjectEvent, EventsKey>
-        & CombinedOnSignature<
-            | OlEventTypes
-            | ObjectEventTypes
-            | `${CustomEventTypes.OPEN}`
-            | `${CustomEventTypes.CLOSE}`
-            | `${CustomEventTypes.BEFOREOPEN}`,
-            EventsKey
-        >
+    declare once: ContextMenuSignature<EventsKey>
 
-    declare un: OnSignature<OlEventTypes | `${CustomEventTypes.CLOSE}`, BaseEvent, void>
-        & OnSignature<
-            `${CustomEventTypes.OPEN}` | `${CustomEventTypes.BEFOREOPEN}`,
-            ContextMenuEvent,
-            EventsKey
-        >
-        & OnSignature<ObjectEventTypes, ObjectEvent, void>
-        & CombinedOnSignature<
-            | OlEventTypes
-            | ObjectEventTypes
-            | `${CustomEventTypes.OPEN}`
-            | `${CustomEventTypes.CLOSE}`
-            | `${CustomEventTypes.BEFOREOPEN}`,
-            void
-        >
+    declare un: ContextMenuSignature<void>
 
     options: Options
 
@@ -417,7 +398,8 @@ export default class ContextMenu extends Control {
             w: mapSize[0] - this.pixel[0],
         }
         const menuSize = this.calculateMenuSize()
-        const left = spaceLeft.w >= menuSize.w ? this.pixel[0] + 5 : this.pixel[0] - menuSize.w
+        const left =
+            spaceLeft.w >= menuSize.w ? this.pixel[0] + MENU_CURSOR_GAP : this.pixel[0] - menuSize.w
 
         this.container.style.left = `${left}px`
 
@@ -437,7 +419,9 @@ export default class ContextMenu extends Control {
 
             elements.forEach((element) => {
                 const lastLeft =
-                    spaceLeftWidth >= menuSize.w ? menuSize.w - 8 : (menuSize.w + 8) * -1
+                    spaceLeftWidth >= menuSize.w
+                        ? menuSize.w - SUBMENU_OVERLAP
+                        : (menuSize.w + SUBMENU_OVERLAP) * -1
 
                 const submenu = element.querySelector(`ul.${CSS_CLASSES.container}`)
 
@@ -453,7 +437,7 @@ export default class ContextMenu extends Control {
                 submenu.style.top =
                     spaceLeft.h >= submenuHeight + menuSize.h
                         ? '0'
-                        : `-${submenu.offsetHeight - 25}px`
+                        : `-${submenu.offsetHeight - SUBMENU_UPWARD_OFFSET}px`
                 submenu.style.bottom = 'auto'
                 submenu.style.zIndex = String(countSubMenu)
 
