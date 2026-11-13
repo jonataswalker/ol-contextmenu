@@ -32,6 +32,7 @@ export default defineConfig({
                                 'wdio:chromedriverOptions': {
                                     binary: chromedriverBinary,
                                 },
+                                'wdio:enforceWebDriverClassic': true,
                             },
                         }),
                     },
