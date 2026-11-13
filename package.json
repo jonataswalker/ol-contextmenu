@@ -85,7 +85,7 @@
         "husky": "^9.1.7",
         "jsdom": "^31.0.1",
         "ol": "^10.11.0",
-        "oxfmt": "^0.74.0",
+        "oxfmt": "^0.78.0",
         "oxlint": "^1.93.0",
         "oxlint-config-jwalker": "^0.2.1",
         "oxlint-tsgolint": "^7.0.2007",
