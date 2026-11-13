@@ -54,7 +54,7 @@ We actively welcome pull requests!
 
 ### Prerequisites
 
-- **Node.js**: 24.x or higher
+- **Node.js**: 26.12.1 or higher on the 26.x line (the webdriverio 10 test tooling requires it)
 - **npm**: 11.x or higher
 - **Git**
 
