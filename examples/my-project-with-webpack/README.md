@@ -4,7 +4,7 @@ This example demonstrates how to integrate `ol-contextmenu` in a project using *
 
 ## Prerequisites
 
-- **Node.js** (version 24 or higher)
+- **Node.js** (version 26 or higher)
 - **npm** (version 11 or higher)
 
 ## Installation
