@@ -51,8 +51,8 @@
         "url": "https://github.com/jonataswalker/ol-contextmenu/issues"
     },
     "engines": {
-        "node": ">=26",
-        "npm": ">=11"
+        "node": "^22 || ^24 || ^26",
+        "npm": ">=10"
     },
     "scripts": {
         "dev": "vite",
@@ -108,8 +108,8 @@
         "tiny-emitter": "^2.1.0"
     },
     "overrides": {
-        "basic-ftp@5": "^6.2.6",
-        "minimatch@10": "^11.0.8"
+        "basic-ftp": "^6.2.6",
+        "minimatch": "^11.0.8"
     },
     "allowScripts": {
         "geckodriver@8.0.0": true
