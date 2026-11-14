@@ -5,6 +5,7 @@ This guide will help you get up and running with `ol-contextmenu` in your OpenLa
 ## Prerequisites
 
 - **OpenLayers**: Version 7.0.0 or higher
+- **Node.js** (to install with npm): 22, 24 or 26, with npm 10 or higher
 - **Modern Browser**: Chrome, Firefox, Safari, or Edge with ES6 support
 - **Build Tool** (optional): Webpack, Vite, Rollup, or similar
 

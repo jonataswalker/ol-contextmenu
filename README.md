@@ -57,7 +57,7 @@ npm install ol ol-contextmenu
 <script src="https://cdn.jsdelivr.net/npm/ol-contextmenu"></script>
 ```
 
-**Requires:** OpenLayers 7.0.0 or higher
+**Requires:** OpenLayers 7.0.0 or higher. To install with npm: Node.js 22, 24 or 26 (the LTS lines) and npm 10 or higher.
 
 📖 See [Getting Started Guide](docs/getting-started.md) for detailed installation instructions and setup.
 

@@ -54,8 +54,8 @@ We actively welcome pull requests!
 
 ### Prerequisites
 
-- **Node.js**: 26.12.1 or higher on the 26.x line (the webdriverio 10 test tooling requires it)
-- **npm**: 11.x or higher
+- **Node.js**: 22.23.4+, 24.22.1+ or 26.12.1+ (the webdriverio 10 test tooling needs these patch floors; `.node-version` pins 26.13.0)
+- **npm**: 10 or higher (Node 22 ships npm 10)
 - **Git**
 
 ### Fork and Clone
