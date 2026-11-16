@@ -120,5 +120,6 @@
     },
     "allowScripts": {
         "geckodriver@8.0.0": true
-    }
+    },
+    "funding": "https://github.com/sponsors/jonataswalker"
 }
