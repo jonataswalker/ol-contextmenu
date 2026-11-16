@@ -208,6 +208,10 @@ npm run dev
 npm run build
 ```
 
+## Sponsor
+
+If ol-contextmenu is useful to you, you can [sponsor its maintenance on GitHub](https://github.com/sponsors/jonataswalker).
+
 ## 📄 License
 
 MIT © [Jonatas Walker](https://github.com/jonataswalker)

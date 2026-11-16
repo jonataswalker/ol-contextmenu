@@ -9,22 +9,26 @@ on:
 jobs:
     test:
         timeout-minutes: 60
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-26.04
         strategy:
             fail-fast: false
             matrix:
                 node: [22, 24, 26]
         name: Node ${{ matrix.node }}
         steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
+            - uses: actions/checkout@v7
+            - uses: actions/setup-node@v7
               with:
                   node-version: ${{ matrix.node }}
             - name: Install dependencies
               run: npm ci
             - name: Verify
               run: |
-                  export CHROME_BIN="$(command -v google-chrome-stable || command -v google-chrome)"
-                  export CHROMEDRIVER_BIN="$(command -v chromedriver)"
-                  export FIREFOX_BIN="$(command -v firefox)"
+                  CHROME_BIN="$(command -v google-chrome-stable || command -v google-chrome)"
+                  CHROMEDRIVER_BIN="$(command -v chromedriver)"
+                  FIREFOX_BIN="$(command -v firefox)"
+                  "$CHROME_BIN" --version
+                  "$CHROMEDRIVER_BIN" --version
+                  "$FIREFOX_BIN" --version
+                  export CHROME_BIN CHROMEDRIVER_BIN FIREFOX_BIN
                   npm run verify
