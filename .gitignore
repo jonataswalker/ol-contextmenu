@@ -9,3 +9,4 @@ coverage
 .claude
 .vitest
 .examples-check
+.parity-check

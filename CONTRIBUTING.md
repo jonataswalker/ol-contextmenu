@@ -92,6 +92,14 @@ npm test
 # Run tests in watch mode
 npm run test:ui
 
+# Type check with tsrs (primary, pinned beta) and TypeScript 7 (second pass);
+# the published-types checks below also run TypeScript 6
+npm run typecheck
+
+# After changing the tsrs pin: compare tsrs and TypeScript 7 on the real code
+# and on fixtures with planted type errors (needs a build first)
+npm run check:typecheck-parity
+
 # Build, then check the published types and package exports
 npm run test:types
 
